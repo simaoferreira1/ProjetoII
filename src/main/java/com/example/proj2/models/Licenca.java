@@ -1,4 +1,4 @@
-package com.example.proj2;
+package com.example.proj2.models;
 
 import jakarta.persistence.*;
 
@@ -15,7 +15,7 @@ public class Licenca {
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idlicenca", nullable = false)
-    private com.example.proj2.Projeto projeto;
+    private Projeto projeto;
 
     @Column(name = "dataemissao")
     private LocalDate dataemissao;
@@ -31,11 +31,11 @@ public class Licenca {
         this.id = id;
     }
 
-    public com.example.proj2.Projeto getProjeto() {
+    public Projeto getProjeto() {
         return projeto;
     }
 
-    public void setProjeto(com.example.proj2.Projeto projeto) {
+    public void setProjeto(Projeto projeto) {
         this.projeto = projeto;
     }
 

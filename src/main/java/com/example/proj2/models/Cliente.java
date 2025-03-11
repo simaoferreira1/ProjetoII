@@ -1,4 +1,4 @@
-package com.example.proj2;
+package com.example.proj2.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,10 +8,10 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "gestordeprojeto")
-public class Gestordeprojeto {
+@Table(name = "cliente")
+public class Cliente {
     @Id
-    @Column(name = "idgestor", nullable = false, precision = 10)
+    @Column(name = "idcliente", nullable = false, precision = 10)
     private BigDecimal id;
 
     @Column(name = "nome", length = 50)
@@ -22,6 +22,9 @@ public class Gestordeprojeto {
 
     @Column(name = "telefone", precision = 10)
     private BigDecimal telefone;
+
+    @Column(name = "endereco", length = 50)
+    private String endereco;
 
     public BigDecimal getId() {
         return id;
@@ -53,6 +56,14 @@ public class Gestordeprojeto {
 
     public void setTelefone(BigDecimal telefone) {
         this.telefone = telefone;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.proj2;
+package com.example.proj2.models;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
@@ -17,7 +17,7 @@ public class Orcamentoprojeto {
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idorcamentoprojeto", nullable = false)
-    private com.example.proj2.Projeto projeto;
+    private Projeto projeto;
 
     @Column(name = "valortotal", precision = 10)
     private BigDecimal valortotal;
@@ -31,7 +31,7 @@ public class Orcamentoprojeto {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "idprojeto")
-    private com.example.proj2.Projeto idprojeto;
+    private Projeto idprojeto;
 
     public BigDecimal getId() {
         return id;
@@ -41,11 +41,11 @@ public class Orcamentoprojeto {
         this.id = id;
     }
 
-    public com.example.proj2.Projeto getProjeto() {
+    public Projeto getProjeto() {
         return projeto;
     }
 
-    public void setProjeto(com.example.proj2.Projeto projeto) {
+    public void setProjeto(Projeto projeto) {
         this.projeto = projeto;
     }
 
@@ -73,11 +73,11 @@ public class Orcamentoprojeto {
         this.estado = estado;
     }
 
-    public com.example.proj2.Projeto getIdprojeto() {
+    public Projeto getIdprojeto() {
         return idprojeto;
     }
 
-    public void setIdprojeto(com.example.proj2.Projeto idprojeto) {
+    public void setIdprojeto(Projeto idprojeto) {
         this.idprojeto = idprojeto;
     }
 

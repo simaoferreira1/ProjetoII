@@ -1,4 +1,4 @@
-package com.example.proj2;
+package com.example.proj2.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,10 +8,10 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "tipoespecialistas")
-public class Tipoespecialista {
+@Table(name = "tipopagamento")
+public class Tipopagamento {
     @Id
-    @Column(name = "idtipoespecialista", nullable = false, precision = 10)
+    @Column(name = "idtipopagamento", nullable = false, precision = 10)
     private BigDecimal id;
 
     @Column(name = "descricao", length = 50)

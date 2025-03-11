@@ -1,4 +1,4 @@
-package com.example.proj2;
+package com.example.proj2.models;
 
 import jakarta.persistence.*;
 
@@ -14,7 +14,7 @@ public class Especialista {
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idespecialista", nullable = false)
-    private com.example.proj2.Tipoespecialista tipoespecialistas;
+    private Tipoespecialista tipoespecialistas;
 
     @Column(name = "nome", length = 50)
     private String nome;
@@ -33,11 +33,11 @@ public class Especialista {
         this.id = id;
     }
 
-    public com.example.proj2.Tipoespecialista getTipoespecialistas() {
+    public Tipoespecialista getTipoespecialistas() {
         return tipoespecialistas;
     }
 
-    public void setTipoespecialistas(com.example.proj2.Tipoespecialista tipoespecialistas) {
+    public void setTipoespecialistas(Tipoespecialista tipoespecialistas) {
         this.tipoespecialistas = tipoespecialistas;
     }
 
