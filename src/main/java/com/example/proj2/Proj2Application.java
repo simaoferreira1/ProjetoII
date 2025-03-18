@@ -81,7 +81,7 @@ public class Proj2Application {
                 System.out.println("🗑 Cliente removido!");
 
                 // ===================== ESPECIALISTA =====================
-                System.out.println("\n🔹 Operações com Especialista...");
+/*                System.out.println("\n🔹 Operações com Especialista...");
 
 // Criação do objeto Tipoespecialista (com id 6)
                 Tipoespecialista tipoEspecialista = new Tipoespecialista();
@@ -153,7 +153,7 @@ public class Proj2Application {
                     }
                 }
 
-
+*/
 
                 // ===================== GESTOR DE PROJETO =====================
                 System.out.println("\n🔹 Operações com Gestor de Projeto...");
@@ -188,43 +188,45 @@ public class Proj2Application {
                 // ===================== LICENÇA =====================
                 System.out.println("\n🔹 Operações com Licença...");
 
-// Verificando se o Projeto existe
-                Optional<Projeto> projetoOptional = projetoRepository.findById(BigDecimal.valueOf(5));
-
+// Verifica se o Projeto com ID 2 existe no banco
+                Optional<Projeto> projetoOptional = projetoRepository.findById(BigDecimal.valueOf(2));
                 if (projetoOptional.isEmpty()) {
-                    throw new RuntimeException("O projeto com ID 5 não existe no banco.");
+                    throw new RuntimeException("O projeto com ID 2 não existe no banco.");
                 }
-
                 Projeto projeto = projetoOptional.get();
 
+// Cria uma nova Licença associada ao Projeto recuperado
                 Licenca novaLicenca = new Licenca();
-                novaLicenca.setId(BigDecimal.valueOf(3));
+// NÃO defina manualmente o ID, pois estamos utilizando @MapsId;
+// o ID da Licença será o mesmo do Projeto (nesse caso, 2)
                 novaLicenca.setProjeto(projeto);
                 novaLicenca.setDataemissao(LocalDate.of(2024, 3, 17));
                 novaLicenca.setDatavalidade(LocalDate.of(2025, 3, 17));
 
+// Salva a Licença
                 Licenca licencaSalva = licencaService.salvarLicenca(novaLicenca);
                 System.out.println("✅ Licença inserida com sucesso!");
 
-// Buscar e listar licenças
+// Busca a Licença salva e exibe seus dados
                 Optional<Licenca> licencaOptional = licencaService.buscarLicencaPorId(licencaSalva.getId());
                 licencaOptional.ifPresent(licenca ->
                         System.out.println("🔍 Licença encontrada: Emitida em " + licenca.getDataemissao() +
-                                ", válida até " + licenca.getDatavalidade()));
+                                ", válida até " + licenca.getDatavalidade())
+                );
 
-// Atualizar a licença
-                if (licencaOptional.isPresent()) {
-                    Licenca licenca = licencaService.buscarLicencaPorId(licencaSalva.getId()).orElseThrow();
-                    licenca.setDatavalidade(LocalDate.of(2026, 3, 17)); // Estendendo a validade
+// Atualiza a Licença: estende a validade para 17/03/2026
+                licencaOptional.ifPresent(licenca -> {
+                    licenca.setDatavalidade(LocalDate.of(2026, 3, 17));
                     licencaService.atualizarLicenca(licenca);
                     System.out.println("✅ Licença atualizada!");
-                }
+                });
 
-// Remover a licença
+// Remove a Licença caso ela esteja presente
                 licencaService.buscarLicencaPorId(licencaSalva.getId()).ifPresent(licenca -> {
                     licencaService.removerLicenca(licenca.getId());
                     System.out.println("🗑 Licença removida!");
                 });
+
 
 
             } catch (Exception e) {
