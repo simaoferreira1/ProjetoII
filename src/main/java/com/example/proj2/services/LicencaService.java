@@ -1,7 +1,9 @@
 package com.example.proj2.services;
 
 import com.example.proj2.models.Licenca;
+import com.example.proj2.models.Projeto;
 import com.example.proj2.repository.LicencaRepository;
+import com.example.proj2.repository.ProjetoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,24 +17,31 @@ import java.util.Optional;
 public class LicencaService {
 
     private final LicencaRepository licencaRepository;
+    private final ProjetoRepository projetoRepository; // Adicionamos o repositório do Projeto
 
     @Autowired
-    public LicencaService(LicencaRepository licencaRepository) {
+    public LicencaService(LicencaRepository licencaRepository, ProjetoRepository projetoRepository) {
         this.licencaRepository = licencaRepository;
+        this.projetoRepository = projetoRepository;
     }
 
-    // Método para salvar uma nova licença com regras de negócio
+    // Método para salvar uma nova licença
     public Licenca salvarLicenca(Licenca licenca) {
-        // Validações de negócio
-        if (licenca.getDataemissao() == null || licenca.getDatavalidade() == null) {
-            throw new IllegalArgumentException("As datas de emissão e validade são obrigatórias.");
+        if (licenca.getId() == null) {
+            throw new IllegalArgumentException("O ID da licença é obrigatório.");
         }
-        if (licenca.getDatavalidade().isBefore(licenca.getDataemissao())) {
-            throw new IllegalArgumentException("A data de validade deve ser posterior à data de emissão.");
+
+        // Verifica se já existe uma licença com o mesmo ID
+        if (licencaRepository.existsById(licenca.getId())) {
+            throw new RuntimeException("Já existe uma licença com ID " + licenca.getId());
         }
-        if (licenca.getProjeto() == null) {
-            throw new IllegalArgumentException("O projeto associado à licença deve ser informado.");
+
+        // Verifica se o Projeto associado existe no banco de dados
+        Optional<Projeto> projetoOptional = projetoRepository.findById(licenca.getProjeto().getId());
+        if (projetoOptional.isEmpty()) {
+            throw new RuntimeException("O projeto associado à licença não existe no banco.");
         }
+
         return licencaRepository.save(licenca);
     }
 
@@ -51,7 +60,7 @@ public class LicencaService {
         if (licenca.getId() == null) {
             throw new IllegalArgumentException("O ID da licença é obrigatório para atualização.");
         }
-        // Outras regras de negócio para atualização podem ser aplicadas aqui
+
         return licencaRepository.save(licenca);
     }
 

@@ -1,13 +1,13 @@
 package com.example.proj2.models;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "licenca")
 public class Licenca {
+
     @Id
     @Column(name = "idlicenca", nullable = false, precision = 10)
     private BigDecimal id;
@@ -17,11 +17,15 @@ public class Licenca {
     @JoinColumn(name = "idlicenca", nullable = false)
     private Projeto projeto;
 
-    @Column(name = "dataemissao")
+    @Column(name = "dataemissao", nullable = false)
     private LocalDate dataemissao;
 
-    @Column(name = "datavalidade")
+    @Column(name = "datavalidade", nullable = false)
     private LocalDate datavalidade;
+
+    @Version // Adiciona controle de versão para evitar concorrência
+    @Column(name = "versao")
+    private Integer versao;
 
     public BigDecimal getId() {
         return id;
@@ -55,4 +59,11 @@ public class Licenca {
         this.datavalidade = datavalidade;
     }
 
+    public Integer getVersao() {
+        return versao;
+    }
+
+    public void setVersao(Integer versao) {
+        this.versao = versao;
+    }
 }
