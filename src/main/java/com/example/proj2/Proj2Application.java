@@ -1,16 +1,17 @@
 package com.example.proj2;
 
-import com.example.proj2.services.ClienteService;
-import com.example.proj2.services.EspecialistaService;
-import com.example.proj2.services.GestordeprojetoService;
-import com.example.proj2.services.LicencaService;
+import com.example.proj2.services.*;
 import com.example.proj2.models.Cliente;
 import com.example.proj2.models.Especialista;
 import com.example.proj2.models.Tipoespecialista;
 import com.example.proj2.models.Gestordeprojeto;
+import com.example.proj2.models.Tipopagamento;
 import com.example.proj2.models.Licenca;
 import com.example.proj2.models.Projeto;
+import com.example.proj2.models.Utilizador;
+import com.example.proj2.models.Tipoutilizador;
 import com.example.proj2.repository.ProjetoRepository;
+import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -31,16 +32,27 @@ public class Proj2Application {
     private final GestordeprojetoService gestordeprojetoService;
     private final LicencaService licencaService;
     private final ProjetoRepository projetoRepository;
+    private final UtilizadorService utilizadorService;
+    private final ProjetoService projetoService;
+    private final TipoespecialistaService tipoespecialistaService;
+    private final TipopagamentoService tipopagamentoService;
 
     @Autowired
     public Proj2Application(ClienteService clienteService, EspecialistaService especialistaService,
-                            GestordeprojetoService gestordeprojetoService, LicencaService licencaService, ProjetoRepository projetoRepository)
+                            GestordeprojetoService gestordeprojetoService, LicencaService licencaService,
+                            ProjetoRepository projetoRepository, UtilizadorService utilizadorService,
+                            ProjetoService projetoService, TipoespecialistaService tipoespecialistaService,
+                            TipopagamentoService tipopagamentoService)
     {
         this.clienteService = clienteService;
         this.especialistaService = especialistaService;
         this.gestordeprojetoService = gestordeprojetoService;
         this.licencaService = licencaService;
         this.projetoRepository = projetoRepository;
+        this.utilizadorService = utilizadorService;
+        this.projetoService = projetoService;
+        this.tipoespecialistaService = tipoespecialistaService;
+        this.tipopagamentoService = tipopagamentoService;
     }
 
     public static void main(String[] args) {
@@ -52,7 +64,8 @@ public class Proj2Application {
         return args -> {
             try {
                 // ===================== CLIENTE =====================
-                System.out.println("\n🔹 Operações com Cliente...");
+                System.out.println("\n=================================================================================================================================================");
+                System.out.println("===== Operações com o Cliente =====");
 
                 Cliente novoCliente = new Cliente();
                 novoCliente.setId(BigDecimal.valueOf(1));
@@ -61,176 +74,194 @@ public class Proj2Application {
                 novoCliente.setTelefone(new BigDecimal("912345678"));
                 novoCliente.setEndereco("Rua das Flores, 123");
 
+                System.out.println("\n||   Inserir novo cliente   ||");
                 Cliente clienteSalvo = clienteService.salvarCliente(novoCliente);
-                System.out.println("✅ Cliente inserido com sucesso!");
+                System.out.println("Cliente inserido com sucesso!");
 
+
+                System.out.println("\n||   Procurar cliente por id   ||");
                 Optional<Cliente> clienteOptional = clienteService.buscarClientePorId(clienteSalvo.getId());
-                clienteOptional.ifPresent(cliente -> System.out.println("🔍 Cliente encontrado: " + cliente.getNome()));
+                clienteOptional.ifPresent(cliente -> System.out.println("||Cliente encontrado: " + cliente.getNome()));
 
+                System.out.println("\n||   Listar clientes   ||");
                 List<Cliente> clientes = clienteService.listarClientes();
-                clientes.forEach(c -> System.out.println("📜 Cliente: " + c.getNome() + " - Email: " + c.getEmail()));
+                clientes.forEach(c -> System.out.println("Cliente: " + c.getNome() + " - Email: " + c.getEmail()));
 
+                System.out.println("\n||   Atualizar clientes   ||");
                 if (clienteOptional.isPresent()) {
                     Cliente cliente = clienteService.buscarClientePorId(clienteSalvo.getId()).orElseThrow();
                     cliente.setEmail("maria.novoemail@exemplo.com");
                     clienteService.atualizarCliente(cliente);
-                    System.out.println("✅ Cliente atualizado!");
+                    System.out.println("Cliente atualizado!");
                 }
 
+                System.out.println("\n||   Remover cliente   ||");
                 clienteService.removerCliente(clienteSalvo.getId());
                 System.out.println("🗑 Cliente removido!");
 
-                // ===================== ESPECIALISTA =====================
-/*                System.out.println("\n🔹 Operações com Especialista...");
 
-// Criação do objeto Tipoespecialista (com id 6)
-                Tipoespecialista tipoEspecialista = new Tipoespecialista();
-                tipoEspecialista.setId(BigDecimal.valueOf(6));
-
-// Criação do novo Especialista
-                Especialista novoEspecialista = new Especialista();
-// ATENÇÃO: Se o ID já existe, o Hibernate pode tratar a operação como update.
-// Certifique-se de que este valor é apropriado para a sua estratégia de geração de IDs.
-                novoEspecialista.setId(BigDecimal.valueOf(6));
-                novoEspecialista.setNome("Dr. João Cardoso");
-                novoEspecialista.setEmail("joao.cardoso@exemplo.com");
-                novoEspecialista.setTelefone(new BigDecimal("912345678"));
-                novoEspecialista.setTipoespecialistas(tipoEspecialista);
-
-// Inserção do especialista
-                Especialista especialistaSalvo = null;
-                try {
-                    especialistaSalvo = especialistaService.salvarEspecialista(novoEspecialista);
-                    System.out.println("✅ Especialista inserido com sucesso!");
-                } catch (ObjectOptimisticLockingFailureException ex) {
-                    System.err.println("Erro ao salvar Especialista: " + ex.getMessage());
-                    // Aqui você pode optar por re-tentar a inserção ou encerrar o processo
-                }
-
-                if (especialistaSalvo != null) {
-                    // Busca e exibe o especialista inserido
-                    Optional<Especialista> especialistaOptional = especialistaService.buscarEspecialistaPorId(especialistaSalvo.getId());
-                    especialistaOptional.ifPresent(especialista ->
-                            System.out.println("🔍 Especialista encontrado: " + especialista.getNome())
-                    );
-
-                    // Listagem de todos os especialistas
-                    List<Especialista> especialistas = especialistaService.listarEspecialistas();
-                    especialistas.forEach(e ->
-                            System.out.println("📜 Especialista: " + e.getNome() + " - Email: " + e.getEmail())
-                    );
-
-                    // Atualização do email com re-tentativa em caso de lock otimista
-                    final int MAX_RETRIES = 3;
-                    int attempts = 0;
-                    boolean updated = false;
-                    while (!updated && attempts < MAX_RETRIES) {
-                        try {
-                            // Recarrega a entidade para obter o estado mais recente
-                            Especialista especialistaParaAtualizar = especialistaService
-                                    .buscarEspecialistaPorId(especialistaSalvo.getId())
-                                    .orElseThrow(() -> new RuntimeException("Especialista não encontrado"));
-                            especialistaParaAtualizar.setEmail("joao.novoemail@exemplo.com");
-                            especialistaService.atualizarEspecialista(especialistaParaAtualizar);
-                            System.out.println("✅ Especialista atualizado!");
-                            updated = true;
-                        } catch (ObjectOptimisticLockingFailureException ex) {
-                            attempts++;
-                            System.err.println("Tentativa " + attempts + " falhou na atualização devido a lock otimista: " + ex.getMessage());
-                            // Aqui você pode esperar um tempo ou recarregar novamente a entidade antes de re-tentar
-                        }
-                    }
-                    if (!updated) {
-                        System.err.println("Falha ao atualizar o Especialista após " + MAX_RETRIES + " tentativas.");
-                    }
-
-                    // Remoção do especialista com tratamento de exceção
-                    try {
-                        especialistaService.removerEspecialista(especialistaSalvo.getId());
-                        System.out.println("🗑 Especialista removido!");
-                    } catch (Exception ex) {
-                        System.err.println("Erro ao remover Especialista: " + ex.getMessage());
-                    }
-                }
-
-*/
-
+                System.out.println("\n=================================================================================================================================================");
                 // ===================== GESTOR DE PROJETO =====================
-                System.out.println("\n🔹 Operações com Gestor de Projeto...");
+                System.out.println("===== Operações com Gestor de Projeto =====\n");
 
+                System.out.println("||   Inserir novo gestor de projeto   ||");
                 Gestordeprojeto novoGestor = new Gestordeprojeto();
-                novoGestor.setId(BigDecimal.valueOf(3));
-                novoGestor.setNome("Carlos Almeida");
-                novoGestor.setEmail("carlos.almeida@exemplo.com");
-                novoGestor.setTelefone(new BigDecimal("934567890"));
+                novoGestor.setId(BigDecimal.valueOf(4));
+                novoGestor.setNome("Tomás Silva");
+                novoGestor.setEmail("tomas.silva@exemplo.com");
+                novoGestor.setTelefone(new BigDecimal("965739572"));
 
+// Salva o Gestor (se já existir, o serviço retorna o existente)
                 Gestordeprojeto gestorSalvo = gestordeprojetoService.salvarGestor(novoGestor);
-                System.out.println("✅ Gestor de projeto inserido com sucesso!");
+                System.out.println(" Gestor de Projeto já existe: " + gestorSalvo.getNome());
 
+                System.out.println("\n||   Procurar gestor de projeto por ID   ||");
                 Optional<Gestordeprojeto> gestorOptional = gestordeprojetoService.buscarGestorPorId(gestorSalvo.getId());
-                gestorOptional.ifPresent(gestor -> System.out.println("🔍 Gestor encontrado: " + gestor.getNome()));
+                gestorOptional.ifPresent(gestor -> System.out.println(" Gestor encontrado: " + gestor.getNome()));
 
+                System.out.println("\n||   Listar gestores de projeto   ||");
                 List<Gestordeprojeto> gestores = gestordeprojetoService.listarGestores();
-                gestores.forEach(g -> System.out.println("📜 Gestor: " + g.getNome() + " - Email: " + g.getEmail()));
+                gestores.forEach(g -> System.out.println(" Gestor: " + g.getNome() + " - Email: " + g.getEmail()));
 
+                System.out.println("\n||   Atualizar gestor de projeto   ||");
                 if (gestorOptional.isPresent()) {
                     Gestordeprojeto gestor = gestordeprojetoService.buscarGestorPorId(gestorSalvo.getId()).orElseThrow();
                     gestor.setEmail("carlos.novoemail@exemplo.com");
                     gestordeprojetoService.atualizarGestor(gestor);
-                    System.out.println("✅ Gestor atualizado!");
+                    System.out.println("Gestor atualizado!");
                 }
 
+                System.out.println("\n||   Remover gestor de projeto   ||");
                 gestordeprojetoService.buscarGestorPorId(gestorSalvo.getId()).ifPresent(gestor -> {
                     gestordeprojetoService.removerGestor(gestor.getId());
-                    System.out.println("🗑 Gestor de projeto removido!");
+                    System.out.println("Gestor de projeto removido!");
                 });
 
-                // ===================== LICENÇA =====================
-                System.out.println("\n🔹 Operações com Licença...");
+                System.out.println("\n=================================================================================================================================================");
+                // ===================== UTILIZADOR =====================
+                System.out.println("===== Operações com Utilizador =====");
 
-// Verifica se o Projeto com ID 2 existe no banco
-                Optional<Projeto> projetoOptional = projetoRepository.findById(BigDecimal.valueOf(2));
-                if (projetoOptional.isEmpty()) {
-                    throw new RuntimeException("O projeto com ID 2 não existe no banco.");
-                }
-                Projeto projeto = projetoOptional.get();
+                // Criação de um novo Utilizador
+                Utilizador novoUtilizador = new Utilizador();
+                novoUtilizador.setId(BigDecimal.valueOf(1));
+                novoUtilizador.setNome("João Silva");
+                novoUtilizador.setUser("joaosilva");
+                novoUtilizador.setPassword("123456");
 
-// Cria uma nova Licença associada ao Projeto recuperado
-                Licenca novaLicenca = new Licenca();
-// NÃO defina manualmente o ID, pois estamos utilizando @MapsId;
-// o ID da Licença será o mesmo do Projeto (nesse caso, 2)
-                novaLicenca.setProjeto(projeto);
-                novaLicenca.setDataemissao(LocalDate.of(2024, 3, 17));
-                novaLicenca.setDatavalidade(LocalDate.of(2025, 3, 17));
+                // Criação e associação do Tipo de Utilizador
+                Tipoutilizador tipoutilizador = new Tipoutilizador();
+                tipoutilizador.setId(BigDecimal.valueOf(1));
+                novoUtilizador.setIdtipoutilizador(tipoutilizador);
 
-// Salva a Licença
-                Licenca licencaSalva = licencaService.salvarLicenca(novaLicenca);
-                System.out.println("✅ Licença inserida com sucesso!");
+                System.out.println("\n||   Inserir novo utilizador   ||");
+                Utilizador utilizadorSalvo = utilizadorService.salvarUtilizador(novoUtilizador);
+                System.out.println("Utilizador inserido com sucesso!");
 
-// Busca a Licença salva e exibe seus dados
-                Optional<Licenca> licencaOptional = licencaService.buscarLicencaPorId(licencaSalva.getId());
-                licencaOptional.ifPresent(licenca ->
-                        System.out.println("🔍 Licença encontrada: Emitida em " + licenca.getDataemissao() +
-                                ", válida até " + licenca.getDatavalidade())
+                System.out.println("\n||   Procurar utilizador por ID   ||");
+                Optional<Utilizador> utilizadorOptional = utilizadorService.buscarUtilizadorPorId(utilizadorSalvo.getId());
+                utilizadorOptional.ifPresent(utilizador ->
+                        System.out.println("Utilizador encontrado: " + utilizador.getNome())
                 );
 
-// Atualiza a Licença: estende a validade para 17/03/2026
-                licencaOptional.ifPresent(licenca -> {
-                    licenca.setDatavalidade(LocalDate.of(2026, 3, 17));
-                    licencaService.atualizarLicenca(licenca);
-                    System.out.println("✅ Licença atualizada!");
-                });
+                System.out.println("\n||   Listar todos os utilizadores   ||");
+                List<Utilizador> utilizadores = utilizadorService.listarUtilizadores();
+                utilizadores.forEach(u ->
+                        System.out.println("Utilizador: " + u.getNome() + " - Username: " + u.getUser())
+                );
 
-// Remove a Licença caso ela esteja presente
-                licencaService.buscarLicencaPorId(licencaSalva.getId()).ifPresent(licenca -> {
-                    licencaService.removerLicenca(licenca.getId());
-                    System.out.println("🗑 Licença removida!");
-                });
+                System.out.println("\n||   Atualizar utilizador   ||");
+                if (utilizadorOptional.isPresent()) {
+                    Utilizador utilizador = utilizadorService.buscarUtilizadorPorId(utilizadorSalvo.getId()).orElseThrow();
+                    utilizador.setPassword("novasenha123");
+                    utilizadorService.atualizarUtilizador(utilizador);
+                    System.out.println("Utilizador atualizado!");
+                }
 
+                System.out.println("\n||   Remover utilizador   ||");
+                utilizadorService.removerUtilizador(utilizadorSalvo.getId());
+                System.out.println("Utilizador removido!");
+
+                System.out.println("\n=================================================================================================================================================");
+                // ===================== TIPO DE ESPECIALISTA =====================
+                System.out.println("===== Operações com Tipo de Especialista =====\n");
+
+// Criação de um novo Tipo de Especialista
+                Tipoespecialista novoTipo = new Tipoespecialista();
+                novoTipo.setId(BigDecimal.valueOf(6)); // Defina o ID manualmente se essa for sua estratégia (ou remova se for gerado automaticamente)
+                novoTipo.setDescricao("Eletrecista");
+
+                System.out.println("\n||   Adicionar novo tipo de especialista   ||");
+                Tipoespecialista tipoSalvo = tipoespecialistaService.salvarTipoespecialista(novoTipo);
+                System.out.println("Tipo de Especialista inserido com sucesso!");
+
+                System.out.println("\n||   Procurar tipo de especialista   ||");
+                Optional<Tipoespecialista> tipoOptional = tipoespecialistaService.buscarTipoespecialistaPorId(tipoSalvo.getId());
+                tipoOptional.ifPresent(tipo ->
+                        System.out.println("Tipo de Especialista encontrado: " + tipo.getDescricao())
+                );
+
+                System.out.println("\n||   Listar tipo de especialistas   ||");
+                List<Tipoespecialista> tipos = tipoespecialistaService.listarTipoespecialistas();
+                tipos.forEach(t ->
+                        System.out.println("Tipo de Especialista: " + t.getDescricao())
+                );
+
+                System.out.println("\n||   Atualizar tipo de especialistas   ||");
+                if (tipoOptional.isPresent()) {
+                    Tipoespecialista tipoParaAtualizar = tipoespecialistaService.buscarTipoespecialistaPorId(tipoSalvo.getId())
+                            .orElseThrow(() -> new RuntimeException("Tipo de Especialista não encontrado."));
+                    tipoParaAtualizar.setDescricao("Neurologista");
+                    tipoespecialistaService.atualizarTipoespecialista(tipoParaAtualizar);
+                    System.out.println("Tipo de Especialista atualizado!");
+                }
+
+                System.out.println("\n||   Remover tipo de especialistas   ||");
+                tipoespecialistaService.removerTipoespecialista(tipoSalvo.getId());
+                System.out.println("Tipo de Especialista removido!");
+
+                System.out.println("\n=================================================================================================================================================");
+                // ===================== TIPO DE PAGAMENTO =====================
+                System.out.println("===== Operações com Tipo de Pagamento =====\n");
+
+
+                Tipopagamento novoTipoPagamento = new Tipopagamento();
+                novoTipoPagamento.setId(BigDecimal.valueOf(1)); // Defina o ID manualmente, se essa for sua estratégia
+                novoTipoPagamento.setDescricao("Cartão de Crédito");
+
+                System.out.println("\n||   Criar novo tipo de pagamento   ||");
+                Tipopagamento tipoPagamentoSalvo = tipopagamentoService.salvarTipopagamento(novoTipoPagamento);
+                System.out.println("Tipo de Pagamento inserido com sucesso!");
+
+                System.out.println("\n||   Procurar tipo de pagamento   ||");
+                Optional<Tipopagamento> tipoPagamentoOptional = tipopagamentoService.buscarTipopagamentoPorId(tipoPagamentoSalvo.getId());
+                tipoPagamentoOptional.ifPresent(tipo ->
+                        System.out.println("Tipo de Pagamento encontrado: " + tipo.getDescricao())
+                );
+
+                System.out.println("\n||   Listar tipos de pagamento   ||");
+                List<Tipopagamento> tiposPagamento = tipopagamentoService.listarTipopagamentos();
+                tiposPagamento.forEach(tipo ->
+                        System.out.println("Tipo de Pagamento: " + tipo.getDescricao())
+                );
+
+                System.out.println("\n||   Atualizar tipo de pagamento   ||");
+                if (tipoPagamentoOptional.isPresent()) {
+                    Tipopagamento tipoParaAtualizar = tipopagamentoService
+                            .buscarTipopagamentoPorId(tipoPagamentoSalvo.getId())
+                            .orElseThrow(() -> new RuntimeException("Tipo de Pagamento não encontrado"));
+                    tipoParaAtualizar.setDescricao("Cartão débito");
+                    tipopagamentoService.atualizarTipopagamento(tipoParaAtualizar);
+                    System.out.println("Tipo de Pagamento atualizado!");
+                }
+
+                System.out.println("\n||   Remover tipo de pagamento   ||");
+                tipopagamentoService.removerTipopagamento(tipoPagamentoSalvo.getId());
+                System.out.println("Tipo de Pagamento removido!");
+                System.out.println("\n=================================================================================================================================================\n\n");
 
 
             } catch (Exception e) {
-                System.err.println("❌ ERRO: " + e.getMessage());
+                System.err.println("ERRO: " + e.getMessage());
                 e.printStackTrace();
             }
         };

@@ -8,4 +8,6 @@ import java.math.BigDecimal;
 
 @Repository
 public interface EspecialistaRepository extends JpaRepository<Especialista, BigDecimal> {
+    // Verifica se já existe um especialista com o e-mail fornecido
+    boolean existsByEmail(String email);
 }

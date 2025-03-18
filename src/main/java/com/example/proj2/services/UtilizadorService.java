@@ -43,7 +43,7 @@ public class UtilizadorService {
         return utilizadorRepository.findAll();
     }
 
-    // Método para buscar um utilizador por ID
+    // Método para procurar um utilizador por ID
     public Optional<Utilizador> buscarUtilizadorPorId(BigDecimal id) {
         return utilizadorRepository.findById(id);
     }

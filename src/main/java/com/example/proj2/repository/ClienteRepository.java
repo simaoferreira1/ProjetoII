@@ -8,4 +8,6 @@ import java.math.BigDecimal;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, BigDecimal> {
+    // Verifica se já existe um cliente com o e-mail fornecido
+    boolean existsByEmail(String email);
 }

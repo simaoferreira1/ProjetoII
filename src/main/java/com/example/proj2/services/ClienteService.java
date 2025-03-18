@@ -12,26 +12,55 @@ import java.util.Optional;
 @Service
 public class ClienteService {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
 
-    public Cliente salvarCliente(Cliente cliente) {
+    // Construtor da classe, injetando a dependência do repositório ClienteRepository
+    @Autowired
+    public ClienteService(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;
+    }
+
+    // Método para salvar um novo cliente ou atualizar um existente
+    public Cliente salvarCliente(Cliente cliente) throws IllegalArgumentException {
+        // Validação: nome do cliente é obrigatório
+        if (cliente.getNome() == null || cliente.getNome().trim().isEmpty()) {
+            throw new IllegalArgumentException("O nome do cliente é obrigatório.");
+        }
+
+        // Validação: e-mail do cliente deve ser único
+        if (cliente.getEmail() != null && clienteRepository.existsByEmail(cliente.getEmail())) {
+            throw new IllegalArgumentException("Já existe um cliente com esse e-mail.");
+        }
+
         return clienteRepository.save(cliente);
     }
 
-    public Optional<Cliente> buscarClientePorId(BigDecimal id) {
+    // Método para buscar um cliente pelo seu ID
+    public Optional<Cliente> buscarClientePorId(BigDecimal id) throws IllegalArgumentException {
+        if (id == null) {
+            throw new IllegalArgumentException("O ID do cliente não pode ser nulo.");
+        }
         return clienteRepository.findById(id);
     }
 
+    // Método para listar todos os clientes
     public List<Cliente> listarClientes() {
         return clienteRepository.findAll();
     }
 
-    public Cliente atualizarCliente(Cliente cliente) {
+    // Método para atualizar as informações de um cliente
+    public Cliente atualizarCliente(Cliente cliente) throws IllegalArgumentException {
+        if (cliente.getId() == null) {
+            throw new IllegalArgumentException("O ID do cliente é obrigatório para a atualização.");
+        }
         return clienteRepository.save(cliente);
     }
 
-    public void removerCliente(BigDecimal id) {
+    // Método para remover um cliente através do seu ID
+    public void removerCliente(BigDecimal id) throws IllegalArgumentException {
+        if (id == null || !clienteRepository.existsById(id)) {
+            throw new IllegalArgumentException("O cliente com o ID fornecido não existe.");
+        }
         clienteRepository.deleteById(id);
     }
 }
