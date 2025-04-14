@@ -36,7 +36,7 @@ public class ClienteService {
     }
 
     // Método para buscar um cliente pelo seu ID
-    public Optional<Cliente> buscarClientePorId(BigDecimal id) throws IllegalArgumentException {
+    public Optional<Cliente> buscarClientePorId(Long id) throws IllegalArgumentException {
         if (id == null) {
             throw new IllegalArgumentException("O ID do cliente não pode ser nulo.");
         }
@@ -57,7 +57,7 @@ public class ClienteService {
     }
 
     // Método para remover um cliente através do seu ID
-    public void removerCliente(BigDecimal id) throws IllegalArgumentException {
+    public void removerCliente(Long id) throws IllegalArgumentException {
         if (id == null || !clienteRepository.existsById(id)) {
             throw new IllegalArgumentException("O cliente com o ID fornecido não existe.");
         }

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Projetos para Orçamento</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            width: 120px;
+            background-color: #f1c40f;
+            padding-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .sidebar a {
+            text-align: center;
+            color: #333;
+            text-decoration: none;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .sidebar a i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .logout {
+            margin-top: auto;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header img {
+            width: 120px;
+        }
+
+        .projeto {
+            display: flex;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .projeto img {
+            width: 80px;
+            height: 80px;
+            background-color: #ddd;
+            margin-right: 20px;
+        }
+
+        .projeto-info {
+            flex: 1;
+        }
+
+        .projeto-info h3 {
+            margin: 0;
+        }
+
+        .projeto-info p {
+            margin: 5px 0;
+        }
+
+        .projeto button {
+            padding: 6px 12px;
+            background-color: #eee;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <a href="/gestor">
+        <i class="fa-solid fa-user"></i>
+        <span>Gestor</span>
+    </a>
+
+    <a href="/gestor/solicitacoesprojeto">
+        <i class="fa-solid fa-file-circle-plus"></i>
+        <span>Solicitações<br>de Projeto</span>
+    </a>
+
+    <a href="/projetosemcurso">
+        <i class="fa-solid fa-list-check"></i>
+        <span>Projetos<br>em curso</span>
+    </a>
+
+    <a href="/projetosparaorcamento">
+        <i class="fa-solid fa-file-invoice"></i>
+        <span>Projetos<br>para orçamento</span>
+    </a>
+
+    <a href="/projetosemespera">
+        <i class="fa-solid fa-clock"></i>
+        <span>Projetos<br>em espera</span>
+    </a>
+
+    <a href="/logout" class="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log Out</span></a>
+</div>
+
+<div class="content">
+    <div class="header">
+        <h2>Projetos para orçamento</h2>
+        <img src="/images/Capacete.png" alt="Logo">
+    </div>
+
+    <div class="projeto">
+        <img src="/images/project-placeholder.png" alt="Projeto 1">
+        <div class="projeto-info">
+            <h3>Projeto 1</h3>
+            <p>Muro rua nossa Senhora da agonia</p>
+            <div>
+                <a href="/detalhesprojeto" class="btn-abrir">Abrir</a>
+                <a href="#" class="btn-apagar"><i class="fa-solid fa-trash"></i>Eliminar projeto</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="projeto">
+        <img src="/images/project-placeholder.png" alt="Projeto 2">
+        <div class="projeto-info">
+            <h3>Projeto 2</h3>
+            <p>Casa rua de monserrate</p>
+            <div>
+                <a href="/detalhesprojeto" class="btn-abrir">Abrir</a>
+                <a href="#" class="btn-apagar"><i class="fa-solid fa-trash"></i>Eliminar projeto</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="projeto">
+        <img src="/images/project-placeholder.png" alt="Projeto 3">
+        <div class="projeto-info">
+            <h3>Projeto 3</h3>
+            <p>Casa...</p>
+            <div>
+                <a href="/detalhesprojeto" class="btn-abrir">Abrir</a>
+                <a href="#" class="btn-apagar"><i class="fa-solid fa-trash"></i>Eliminar projeto</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

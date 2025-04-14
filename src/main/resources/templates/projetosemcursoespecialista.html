@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Projetos em curso</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            width: 120px;
+            background-color: #f1c40f;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            min-height: 100vh;
+        }
+
+        .sidebar a {
+            color: #333;
+            text-decoration: none;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .sidebar a i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .logout {
+            margin-top: auto;
+            margin-bottom: 20px;
+        }
+
+        .main {
+            flex: 1;
+            padding: 30px;
+            background-color: #f8f8f8;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            width: 120px;
+            opacity: 0.5;
+        }
+
+        .projeto-card {
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .projeto-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .projeto-info img {
+            width: 70px;
+            height: 70px;
+            background-color: #ddd;
+        }
+
+        .projeto-texto h3 {
+            margin: 0;
+        }
+
+        .btn-abrir {
+            padding: 6px 12px;
+            background-color: lightgray;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <a href="#"><i class="fa-solid fa-user"></i><br>Especialista</a>
+    <a href="/projetosparaorcamentoespecialista"><i class="fa-solid fa-chart-bar"></i><br>Listar projetos<br>para orçamento</a>
+    <a href="/projetosemcursoespecialista"><i class="fa-solid fa-clipboard-list"></i><br>Projetos<br>em curso</a>
+    <a href="/logout" class="logout"><i class="fa-solid fa-right-from-bracket"></i><br>Log Out</a>
+</div>
+
+<div class="main">
+    <div class="header">
+        <h2>Projetos em curso</h2>
+        <img src="/images/Capacete.png" class="logo" alt="Logo Betonarte">
+    </div>
+
+    <!-- Card Projeto 1 -->
+    <div class="projeto-card">
+        <div class="projeto-info">
+            <img src="/images/placeholder.png" alt="Projeto">
+            <div class="projeto-texto">
+                <h3>Projeto 1</h3>
+                <p>Rua da Liberdade</p>
+            </div>
+            <div>
+                <a href="/detalhesprojetoemcursoespecialista" class="btn-abrir">Abrir</a>
+                <a href="#" class="btn-apagar"><i class="fa-solid fa-trash"></i>Eliminar projeto</a>
+            </div>
+
+
+    <!-- Card Projeto 2 -->
+    <div class="projeto-card">
+        <div class="projeto-info">
+            <img src="/images/placeholder.png" alt="Projeto">
+            <div class="projeto-texto">
+                <h3>Projeto 2</h3>
+                <p>Rua de Monserrate</p>
+            </div>
+            <div>
+                <a href="/detalhesprojetoemcursoespecialista" class="btn-abrir">Abrir</a>
+                <a href="#" class="btn-apagar"><i class="fa-solid fa-trash"></i>Eliminar projeto</a>
+            </div>
+</div>
+</body>
+</html>

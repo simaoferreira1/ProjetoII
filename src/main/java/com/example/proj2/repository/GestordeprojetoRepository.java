@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 
 @Repository
-public interface GestordeprojetoRepository extends JpaRepository<Gestordeprojeto, BigDecimal> {
+public interface GestordeprojetoRepository extends JpaRepository<Gestordeprojeto, Long> {
     Gestordeprojeto findByEmailAndPassword(String email, String password); // <- AQUI
 }

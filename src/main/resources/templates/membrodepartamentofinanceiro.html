@@ -2,7 +2,7 @@
 <html lang="pt" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Painel do Especialista</title>
+    <title>Painel Financeiro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * {
@@ -84,18 +84,11 @@
 </head>
 <body>
 <div class="sidebar">
-    <a href="#"><i class="fa-solid fa-user"></i><span>Especialista</span></a>
+    <a href="#"><i class="fa-solid fa-user"></i><span>Financeiro</span></a>
 
-    <a href="/projetosparaorcamentoespecialista">
-        <i class="fa-solid fa-chart-column"></i>
-        <span>Listar projetos<br>para orçamento</span>
-    </a>
+    <a href="/projetospreplaneamento"><img src="/images/clipboard-icon.png" alt="Pré-planeamento" style="width:32px; height:32px;"><span>Listar projetos<br>em pré-planeamento</span></a>
 
-
-    <a href="/projetosemcursoespecialista">
-        <i class="fa-solid fa-chart-column"></i>
-        <span>Listar projetos<br>para orçamento</span>
-    </a>
+    <a href="/projetosemcurso"><i class="fa-solid fa-list-check"></i><span>Listar projetos<br>em curso</span></a>
 
     <a href="/logout" class="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i><br><span>Log Out</span></a>
 </div>

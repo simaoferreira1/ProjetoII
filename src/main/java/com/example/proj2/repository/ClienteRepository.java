@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 
 @Repository
-public interface ClienteRepository extends JpaRepository<Cliente, BigDecimal> {
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     Cliente findByEmailAndPassword(String email, String password);
     boolean existsByEmail(String email);
 }

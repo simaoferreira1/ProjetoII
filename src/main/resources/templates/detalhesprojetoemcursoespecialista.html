@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes do Projeto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .btn-voltar {
+            background-color: #f1c40f;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-right: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-voltar i {
+            margin-right: 5px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+
+        .logo {
+            width: 120px;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .linha-flex {
+            display: flex;
+            gap: 20px;
+        }
+
+        .linha-flex > div {
+            flex: 1;
+        }
+
+        .btn-concluir {
+            background-color: #ccc;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+<div class="top-bar">
+    <button class="btn-voltar" onclick="history.back()">
+        <i class="fa fa-arrow-left"></i> Voltar
+    </button>
+</div>
+
+<div class="header">
+    <div>
+        <h2>Projeto 1</h2>
+        <p>Informações sobre o projeto</p>
+    </div>
+    <img src="/images/Capacete.png" alt="Logo" class="logo">
+</div>
+
+<div class="container">
+    <label>Nome do cliente</label>
+    <input type="text" placeholder="Nome do cliente">
+
+    <label>Tipo de obra</label>
+    <input type="text" placeholder="Tipo de obra">
+
+    <label>Medidas da obra:</label>
+    <div class="linha-flex">
+        <div>
+            <input type="text" placeholder="Comprimento">
+        </div>
+        <div>
+            <input type="text" placeholder="Largura">
+        </div>
+        <div>
+            <input type="text" placeholder="Altura">
+        </div>
+    </div>
+
+    <label>Descrição do projeto</label>
+    <textarea rows="4" placeholder="Descrição do projeto"></textarea>
+
+    <button class="btn-concluir">Projeto concluído</button>
+</div>
+</body>
+</html>

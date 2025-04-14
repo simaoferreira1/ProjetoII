@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Projetos Solicitados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 120px;
+            background-color: #f1c40f;
+            padding-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .sidebar a {
+            text-align: center;
+            color: #333;
+            text-decoration: none;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .sidebar a i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .logout {
+            margin-top: auto;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .projetos-container {
+            margin-top: 40px;
+        }
+
+        .projeto-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .projeto-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .projeto-img {
+            width: 70px;
+            height: 70px;
+            background-color: #eee;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+
+        .projeto-nome {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .projeto-desc {
+            color: #777;
+        }
+
+        .btn-abrir {
+            padding: 5px 10px;
+            background-color: #ddd;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .btn-apagar {
+            color: red;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .btn-apagar i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <a href="/gestor">
+        <i class="fa-solid fa-user"></i>
+        <span>Gestor</span>
+    </a>
+
+    <a href="/gestor/solicitacoesprojeto">
+        <i class="fa-solid fa-file-circle-plus"></i>
+        <span>Solicitações<br>de Projeto</span>
+    </a>
+
+    <a href="/projetosemcurso">
+        <i class="fa-solid fa-list-check"></i>
+        <span>Projetos<br>em curso</span>
+    </a>
+
+    <a href="/projetosparaorcamento">
+        <i class="fa-solid fa-file-invoice"></i>
+        <span>Projetos<br>para orçamento</span>
+    </a>
+
+    <a href="/projetosemespera">
+        <i class="fa-solid fa-clock"></i>
+        <span>Projetos<br>em espera</span>
+    </a>
+
+    <a href="/logout" class="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i><br><span>Log Out</span></a>
+</div>
+
+<div class="content">
+    <div class="top-bar">
+        <h2>Projetos solicitados</h2>
+        <div class="logo">
+            <img src="/images/Capacete.png" alt="Capacete">
+            <div>
+                <div style="font-weight:bold;">BETONARTE</div>
+                <div style="font-size:12px;">Construção Civil</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="projetos-container">
+        <div class="projeto-card">
+            <div class="projeto-info">
+                <div class="projeto-img"></div>
+                <div>
+                    <div class="projeto-nome">Projeto 1</div>
+                    <div class="projeto-desc">Muro rua nossa Senhora da agonia</div>
+                </div>
+            </div>
+                <div>
+                    <a href="/detalhesprojeto" class="btn-abrir">Abrir</a>
+                    <a href="#" class="btn-apagar"><i class="fa-solid fa-trash"></i>Eliminar projeto</a>
+                </div>
+        </div>
+
+        <!-- Repete para outros projetos -->
+    </div>
+</div>
+
+</body>
+</html>

@@ -20,6 +20,9 @@ public class Membrodepartamentofinanceiro {
     @Column(name = "email", length = 50)
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "telefone", precision = 10)
     private BigDecimal telefone;
 
@@ -54,5 +57,9 @@ public class Membrodepartamentofinanceiro {
     public void setTelefone(BigDecimal telefone) {
         this.telefone = telefone;
     }
+
+    public String getPassword() {return password;}
+
+    public void setPassword(String password) {this.password = password;}
 
 }

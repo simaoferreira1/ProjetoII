@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registo</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .register-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+        }
+
+        .register-container img {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+
+        .register-container h1 {
+            margin-bottom: 10px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #f1c40f;
+            border: none;
+            padding: 12px;
+            margin-top: 20px;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-link {
+            margin-top: 15px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <img src="/images/Capacete.png" alt="Logo" style="width: 300px; height: auto;" >
+    <form th:action="@{/register}" method="post">
+        <input type="text" name="nome" placeholder="Nome" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="telefone" placeholder="Telefone" required>
+        <input type="text" name="endereco" placeholder="Endereço (opcional)">
+        <input type="password" name="password" placeholder="Palavra-passe" required>
+        <select name="tipo" required>
+            <option value="">Selecione o tipo</option>
+            <option value="cliente">Cliente</option>
+            <option value="especialista">Especialista</option>
+            <option value="gestor">Gestor</option>
+            <option value="membrodepartamentofinanceiro">Departamento Financeiro</option>
+        </select>
+        <button type="submit">Registar</button>
+    </form>
+    <a href="/login" class="login-link">Já tem conta? Entrar</a>
+</div>
+</body>
+</html>
+

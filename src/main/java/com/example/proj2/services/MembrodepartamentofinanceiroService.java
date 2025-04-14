@@ -40,7 +40,7 @@ public class MembrodepartamentofinanceiroService {
     }
 
     // Método para buscar um membro por ID
-    public Optional<Membrodepartamentofinanceiro> buscarMembroPorId(BigDecimal id) {
+    public Optional<Membrodepartamentofinanceiro> buscarMembroPorId(Long id) {
         return membroRepository.findById(id);
     }
 
@@ -54,7 +54,7 @@ public class MembrodepartamentofinanceiroService {
     }
 
     // Método para remover um membro por ID
-    public void removerMembro(BigDecimal id) {
+    public void removerMembro(Long id) {
         membroRepository.deleteById(id);
     }
 }

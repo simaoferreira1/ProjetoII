@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 
 @Repository
-public interface EspecialistaRepository extends JpaRepository<Especialista, BigDecimal> {
+public interface EspecialistaRepository extends JpaRepository<Especialista, Long> {
     Especialista findByEmailAndPassword(String email, String password);
     boolean existsByEmail(String email);
 }

@@ -26,7 +26,7 @@ public class EspecialistaService {
     }
 
     // Método para procurar um especialista através do seu ID
-    public Optional<Especialista> buscarEspecialistaPorId(BigDecimal id) {
+    public Optional<Especialista> buscarEspecialistaPorId(Long id) {
         return especialistaRepository.findById(id);
     }
 
@@ -41,7 +41,7 @@ public class EspecialistaService {
     }
 
     // Método para remover um especialista através do seu ID
-    public void removerEspecialista(BigDecimal id) {
+    public void removerEspecialista(Long id) {
         especialistaRepository.deleteById(id);
     }
 }

@@ -29,7 +29,7 @@ public class GestordeprojetoService {
     }
 
     // Métodos para buscar, atualizar e remover
-    public Optional<Gestordeprojeto> buscarGestorPorId(BigDecimal id) {
+    public Optional<Gestordeprojeto> buscarGestorPorId(Long id) {
         return gestordeprojetoRepository.findById(id);
     }
 
@@ -47,7 +47,7 @@ public class GestordeprojetoService {
     }
 
     // Método para remover um gestor de projeto pelo ID
-    public void removerGestor(BigDecimal id) {
+    public void removerGestor(Long id) {
         gestordeprojetoRepository.deleteById(id);
     }
 }
