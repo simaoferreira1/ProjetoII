@@ -8,4 +8,5 @@ import java.math.BigDecimal;
 
 @Repository
 public interface GestordeprojetoRepository extends JpaRepository<Gestordeprojeto, BigDecimal> {
+    Gestordeprojeto findByEmailAndPassword(String email, String password); // <- AQUI
 }

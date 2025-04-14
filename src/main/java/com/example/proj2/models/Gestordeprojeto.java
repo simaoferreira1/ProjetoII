@@ -23,6 +23,9 @@ public class Gestordeprojeto {
     @Column(name = "telefone", precision = 10)
     private BigDecimal telefone;
 
+    @Column(name = "password", length = 20)
+    private String password;
+
     public BigDecimal getId() {
         return id;
     }
@@ -54,5 +57,9 @@ public class Gestordeprojeto {
     public void setTelefone(BigDecimal telefone) {
         this.telefone = telefone;
     }
+
+    public String getPassword() {return password;}
+
+    public void setPassword(String password) {this.password = password;}
 
 }

@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.3'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.openjfx.javafxplugin' version '0.0.14'
 }
 
 group = 'com.example'
@@ -18,18 +19,34 @@ repositories {
 }
 
 dependencies {
+    // Dependências para acesso a dados via JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Dependência do PostgreSQL para ambiente de runtime
     runtimeOnly 'org.postgresql:postgresql'
+
+    // Dependências para testes
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Dependência do PostgreSQL (caso necessário em duplicidade, certifique-se de que a versão esteja consistente)
     implementation 'org.postgresql:postgresql:42.5.0'
+
+    // Dependências do JavaFX
+    implementation 'org.openjfx:javafx-controls:17'
+    implementation 'org.openjfx:javafx-fxml:17'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.postgresql:postgresql'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-
-
-
-
+javafx {
+    version = "17"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}

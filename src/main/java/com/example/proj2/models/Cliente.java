@@ -23,6 +23,9 @@ public class Cliente {
     @Column(name = "endereco", length = 100)
     private String endereco;
 
+    @Column(name = "password", length = 20)
+    private String password;
+
     public BigDecimal getId() {
         return id;
     }
@@ -62,4 +65,8 @@ public class Cliente {
     public void setEndereco(String endereco) {
         this.endereco = endereco;
     }
+
+    public String getPassword() {return password;}
+
+    public void setPassword(String password) {this.password = password;}
 }
