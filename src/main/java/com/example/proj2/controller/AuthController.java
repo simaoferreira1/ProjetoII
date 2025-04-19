@@ -4,14 +4,12 @@ import com.example.proj2.models.Gestordeprojeto;
 import com.example.proj2.models.Especialista;
 import com.example.proj2.models.Cliente;
 import com.example.proj2.models.Membrodepartamentofinanceiro;
-import com.example.proj2.models.Orcamento;
-import com.example.proj2.models.Projeto; // Adicionando o modelo Projeto
 import com.example.proj2.repository.GestordeprojetoRepository;
 import com.example.proj2.repository.EspecialistaRepository;
 import com.example.proj2.repository.ClienteRepository;
 import com.example.proj2.repository.MembrodepartamentofinanceiroRepository;
-import com.example.proj2.repository.OrcamentoRepository;
-import com.example.proj2.repository.ProjetoRepository; // Adicionando o repositório ProjetoRepository
+
+
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Controller
 public class AuthController {
@@ -37,17 +34,13 @@ public class AuthController {
     @Autowired
     private MembrodepartamentofinanceiroRepository membroFinanceiroRepo;
 
-    @Autowired
-    private OrcamentoRepository orcamentoRepo;
-
-    @Autowired
-    private ProjetoRepository projetoRepo; // Injetando o ProjetoRepository
 
     // FORMULÁRIO DE LOGIN
     @GetMapping("/login")
     public String loginForm() {
         return "login";
     }
+
 
     // PROCESSAMENTO DE LOGIN
     @PostMapping("/login")
@@ -79,6 +72,7 @@ public class AuthController {
             session.setAttribute("user", membro);
             return "membrodepartamentofinanceiro";
         }
+
 
         model.addAttribute("erro", "Credenciais inválidas");
         return "login";
@@ -143,6 +137,7 @@ public class AuthController {
                 membro.setPassword(password);
                 membroFinanceiroRepo.save(membro);
                 break;
+
         }
 
         return "redirect:/login";
@@ -166,7 +161,8 @@ public class AuthController {
 
     @GetMapping("/gestor/solicitacoesprojeto")
     public String mostrarProjetosSolicitados(Model model) {
-        return "solicitacoesprojeto";
+        // aqui podes carregar uma lista de projetos, se quiseres
+        return "solicitacoesprojeto"; // corresponde ao ficheiro solicitacoesprojeto.html
     }
 
     @GetMapping("/detalhesprojeto")
@@ -186,7 +182,7 @@ public class AuthController {
 
     @GetMapping("/projetosparaorcamento")
     public String listarProjetosParaOrcamento() {
-        return "projetosparaorcamento";
+        return "projetosparaorcamento"; // nome do ficheiro .html sem a extensão
     }
 
     @GetMapping("/detalhesprojetoorcamento")
@@ -211,31 +207,18 @@ public class AuthController {
 
     @GetMapping("/detalhesprojetoorcamentoespecialista")
     public String detalhesProjetoConcluido() {
-        return "detalhesprojetoorcamentoespecialista";
+        return "detalhesprojetoorcamentoespecialista"; // nome do HTML
     }
 
     @GetMapping("/projetosemcursoespecialista")
     public String mostrarProjetosCursoEspecialista() {
-        return "projetosemcursoespecialista";
+        return "projetosemcursoespecialista"; // nome do ficheiro sem extensão
     }
 
     @GetMapping("/detalhesprojetoemcursoespecialista")
     public String detalhesProjetoCurso() {
-        return "detalhesprojetoemcursoespecialista";
+        return "detalhesprojetoemcursoespecialista"; // sem .html
     }
 
-    @GetMapping("/membrodepartamentofinanceiro/orcamentos")
-    public String mostrarOrcamentos(Model model) {
-        List<Orcamento> orcamentos = orcamentoRepo.findAll();
-        model.addAttribute("orcamentos", orcamentos);
-        return "listarOrcamentos";
-    }
 
-    // Nova rota para listar projetos em curso no financeiro
-    @GetMapping("/membrodepartamentofinanceiro/projetosemcurso")
-    public String listarProjetosEmCurso(Model model) {
-        List<Projeto> projetosEmCurso = projetoRepo.findByEstado("Em curso");
-        model.addAttribute("projetos", projetosEmCurso);
-        return "projetosemcursoFinanceiro";
-    }
 }

@@ -60,7 +60,8 @@
         }
 
         .main-content img {
-            width: 300px;
+            width: 500px;
+            opacity: 0.5;
         }
 
         .main-content h1 {
@@ -82,10 +83,14 @@
     </style>
 </head>
 <body>
-<div class="sidebar">
-    <a href="#"><i class="fa-solid fa-user"></i><span>Gestor</span></a>
 
-    <a href="/gestor/solicitacoesprojeto">
+<div class="sidebar">
+    <a href="/gestor">
+        <i class="fa-solid fa-user"></i>
+        <span>Gestor</span>
+    </a>
+
+    <a href="/solicitacoesprojeto">
         <i class="fa-solid fa-file-circle-plus"></i>
         <span>Solicitações<br>de Projeto</span>
     </a>
@@ -105,11 +110,14 @@
         <span>Projetos<br>em espera</span>
     </a>
 
-    <a href="/logout" class="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i><br><span>Log Out</span></a>
+    <a href="/logout" class="logout">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i><br><span>Log Out</span>
+    </a>
 </div>
 
 <div class="main-content">
-    <img src="/images/Capacete.png" alt="Capacete" style="width: 800px; height: auto;" >
+    <img src="/images/Capacete.png" alt="Capacete">
 </div>
+
 </body>
 </html>

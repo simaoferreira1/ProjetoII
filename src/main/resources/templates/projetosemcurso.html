@@ -61,124 +61,127 @@
             margin-bottom: 30px;
         }
 
-        .header h2 {
-            font-size: 20px;
+        .header h1 {
+            font-size: 22px;
         }
 
         .header img {
-            width: 150px;
+            height: 50px;
         }
 
-        .project-card {
+        .projetos-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .projeto-card {
             background: white;
             border-radius: 8px;
             padding: 20px;
-            margin-bottom: 20px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .project-card img {
-            width: 80px;
-            height: 80px;
-            margin-right: 20px;
-            opacity: 0.3;
+        .projeto-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
-        .project-info {
-            flex: 1;
+        .projeto-nome {
+            font-weight: bold;
+            font-size: 18px;
         }
 
-        .project-info h3 {
-            margin-bottom: 5px;
+        .projeto-desc {
+            color: #777;
+            font-size: 14px;
         }
 
-        .project-info p {
-            margin-bottom: 10px;
-            color: #555;
+        .btns {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .project-card button {
-            background-color: #ccc;
-            border: none;
+        .btn-abrir {
             padding: 6px 12px;
+            background-color: #ddd;
+            border: none;
             border-radius: 4px;
             cursor: pointer;
+            text-decoration: none;
+            color: black;
+        }
+
+        .btn-apagar {
+            color: red;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .btn-apagar i {
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
+
 <div class="sidebar">
     <a href="/gestor">
         <i class="fa-solid fa-user"></i>
         <span>Gestor</span>
     </a>
-
-    <a href="/gestor/solicitacoesprojeto">
+    <a href="/solicitacoesprojeto">
         <i class="fa-solid fa-file-circle-plus"></i>
         <span>Solicitações<br>de Projeto</span>
     </a>
-
     <a href="/projetosemcurso">
         <i class="fa-solid fa-list-check"></i>
         <span>Projetos<br>em curso</span>
     </a>
-
     <a href="/projetosparaorcamento">
         <i class="fa-solid fa-file-invoice"></i>
         <span>Projetos<br>para orçamento</span>
     </a>
-
     <a href="/projetosemespera">
         <i class="fa-solid fa-clock"></i>
         <span>Projetos<br>em espera</span>
     </a>
-
-    <a href="/logout" class="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i><br><span>Log Out</span></a>
+    <a href="/logout" class="logout">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i><br><span>Log Out</span>
+    </a>
 </div>
 
 <div class="main-content">
     <div class="header">
-        <h2>Projetos em curso</h2>
-        <img src="/images/Capacete.png" alt="Logo Betonarte">
+        <h1>Projetos em curso</h1>
+        <img src="/images/Capacete.png" alt="Logo">
     </div>
 
-    <div class="project-card">
-        <img src="/images/image-placeholder.png" alt="Projeto">
-        <div class="project-info">
-            <h3>Projeto 1</h3>
-            <p>Muros rua nossa Senhora da agonia</p>
-            <div>
-                <a href="/detalhesprojeto" class="btn-abrir">Abrir</a>
-                <a href="#" class="btn-apagar"><i class="fa-solid fa-trash"></i>Eliminar projeto</a>
+    <div class="projetos-container">
+        <div th:each="projeto : ${projetos}" class="projeto-card">
+            <div class="projeto-info">
+                <div class="projeto-nome" th:text="${projeto.nome}">Nome do Projeto</div>
+                <div class="projeto-desc" th:text="${projeto.localizacao}">Localização</div>
             </div>
-        </div>
-    </div>
-
-    <div class="project-card">
-        <img src="/images/image-placeholder.png" alt="Projeto">
-        <div class="project-info">
-            <h3>Projeto 2</h3>
-            <p>Casa rua de monserrate</p>
-            <div>
-                <a href="/detalhesprojeto" class="btn-abrir">Abrir</a>
-                <a href="#" class="btn-apagar"><i class="fa-solid fa-trash"></i>Eliminar projeto</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="project-card">
-        <img src="/images/image-placeholder.png" alt="Projeto">
-        <div class="project-info">
-            <h3>Projeto 3</h3>
-            <p>Casa...</p>
-            <div>
-                <a href="/detalhesprojeto" class="btn-abrir">Abrir</a>
-                <a href="#" class="btn-apagar"><i class="fa-solid fa-trash"></i>Eliminar projeto</a>
+            <div class="btns">
+                <a th:href="@{/projeto/{id}(id=${projeto.id})}" class="btn-abrir">Abrir</a>
+                <form th:action="@{'/eliminarprojeto/' + ${projeto.id}}" method="post" style="margin: 0;">
+                    <button type="submit" class="btn-apagar"><i class="fa-solid fa-trash"></i>Eliminar</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
 </body>
 </html>
