@@ -2,7 +2,7 @@
 <html lang="pt" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Financeiro</title>
+    <title>Pedidos de Orçamento</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * {
@@ -51,34 +51,40 @@
 
         .main-content {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             padding: 40px;
             background-color: white;
         }
 
-        .main-content img.logo {
-            width: 300px;
-            opacity: 0.4;
-        }
-
         .main-content h1 {
-            font-size: 48px;
-            margin-top: 10px;
-            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
         }
 
-        .main-content p {
-            font-size: 18px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        .bar {
-            width: 80%;
-            height: 5px;
-            background-color: black;
-            margin: 10px 0;
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .no-orcamentos {
+            color: #666;
+            font-style: italic;
+            text-align: left;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -97,7 +103,32 @@
 </div>
 
 <div class="main-content">
-    <img src="/images/Capacete.png" alt="Capacete" class="logo" style="width: 800px; height: auto;">
+    <h1>Pedidos de Orçamento</h1>
+
+    <!-- Exibir a tabela apenas se houver orçamentos -->
+    <div th:if="${!orcamentos.isEmpty()}">
+        <table>
+            <thead>
+            <tr>
+                <th>Email do Gestor</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Data</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="orcamento : ${orcamentos}">
+                <td th:text="${orcamento.gestor?.email} ?: 'Sem gestor'"></td>
+                <td th:text="${orcamento.descricao}"></td>
+                <td th:text="${orcamento.valor}"></td>
+                <td th:text="${orcamento.data}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Exibir mensagem se não houver orçamentos -->
+    <p th:if="${orcamentos.isEmpty()}" class="no-orcamentos">Nenhum pedido de orçamento encontrado.</p>
 </div>
 </body>
 </html>

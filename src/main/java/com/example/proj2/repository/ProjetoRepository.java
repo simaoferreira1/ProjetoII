@@ -4,6 +4,8 @@ import com.example.proj2.models.Projeto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface ProjetoRepository extends JpaRepository<Projeto, BigDecimal> {
+    List<Projeto> findByEstado(String estado);
 }
