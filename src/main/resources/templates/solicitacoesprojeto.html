@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
+            display: flex;
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #fff;
-            display: flex;
+            background-color: #f4f4f4;
         }
 
         .sidebar {
@@ -46,74 +46,78 @@
 
         .content {
             flex: 1;
-            padding: 30px;
+            padding: 40px;
         }
 
-        .top-bar {
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 30px;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
+        .header h2 {
+            font-size: 22px;
         }
 
-        .logo img {
+        .header img {
             height: 50px;
-            margin-right: 10px;
         }
 
         .projetos-container {
-            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .projeto-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
         .projeto-info {
             display: flex;
-            align-items: center;
-        }
-
-        .projeto-img {
-            width: 70px;
-            height: 70px;
-            background-color: #eee;
-            border-radius: 10px;
-            margin-right: 20px;
+            flex-direction: column;
         }
 
         .projeto-nome {
             font-weight: bold;
             font-size: 18px;
+            margin-bottom: 5px;
         }
 
         .projeto-desc {
             color: #777;
+            font-size: 14px;
+        }
+
+        .btns {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
         .btn-abrir {
-            padding: 5px 10px;
+            padding: 6px 12px;
             background-color: #ddd;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #000;
         }
 
         .btn-apagar {
             color: red;
             text-decoration: none;
+            font-size: 14px;
             display: flex;
             align-items: center;
-            font-size: 14px;
         }
 
         .btn-apagar i {
@@ -128,58 +132,45 @@
         <i class="fa-solid fa-user"></i>
         <span>Gestor</span>
     </a>
-
-    <a href="/gestor/solicitacoesprojeto">
+    <a href="/solicitacoesprojeto">
         <i class="fa-solid fa-file-circle-plus"></i>
         <span>Solicitações<br>de Projeto</span>
     </a>
-
     <a href="/projetosemcurso">
         <i class="fa-solid fa-list-check"></i>
         <span>Projetos<br>em curso</span>
     </a>
-
     <a href="/projetosparaorcamento">
         <i class="fa-solid fa-file-invoice"></i>
         <span>Projetos<br>para orçamento</span>
     </a>
-
     <a href="/projetosemespera">
         <i class="fa-solid fa-clock"></i>
         <span>Projetos<br>em espera</span>
     </a>
-
-    <a href="/logout" class="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i><br><span>Log Out</span></a>
+    <a href="/logout" class="logout">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Log Out</span>
+    </a>
 </div>
 
 <div class="content">
-    <div class="top-bar">
+    <div class="header">
         <h2>Projetos solicitados</h2>
-        <div class="logo">
-            <img src="/images/Capacete.png" alt="Capacete">
-            <div>
-                <div style="font-weight:bold;">BETONARTE</div>
-                <div style="font-size:12px;">Construção Civil</div>
-            </div>
-        </div>
+        <img src="/images/Capacete.png" alt="Logo">
     </div>
 
     <div class="projetos-container">
-        <div class="projeto-card">
+        <div th:each="solicitacao : ${solicitacoes}" class="projeto-card">
             <div class="projeto-info">
-                <div class="projeto-img"></div>
-                <div>
-                    <div class="projeto-nome">Projeto 1</div>
-                    <div class="projeto-desc">Muro rua nossa Senhora da agonia</div>
-                </div>
+                <div class="projeto-nome" th:text="'Solicitação ' + ${solicitacao.id}">Solicitação 1</div>
+                <div class="projeto-desc" th:text="${solicitacao.localreuniao}">Sala 3 - Escritório</div>
             </div>
-                <div>
-                    <a href="/detalhesprojeto" class="btn-abrir">Abrir</a>
-                    <a href="#" class="btn-apagar"><i class="fa-solid fa-trash"></i>Eliminar projeto</a>
-                </div>
+            <div class="btns">
+                <a th:href="@{'/solicitacao/' + ${solicitacao.id}}" class="btn-abrir">Abrir</a>
+                <a href="#" class="btn-apagar"><i class="fa-solid fa-trash"></i>Eliminar</a>
+            </div>
         </div>
-
-        <!-- Repete para outros projetos -->
     </div>
 </div>
 

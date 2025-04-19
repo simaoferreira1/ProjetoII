@@ -4,10 +4,16 @@ import com.example.proj2.models.Gestordeprojeto;
 import com.example.proj2.models.Especialista;
 import com.example.proj2.models.Cliente;
 import com.example.proj2.models.Membrodepartamentofinanceiro;
+import com.example.proj2.models.Projeto;
+import com.example.proj2.models.Solicitacaoprojeto;
+import com.example.proj2.models.Orcamentoprojeto;
 import com.example.proj2.repository.GestordeprojetoRepository;
 import com.example.proj2.repository.EspecialistaRepository;
 import com.example.proj2.repository.ClienteRepository;
 import com.example.proj2.repository.MembrodepartamentofinanceiroRepository;
+import com.example.proj2.repository.ProjetoRepository;
+import com.example.proj2.repository.SolicitacaoprojetoRepository;
+import com.example.proj2.repository.OrcamentoprojetoRepository;
 
 
 
@@ -16,8 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
+import java.util.Optional;
+
 
 @Controller
 public class AuthController {
@@ -33,6 +42,15 @@ public class AuthController {
 
     @Autowired
     private MembrodepartamentofinanceiroRepository membroFinanceiroRepo;
+
+    @Autowired
+    private ProjetoRepository projetoRepository;
+
+    @Autowired
+    private SolicitacaoprojetoRepository solicitacaoprojetoRepository;
+
+    @Autowired
+    private OrcamentoprojetoRepository orcamentoprojetoRepository;
 
 
     // FORMULÁRIO DE LOGIN
@@ -143,6 +161,7 @@ public class AuthController {
         return "redirect:/login";
     }
 
+
     @GetMapping("/especialista")
     public String menuEspecialista() {
         return "especialista";
@@ -159,21 +178,42 @@ public class AuthController {
         return "gestordeprojeto";
     }
 
-    @GetMapping("/gestor/solicitacoesprojeto")
-    public String mostrarProjetosSolicitados(Model model) {
-        // aqui podes carregar uma lista de projetos, se quiseres
-        return "solicitacoesprojeto"; // corresponde ao ficheiro solicitacoesprojeto.html
+    // Listar solicitações
+    @GetMapping("/solicitacoesprojeto")
+    public String listarSolicitacoesProjeto(Model model) {
+        model.addAttribute("solicitacoes", solicitacaoprojetoRepository.findAll());
+        return "solicitacoesprojeto"; // Nome do ficheiro HTML
     }
 
-    @GetMapping("/detalhesprojeto")
-    public String detalhesProjeto() {
-        return "detalhesprojeto";
+    // Ver detalhes de uma solicitação
+    @GetMapping("/solicitacao/{id}")
+    public String verDetalhesSolicitacao(@PathVariable BigDecimal id, Model model) {
+        Optional<Solicitacaoprojeto> solicitacao = solicitacaoprojetoRepository.findById(id);
+        solicitacao.ifPresent(s -> model.addAttribute("solicitacao", s));
+        return "detalhessolicitacao"; // Nome do HTML de detalhes
+    }
+
+    @GetMapping("/projeto/{id}")
+    public String verDetalhesProjeto(@PathVariable BigDecimal id, Model model) {
+        Optional<Projeto> projeto = projetoRepository.findById(id);
+        if (projeto.isPresent()) {
+            model.addAttribute("projeto", projeto.get());
+            return "detalhesprojeto"; // deve coincidir com o nome do ficheiro HTML (sem .html)
+        }
+        return "redirect:/projetosemcurso"; // caso não encontre
     }
 
     @GetMapping("/projetosemcurso")
-    public String projetosEmCurso() {
+    public String listarProjetosEmCurso(Model model) {
+        List<Projeto> projetos = projetoRepository.findAll()
+                .stream()
+                .filter(p -> "Em andamento".equalsIgnoreCase(p.getEstado()))
+                .collect(Collectors.toList());
+
+        model.addAttribute("projetos", projetos);
         return "projetosemcurso";
     }
+
 
     @GetMapping("/detalhesprojetoemcurso")
     public String detalhesProjetoEmCurso() {
@@ -181,18 +221,32 @@ public class AuthController {
     }
 
     @GetMapping("/projetosparaorcamento")
-    public String listarProjetosParaOrcamento() {
-        return "projetosparaorcamento"; // nome do ficheiro .html sem a extensão
+    public String listarProjetosParaOrcamento(Model model) {
+        List<Orcamentoprojeto> orcamentos = orcamentoprojetoRepository.findAll();
+        model.addAttribute("orcamentos", orcamentos);
+        return "projetosparaorcamento"; // nome do ficheiro .html
     }
 
-    @GetMapping("/detalhesprojetoorcamento")
-    public String detalhesProjetoOrcamento() {
-        return "detalhesprojetoorcamento";
+
+    @GetMapping("/detalhesprojetoorcamento/{id}")
+    public String detalhesProjetoOrcamento(@PathVariable BigDecimal id, Model model) {
+        Optional<Orcamentoprojeto> orcamento = orcamentoprojetoRepository.findById(id);
+        if (orcamento.isPresent()) {
+            model.addAttribute("orcamento", orcamento.get());
+            return "detalhesprojetoorcamento";
+        }
+        return "redirect:/projetosparaorcamento";
     }
 
     @GetMapping("/projetosemespera")
-    public String listarProjetosEmEspera() {
-        return "projetosemespera";
+    public String listarProjetosEmEspera(Model model) {
+        List<Projeto> projetosEmEspera = projetoRepository.findAll()
+                .stream()
+                .filter(p -> "Em espera".equalsIgnoreCase(p.getEstado()))
+                .collect(Collectors.toList());
+
+        model.addAttribute("projetos", projetosEmEspera);
+        return "projetosemespera"; // ficheiro .html que mostra os projetos em espera
     }
 
     @GetMapping("/detalhesprojetoemespera")
@@ -220,5 +274,10 @@ public class AuthController {
         return "detalhesprojetoemcursoespecialista"; // sem .html
     }
 
+    @PostMapping("/eliminarprojeto/{id}")
+    public String eliminarProjeto(@PathVariable BigDecimal id) {
+        projetoRepository.deleteById(id);
+        return "redirect:/projetosemcurso"; // ou a página que estás a usar
+    }
 
 }
