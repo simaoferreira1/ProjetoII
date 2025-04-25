@@ -9,6 +9,12 @@ import javafx.stage.Stage;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import com.example.proj2.models.Gestordeprojeto;
+import com.example.proj2.views.GestorView;
+import com.example.proj2.models.Especialista;
+import com.example.proj2.views.EspecialistaView;
+
+
 
 public class Proj2Application extends Application {
 
@@ -26,7 +32,7 @@ public class Proj2Application extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        new views.LoginView().start(primaryStage); // 👈 mostrar tela de login
+        new views.LoginView().start(primaryStage);
     }
 
     @Override
