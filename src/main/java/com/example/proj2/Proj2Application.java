@@ -13,9 +13,16 @@ import com.example.proj2.models.Gestordeprojeto;
 import com.example.proj2.views.GestorView;
 import com.example.proj2.models.Especialista;
 import com.example.proj2.views.EspecialistaView;
+import com.example.proj2.views.SolicitacoesView;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.example.proj2.views.ProjetosEmCursoView;
+import com.example.proj2.views.ProjetosOrcamentoView;
+import com.example.proj2.views.ProjetosEmEsperaView;
 
 
 
+
+@SpringBootApplication(scanBasePackages = "com.example.proj2")
 public class Proj2Application extends Application {
 
     private ConfigurableApplicationContext context;
@@ -32,8 +39,10 @@ public class Proj2Application extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        new views.LoginView().start(primaryStage);
+        new ProjetosEmEsperaView(primaryStage).show();
     }
+
+
 
     @Override
     public void stop() {

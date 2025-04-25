@@ -24,7 +24,7 @@ public class Orcamentoprojeto {
     @Column(name = "estado", length = 20)
     private String estado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idprojeto") // esta é a foreign key para a tabela projeto
     private Projeto projeto;
 
