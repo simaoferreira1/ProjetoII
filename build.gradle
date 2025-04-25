@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
     id 'org.springframework.boot' version '3.4.3'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.openjfx.javafxplugin' version '0.0.14'
@@ -10,7 +11,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(23)
+        languageVersion = JavaLanguageVersion.of(17) // Ajustado para compatibilidade com JavaFX 17
     }
 }
 
@@ -19,27 +20,17 @@ repositories {
 }
 
 dependencies {
-    // Dependências para acesso a dados via JPA
+    // Aqui dentro colocas as dependências
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-    // Dependência do PostgreSQL para ambiente de runtime
     runtimeOnly 'org.postgresql:postgresql'
 
-    // Dependências para testes
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springframework.boot:spring-boot-starter-web'  // <-- Esta linha aqui
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
-    // Dependência do PostgreSQL (caso necessário em duplicidade, certifique-se de que a versão esteja consistente)
-    implementation 'org.postgresql:postgresql:42.5.0'
-
-    // Dependências do JavaFX
     implementation 'org.openjfx:javafx-controls:17'
     implementation 'org.openjfx:javafx-fxml:17'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
@@ -48,5 +39,9 @@ tasks.named('test') {
 
 javafx {
     version = "17"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
+application {
+    mainClass = 'com.example.proj2.Proj2Application' // ou o caminho da tua Main de JavaFX
 }
