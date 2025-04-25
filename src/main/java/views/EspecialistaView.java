@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class EspecialistaView {
@@ -23,9 +22,9 @@ public class EspecialistaView {
     }
 
     public void show() {
-        BorderPane root = new BorderPane();
+        BorderPane layout = new BorderPane();
 
-        // ==== MENU LATERAL ====
+        // === MENU LATERAL ===
         VBox menu = new VBox(15);
         menu.setStyle("-fx-background-color: #f1c40f;");
         menu.setPadding(new Insets(20));
@@ -33,39 +32,36 @@ public class EspecialistaView {
         menu.setAlignment(Pos.TOP_CENTER);
 
         Label nome = new Label("👤 Especialista");
-        nome.setFont(new Font(16));
+        nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        // Estilo comum para botões
         String estiloBtn = "-fx-background-color: white; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-pref-width: 180px; -fx-pref-height: 80px;";
 
-        Button btnProjetosOrcamento = new Button("💰 Projetos \npara orçamento");
-        Button btnProjetosCurso = new Button("🗂 Projetos \nem curso");
+        Button btnProjetosCurso = new Button("📂 Projetos\nem curso");
+        btnProjetosCurso.setStyle(estiloBtn);
+        btnProjetosCurso.setOnAction(e -> new ProjetosCursoEspecialistaView(stage).show());
+
+        Button btnProjetosOrcamento = new Button("💰 Projetos\npara orçamento");
+        btnProjetosOrcamento.setStyle(estiloBtn);
+        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage).show());
+
         Button btnLogout = new Button("↩ Log Out");
+        btnLogout.setStyle(estiloBtn);
+        btnLogout.setOnAction(e -> stage.close());
 
-        // Aplica o mesmo estilo a todos os botões
-        for (Button btn : new Button[]{btnProjetosOrcamento, btnProjetosCurso, btnLogout}) {
-            btn.setStyle(estiloBtn);
-        }
+        menu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento, btnLogout);
+        layout.setLeft(menu);
 
-        menu.getChildren().addAll(nome, btnProjetosOrcamento, btnProjetosCurso, btnLogout);
+        // === CONTEÚDO CENTRAL COM IMAGEM DE FUNDO ===
+        StackPane centerPane = new StackPane();
+        ImageView backgroundImage = new ImageView(new Image(getClass().getResource("/images/Capacete.png").toExternalForm()));
+        backgroundImage.setPreserveRatio(true);
+        backgroundImage.setFitWidth(450); // ajustável
+        backgroundImage.setOpacity(0.2); // transparência
+        centerPane.getChildren().add(backgroundImage);
+        centerPane.setAlignment(Pos.CENTER);
+        layout.setCenter(centerPane);
 
-        // ==== CONTEÚDO CENTRAL ====
-        VBox center = new VBox(10);
-        center.setAlignment(Pos.CENTER);
-
-        // Logo
-        ImageView imageView = new ImageView(new Image(getClass().getResource("/images/Capacete.png").toExternalForm()));
-        imageView.setFitHeight(400); // imagem maior
-        imageView.setPreserveRatio(true);
-        imageView.setOpacity(0.3); // opacidade reduzida
-
-        center.getChildren().add(imageView);
-
-        // Adiciona ao layout principal
-        root.setLeft(menu);
-        root.setCenter(center);
-
-        Scene scene = new Scene(root, 900, 600);
+        Scene scene = new Scene(layout, 900, 600);
         stage.setScene(scene);
         stage.setTitle("Painel do Especialista");
         stage.show();

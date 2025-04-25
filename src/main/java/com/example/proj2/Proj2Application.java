@@ -39,9 +39,10 @@ public class Proj2Application extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        new ProjetosEmEsperaView(primaryStage).show();
+        Especialista especialistaFalso = new Especialista();
+        especialistaFalso.setNome("Especialista Exemplo"); // ou puxa da base de dados se quiseres
+        new EspecialistaView(primaryStage, especialistaFalso).show();
     }
-
 
 
     @Override
