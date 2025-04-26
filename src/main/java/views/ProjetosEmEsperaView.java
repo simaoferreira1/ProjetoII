@@ -6,9 +6,7 @@ import com.example.proj2.services.ProjetoService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -25,62 +23,92 @@ public class ProjetosEmEsperaView {
     }
 
     public void show() {
-        BorderPane layout = new BorderPane();
+        BorderPane root = new BorderPane();
+        root.setStyle("-fx-background-color: white;");
 
-        // === MENU LATERAL ===
+        // === MENU LATERAL COM STACKPANE PARA OCUPAR ALTURA ===
         VBox menu = new VBox(15);
         menu.setStyle("-fx-background-color: #f1c40f;");
         menu.setPadding(new Insets(20));
         menu.setPrefWidth(200);
         menu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("\uD83D\uDC64 Gestor");
+        Label nome = new Label("👤 Gestor");
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        String estiloBtn = "-fx-background-color: white; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-pref-width: 180px; -fx-pref-height: 80px;";
+        String estiloBtn = "-fx-background-color: white; -fx-text-fill: #333333; -fx-font-size: 13px;" +
+                "-fx-pref-width: 180px; -fx-pref-height: 60px; -fx-wrap-text: true;";
 
-        Button btnSolicitacoes = new Button("\uD83D\uDCCB Solicitações\nde Projeto");
-        Button btnProjetosCurso = new Button("\uD83D\uDCC2 Projetos\nem curso");
-        Button btnProjetosOrcamento = new Button("\uD83D\uDCB0 Projetos\npara orçamento");
-        Button btnProjetosEspera = new Button("\u23F0 Projetos\nem espera");
-        Button btnLogout = new Button("\u21A9 Log Out");
+        Button btnSolicitacoes = new Button("📋 Solicitações de Projeto");
+        Button btnProjetosCurso = new Button("🗂 Projetos em curso");
+        Button btnProjetosOrcamento = new Button("💰 Projetos para orçamento");
+        Button btnProjetosEspera = new Button("🕒 Projetos em espera");
+        Button btnLogout = new Button("↩ Log Out");
 
-        for (Button btn : new Button[]{btnSolicitacoes, btnProjetosCurso, btnProjetosOrcamento, btnProjetosEspera, btnLogout}) {
+        for (Button btn : List.of(btnSolicitacoes, btnProjetosCurso, btnProjetosOrcamento, btnProjetosEspera, btnLogout)) {
             btn.setStyle(estiloBtn);
+            btn.setAlignment(Pos.CENTER);
         }
 
+        btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage).show());
+        btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage).show());
+        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoView(stage).show());
+        btnProjetosEspera.setOnAction(e -> new ProjetosEmEsperaView(stage).show());
+        btnLogout.setOnAction(e -> stage.close());
+
         menu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosOrcamento, btnProjetosEspera, btnLogout);
-        layout.setLeft(menu);
 
-        // === CONTEÚDO CENTRAL ===
-        VBox conteudo = new VBox(20);
-        conteudo.setPadding(new Insets(20));
+        StackPane menuContainer = new StackPane(menu);
+        root.setLeft(menuContainer);
 
-        // Topo com logo alinhado à direita
+        // === TOPO COM LOGO ===
         HBox topo = new HBox();
-        topo.setPadding(new Insets(0, 20, 0, 0));
         topo.setAlignment(Pos.TOP_RIGHT);
+        topo.setPadding(new Insets(10));
+
         ImageView logo = new ImageView(new Image(getClass().getResource("/images/Capacete.png").toExternalForm()));
         logo.setFitHeight(80);
         logo.setPreserveRatio(true);
         topo.getChildren().add(logo);
-        conteudo.getChildren().add(topo);
+
+        root.setTop(topo);
+
+        // === CONTEÚDO CENTRAL ===
+        VBox content = new VBox(20);
+        content.setPadding(new Insets(20));
 
         Label titulo = new Label("Projetos em espera");
         titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
-        conteudo.getChildren().add(titulo);
+        content.getChildren().add(titulo);
 
+        VBox lista = new VBox(10);
         ProjetoService service = SpringContext.getBean(ProjetoService.class);
+        atualizarListaProjetos(lista, service);
+
+        ScrollPane scroll = new ScrollPane(lista);
+        scroll.setFitToWidth(true);
+        content.getChildren().add(scroll);
+
+        root.setCenter(content);
+
+        Scene scene = new Scene(root, 900, 600);
+        stage.setScene(scene);
+        stage.setTitle("Projetos em Espera");
+        stage.show();
+    }
+
+    private void atualizarListaProjetos(VBox lista, ProjetoService service) {
+        lista.getChildren().clear();
+
         List<Projeto> projetos = service.listarProjetos()
                 .stream()
                 .filter(p -> "em espera".equalsIgnoreCase(p.getEstado()))
                 .toList();
 
-        VBox lista = new VBox(10);
         for (Projeto projeto : projetos) {
             HBox card = new HBox(15);
             card.setPadding(new Insets(10));
-            card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5px; -fx-background-color: white;");
+            card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5px; -fx-background-color: #fff;");
             card.setAlignment(Pos.CENTER_LEFT);
 
             VBox info = new VBox(5);
@@ -90,27 +118,44 @@ public class ProjetosEmEsperaView {
             info.getChildren().addAll(nomeProjeto, descricao);
 
             Button btnAbrir = new Button("Abrir");
-            Button btnEliminar = new Button("\uD83D\uDDD1 Eliminar projeto");
-            btnEliminar.setStyle("-fx-text-fill: red;");
+            btnAbrir.setOnAction(e -> new DetalhesProjetosEmEsperaView(projeto).show());
+
+            Button btnEliminar = new Button("🗑 Eliminar projeto");
+            btnEliminar.setStyle("-fx-text-fill: red; -fx-background-color: transparent;");
+            btnEliminar.setOnAction(e -> {
+                Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmacao.setTitle("Confirmação");
+                confirmacao.setHeaderText(null);
+                confirmacao.setContentText("Tem a certeza que deseja eliminar?");
+                confirmacao.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        try {
+                            service.removerProjeto(projeto.getId());
+                            mostrarAlerta("Sucesso", "Projeto eliminado com sucesso.", Alert.AlertType.INFORMATION);
+                            atualizarListaProjetos(lista, service);
+                        } catch (Exception ex) {
+                            mostrarAlerta("Erro", "Erro ao eliminar: " + ex.getMessage(), Alert.AlertType.ERROR);
+                        }
+                    }
+                });
+            });
 
             HBox botoes = new HBox(10, btnAbrir, btnEliminar);
             botoes.setAlignment(Pos.CENTER_RIGHT);
 
-            Region espaco = new Region();
-            HBox.setHgrow(espaco, Priority.ALWAYS);
+            Region espacador = new Region();
+            HBox.setHgrow(espacador, Priority.ALWAYS);
 
-            card.getChildren().addAll(info, espaco, botoes);
+            card.getChildren().addAll(info, espacador, botoes);
             lista.getChildren().add(card);
         }
+    }
 
-        ScrollPane scroll = new ScrollPane(lista);
-        scroll.setFitToWidth(true);
-        conteudo.getChildren().add(scroll);
-        layout.setCenter(conteudo);
-
-        Scene scene = new Scene(layout, 900, 600);
-        stage.setScene(scene);
-        stage.setTitle("Projetos em Espera");
-        stage.show();
+    private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType tipo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensagem);
+        alerta.showAndWait();
     }
 }

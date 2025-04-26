@@ -21,7 +21,7 @@ public class SolicitacaoprojetoService {
         this.solicitacaoprojetoRepository = solicitacaoprojetoRepository;
     }
 
-    // Método para salvar uma nova solicitação de projeto com regras de negócio
+    // Método para salvar uma nova solicitação de projeto
     public Solicitacaoprojeto salvarSolicitacaoprojeto(Solicitacaoprojeto solicitacao) {
         if (solicitacao.getDatasolicitacao() == null) {
             throw new IllegalArgumentException("A data da solicitação é obrigatória.");
@@ -53,12 +53,11 @@ public class SolicitacaoprojetoService {
         if (solicitacao.getId() == null) {
             throw new IllegalArgumentException("O ID da solicitação é obrigatório para atualização.");
         }
-        // Outras validações podem ser aplicadas se necessário
         return solicitacaoprojetoRepository.save(solicitacao);
     }
 
-    // Método para remover uma solicitação por ID
-    public void removerSolicitacao(BigDecimal id) {
+    // Método para eliminar uma solicitação por ID
+    public void eliminarSolicitacao(BigDecimal id) {
         solicitacaoprojetoRepository.deleteById(id);
     }
 }

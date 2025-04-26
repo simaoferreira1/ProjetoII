@@ -18,6 +18,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.example.proj2.views.ProjetosEmCursoView;
 import com.example.proj2.views.ProjetosOrcamentoView;
 import com.example.proj2.views.ProjetosEmEsperaView;
+import com.example.proj2.models.Membrodepartamentofinanceiro;
+import com.example.proj2.views.FinanceiroView;
+import com.example.proj2.views.ProjetosEmCursoFinanceiroView;
+
+
 
 
 
@@ -39,11 +44,11 @@ public class Proj2Application extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Especialista especialistaFalso = new Especialista();
-        especialistaFalso.setNome("Especialista Exemplo"); // ou puxa da base de dados se quiseres
-        new EspecialistaView(primaryStage, especialistaFalso).show();
-    }
+        Gestordeprojeto gestorFalso = new Gestordeprojeto();
+        gestorFalso.setNome("Nome do Gestor"); // Podes colocar o nome que quiseres para aparecer na tela
 
+        new GestorView(primaryStage, gestorFalso).show();
+    }
 
     @Override
     public void stop() {
