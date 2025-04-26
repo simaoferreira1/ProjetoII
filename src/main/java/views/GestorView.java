@@ -30,29 +30,32 @@ public class GestorView {
         menu.setPrefWidth(200);
         menu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("\uD83D\uDC64 Gestor");
+        Label nome = new Label("👤 Gestor");
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        String estiloBtn = "-fx-background-color: white; " +
+        String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
                 "-fx-font-size: 14px; " +
+                "-fx-font-weight: bold; " +
                 "-fx-pref-width: 160px; " +
                 "-fx-pref-height: 60px; " +
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-border-color: #cccccc; " +
+                "-fx-border-width: 1px; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2); " +
                 "-fx-alignment: center;";
 
-        Button btnSolicitacoes = new Button("\uD83D\uDCCB Solicita\u00e7\u00f5es\n de Projeto");
-        Button btnProjetosCurso = new Button("\uD83D\uDCC2 Projetos\nem curso");
-        Button btnProjetosOrcamento = new Button("\uD83D\uDCB0 Projetos\npara or\u00e7amento");
-        Button btnProjetosEspera = new Button("\uD83D\uDD52 Projetos\nem espera");
+        String estiloHover = "-fx-background-color: #e0e0e0; " +
+                "-fx-scale-x: 1.02; " +
+                "-fx-scale-y: 1.02;";
 
-        for (Button btn : new Button[]{btnSolicitacoes, btnProjetosCurso, btnProjetosOrcamento, btnProjetosEspera}) {
-            btn.setStyle(estiloBtn);
-        }
+        Button btnSolicitacoes = criarBotao("📋 Solicitações\n de Projeto", estiloBtn, estiloHover);
+        Button btnProjetosCurso = criarBotao("📂 Projetos\nem curso", estiloBtn, estiloHover);
+        Button btnProjetosOrcamento = criarBotao("💰 Projetos\npara orçamento", estiloBtn, estiloHover);
+        Button btnProjetosEspera = criarBotao("🕒 Projetos\nem espera", estiloBtn, estiloHover);
+        Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
-        Button btnLogout = new Button("\u21A9 Sair");
-        btnLogout.setStyle(estiloBtn);
-
-        // Navegação dos botões
         btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage).show());
         btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage).show());
         btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoView(stage).show());
@@ -66,7 +69,6 @@ public class GestorView {
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
 
         menu.getChildren().addAll(conteudoMenu, espacoInferior, btnLogout);
-
         layout.setLeft(menu);
 
         // ==== LOGO CENTRAL ====
@@ -80,12 +82,20 @@ public class GestorView {
         logo.setOpacity(0.3);
 
         center.getChildren().add(logo);
-
         layout.setCenter(center);
 
         Scene scene = new Scene(layout, 900, 600);
         stage.setScene(scene);
         stage.setTitle("Painel do Gestor");
         stage.show();
+    }
+
+    private Button criarBotao(String texto, String estiloBase, String estiloHover) {
+        Button button = new Button(texto);
+        button.setWrapText(true);
+        button.setStyle(estiloBase);
+        button.setOnMouseEntered(e -> button.setStyle(estiloBase + estiloHover));
+        button.setOnMouseExited(e -> button.setStyle(estiloBase));
+        return button;
     }
 }

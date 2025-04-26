@@ -6,11 +6,12 @@ import com.example.proj2.models.Membrodepartamentofinanceiro;
 import com.example.proj2.services.AuthService;
 import com.example.proj2.views.GestorView;
 import com.example.proj2.views.EspecialistaView;
-import com.example.proj2.views.FinanceiroView;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.application.Platform;
+import com.example.proj2.views.FinanceiroView;
+
 
 
 

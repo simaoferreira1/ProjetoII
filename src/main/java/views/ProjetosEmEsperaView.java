@@ -36,30 +36,33 @@ public class ProjetosEmEsperaView {
         VBox conteudoMenu = new VBox(20);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("\uD83D\uDC64 Gestor");
+        Label nome = new Label("👤 Gestor");
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        String estiloBtn = "-fx-background-color: white; " +
+        String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
                 "-fx-font-size: 14px; " +
+                "-fx-font-weight: bold; " +
                 "-fx-pref-width: 160px; " +
                 "-fx-pref-height: 60px; " +
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-border-color: #cccccc; " +
+                "-fx-border-width: 1px; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2); " +
                 "-fx-alignment: center;";
 
-        Button btnSolicitacoes = new Button("\uD83D\uDCCB Solicita\u00e7\u00f5es\n de Projeto");
-        Button btnProjetosCurso = new Button("\uD83D\uDCC2 Projetos\nem curso");
-        Button btnProjetosOrcamento = new Button("\uD83D\uDCB0 Projetos\npara or\u00e7amento");
-        Button btnProjetosEspera = new Button("\uD83D\uDD52 Projetos\nem espera");
+        String estiloHover = "-fx-background-color: #e0e0e0; " +
+                "-fx-scale-x: 1.02; " +
+                "-fx-scale-y: 1.02;";
 
-        for (Button btn : List.of(btnSolicitacoes, btnProjetosCurso, btnProjetosOrcamento, btnProjetosEspera)) {
-            btn.setStyle(estiloBtn);
-        }
+        Button btnSolicitacoes = criarBotao("📋 Solicitações\n de Projeto", estiloBtn, estiloHover);
+        Button btnProjetosCurso = criarBotao("📂 Projetos\nem curso", estiloBtn, estiloHover);
+        Button btnProjetosOrcamento = criarBotao("💰 Projetos\npara orçamento", estiloBtn, estiloHover);
+        Button btnProjetosEspera = criarBotao("🕒 Projetos\nem espera", estiloBtn, estiloHover);
+        Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
         conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosOrcamento, btnProjetosEspera);
-
-        Button btnLogout = new Button("\u21A9 Sair");
-        btnLogout.setStyle(estiloBtn);
-        btnLogout.setOnAction(e -> stage.close());
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -70,10 +73,11 @@ public class ProjetosEmEsperaView {
         btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage).show());
         btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoView(stage).show());
         btnProjetosEspera.setOnAction(e -> new ProjetosEmEsperaView(stage).show());
+        btnLogout.setOnAction(e -> stage.close());
 
         layout.setLeft(menu);
 
-        // === CONTEUDO CENTRAL ===
+        // === CONTEÚDO CENTRAL ===
         VBox conteudo = new VBox(20);
         conteudo.setPadding(new Insets(20));
 
@@ -90,7 +94,7 @@ public class ProjetosEmEsperaView {
         for (Projeto projeto : projetos) {
             HBox card = new HBox(15);
             card.setPadding(new Insets(10));
-            card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5px; -fx-background-color: white;");
+            card.setStyle("-fx-background-color: white;"); // Sem borda cinzenta
             card.setAlignment(Pos.CENTER_LEFT);
 
             VBox info = new VBox(5);
@@ -100,11 +104,10 @@ public class ProjetosEmEsperaView {
 
             info.getChildren().addAll(nomeProjeto, descricao);
 
-            Button btnAbrir = new Button("Abrir");
+            Button btnAbrir = criarBotaoAcao("Abrir", false);
             btnAbrir.setOnAction(e -> new DetalhesProjetosEmEsperaView(projeto).show());
 
-            Button btnEliminar = new Button("\uD83D\uDDD1 Eliminar projeto");
-            btnEliminar.setStyle("-fx-text-fill: red;");
+            Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
             btnEliminar.setOnAction(e -> eliminarProjeto(projeto));
 
             HBox botoes = new HBox(10, btnAbrir, btnEliminar);
@@ -130,36 +133,47 @@ public class ProjetosEmEsperaView {
 
     private void eliminarProjeto(Projeto projeto) {
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacao.setTitle("Confirma\u00e7\u00e3o");
+        confirmacao.setTitle("Confirmação");
         confirmacao.setHeaderText("Tem certeza que deseja eliminar este projeto?");
-        confirmacao.setContentText("Esta a\u00e7\u00e3o \u00e9 irrevers\u00edvel.");
+        confirmacao.setContentText("Esta ação é irreversível.");
 
         confirmacao.showAndWait().ifPresent(resposta -> {
             if (resposta == ButtonType.OK) {
                 ProjetoService service = SpringContext.getBean(ProjetoService.class);
                 service.removerProjeto(projeto.getId());
-
-                Stage sucessoStage = new Stage();
-                VBox sucessoLayout = new VBox(20);
-                sucessoLayout.setAlignment(Pos.CENTER);
-                sucessoLayout.setStyle("-fx-background-color: white; -fx-padding: 20px;");
-
-                ImageView sucessoImg = new ImageView(new Image(getClass().getResource("/images/sucesso.png").toExternalForm()));
-                sucessoImg.setFitHeight(100);
-                sucessoImg.setPreserveRatio(true);
-
-                Label sucessoLabel = new Label("Projeto eliminado com sucesso!");
-                sucessoLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-                sucessoLayout.getChildren().addAll(sucessoImg, sucessoLabel);
-
-                Scene sucessoScene = new Scene(sucessoLayout, 300, 200);
-                sucessoStage.setScene(sucessoScene);
-                sucessoStage.setTitle("Sucesso");
-                sucessoStage.show();
-
-                show(); // Atualiza a tela
+                show(); // Atualiza
             }
         });
+    }
+
+    private Button criarBotao(String texto, String estiloBase, String estiloHover) {
+        Button button = new Button(texto);
+        button.setWrapText(true);
+        button.setStyle(estiloBase);
+        button.setOnMouseEntered(e -> button.setStyle(estiloBase + estiloHover));
+        button.setOnMouseExited(e -> button.setStyle(estiloBase));
+        return button;
+    }
+
+    private Button criarBotaoAcao(String texto, boolean vermelho) {
+        String estilo = "-fx-background-color: #ffffff; " +
+                "-fx-text-fill: " + (vermelho ? "red" : "#333333") + "; " +
+                "-fx-font-size: 12px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-padding: 6px 12px; " +
+                "-fx-background-radius: 8px; " +
+                "-fx-border-radius: 8px; " +
+                "-fx-border-color: " + (vermelho ? "red" : "#cccccc") + "; " +
+                "-fx-border-width: 1px; " +
+                "-fx-cursor: hand;";
+        Button button = new Button(texto);
+        button.setStyle(estilo);
+
+        button.setOnMouseEntered(e -> button.setStyle(estilo +
+                "-fx-background-color: " + (vermelho ? "#ffcccc" : "#e0e0e0") + "; " +
+                "-fx-scale-x: 1.05; " +
+                "-fx-scale-y: 1.05;"));
+        button.setOnMouseExited(e -> button.setStyle(estilo));
+        return button;
     }
 }

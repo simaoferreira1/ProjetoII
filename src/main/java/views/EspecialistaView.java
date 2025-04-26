@@ -38,26 +38,35 @@ public class EspecialistaView {
         Label nome = new Label("👤 Especialista");
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        String estiloBtn = "-fx-background-color: white; " +
+        // Estilos de Botões
+        String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
                 "-fx-font-size: 14px; " +
+                "-fx-font-weight: bold; " +
                 "-fx-pref-width: 160px; " +
                 "-fx-pref-height: 60px; " +
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-border-color: #cccccc; " +
+                "-fx-border-width: 1px; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2); " +
                 "-fx-alignment: center;";
 
-        Button btnProjetosCurso = new Button("📂 Projetos\nem curso");
-        btnProjetosCurso.setStyle(estiloBtn);
+        String estiloHover = "-fx-background-color: #e0e0e0; " +
+                "-fx-scale-x: 1.02; " +
+                "-fx-scale-y: 1.02;";
+
+        // Botões
+        Button btnProjetosCurso = criarBotao("📂 Projetos\nem curso", estiloBtn, estiloHover);
         btnProjetosCurso.setOnAction(e -> new ProjetosCursoEspecialistaView(stage).show());
 
-        Button btnProjetosOrcamento = new Button("💰 Projetos\npara orçamento");
-        btnProjetosOrcamento.setStyle(estiloBtn);
+        Button btnProjetosOrcamento = criarBotao("💰 Projetos\npara orçamento", estiloBtn, estiloHover);
         btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage).show());
 
-        conteudoMenu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento);
-
-        Button btnLogout = new Button("↩ Sair");
-        btnLogout.setStyle(estiloBtn);
+        Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
         btnLogout.setOnAction(e -> stage.close());
+
+        conteudoMenu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -79,5 +88,14 @@ public class EspecialistaView {
         stage.setScene(scene);
         stage.setTitle("Painel do Especialista");
         stage.show();
+    }
+
+    private Button criarBotao(String texto, String estiloBase, String estiloHover) {
+        Button button = new Button(texto);
+        button.setWrapText(true);
+        button.setStyle(estiloBase);
+        button.setOnMouseEntered(e -> button.setStyle(estiloBase + estiloHover));
+        button.setOnMouseExited(e -> button.setStyle(estiloBase));
+        return button;
     }
 }

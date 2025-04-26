@@ -15,11 +15,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
-public class LoginView {
+public class RegistarView {
 
     private Stage stage;
 
-    public LoginView(Stage stage) {
+    public RegistarView(Stage stage) {
         this.stage = stage;
     }
 
@@ -32,12 +32,15 @@ public class LoginView {
         // Logo
         Image logoImage = new Image(getClass().getResource("/images/Capacete.png").toExternalForm());
         ImageView logo = new ImageView(logoImage);
-        logo.setFitWidth(150); // Ajusta o tamanho conforme queiras
+        logo.setFitHeight(100);
         logo.setPreserveRatio(true);
-
 
         Region separator = new Region();
         separator.setPrefHeight(10);
+
+        TextField nameField = new TextField();
+        nameField.setPromptText("Nome");
+        nameField.setMaxWidth(250);
 
         TextField emailField = new TextField();
         emailField.setPromptText("E-mail");
@@ -47,27 +50,33 @@ public class LoginView {
         passwordField.setPromptText("Palavra-passe");
         passwordField.setMaxWidth(250);
 
-        Button loginButton = new Button("Entrar");
-        loginButton.setPrefWidth(250);
-        loginButton.setStyle("-fx-background-color: #f5c242; -fx-text-fill: white; -fx-font-weight: bold;");
+        Button registerButton = new Button("Registar");
+        registerButton.setPrefWidth(250);
+        registerButton.setStyle("-fx-background-color: #f5c242; -fx-text-fill: white; -fx-font-weight: bold;");
 
-        HBox registerBox = new HBox(5);
-        registerBox.setAlignment(Pos.CENTER);
-        Label noAccount = new Label("Não tem uma conta?");
-        Hyperlink registerLink = new Hyperlink("Registar");
-        registerLink.setStyle("-fx-text-fill: #f5c242; -fx-font-weight: bold;");
-        registerLink.setOnAction(e -> {
-            new com.example.proj2.views.RegistarView(stage).show(); // Abrir a página de registar
+        HBox loginBox = new HBox(5);
+        loginBox.setAlignment(Pos.CENTER);
+        Label hasAccount = new Label("Já tem uma conta?");
+        Hyperlink loginLink = new Hyperlink("Entrar");
+        loginLink.setStyle("-fx-text-fill: #f5c242; -fx-font-weight: bold;");
+
+        loginBox.getChildren().addAll(hasAccount, loginLink);
+
+        // Ir para página de login quando clicar no link
+        loginLink.setOnAction(e -> {
+            new com.example.proj2.views.LoginView(stage).show();
         });
 
+        // TODO: Aqui vais depois pôr a lógica de registar no botão
+        registerButton.setOnAction(e -> {
+            // Exemplo: guardar dados no banco de dados
+        });
 
-        registerBox.getChildren().addAll(noAccount, registerLink);
+        root.getChildren().addAll(logo, separator, nameField, emailField, passwordField, registerButton, loginBox);
 
-        root.getChildren().addAll(logo, separator, emailField, passwordField, loginButton, registerBox);
-
-        Scene scene = new Scene(root, 400, 500);
+        Scene scene = new Scene(root, 400, 550);
         stage.setScene(scene);
-        stage.setTitle("Login - Betonarte");
+        stage.setTitle("Registar - Betonarte");
         stage.show();
     }
 }

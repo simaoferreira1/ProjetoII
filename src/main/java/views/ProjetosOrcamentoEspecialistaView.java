@@ -33,42 +33,45 @@ public class ProjetosOrcamentoEspecialistaView {
         menu.setPrefWidth(200);
         menu.setAlignment(Pos.TOP_CENTER);
 
-// Layout interno do menu (para separar os itens de cima e o botão sair em baixo)
         VBox conteudoMenu = new VBox(20);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
         Label nome = new Label("👤 Especialista");
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        String estiloBtn = "-fx-background-color: white; " +
+        String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
                 "-fx-font-size: 14px; " +
+                "-fx-font-weight: bold; " +
                 "-fx-pref-width: 160px; " +
                 "-fx-pref-height: 60px; " +
+                "-fx-background-radius: 10px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-border-color: #cccccc; " +
+                "-fx-border-width: 1px; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2); " +
                 "-fx-alignment: center;";
 
-        Button btnProjetosCurso = new Button("🗂 Projetos\nem curso");
-        btnProjetosCurso.setStyle(estiloBtn);
+        String estiloHover = "-fx-background-color: #e0e0e0; " +
+                "-fx-scale-x: 1.02; " +
+                "-fx-scale-y: 1.02;";
+
+        Button btnProjetosCurso = criarBotao("🗂 Projetos\nem curso", estiloBtn, estiloHover);
         btnProjetosCurso.setOnAction(e -> new ProjetosCursoEspecialistaView(stage).show());
 
-        Button btnProjetosOrcamento = new Button("💰 Projetos\npara orçamento");
-        btnProjetosOrcamento.setStyle(estiloBtn);
+        Button btnProjetosOrcamento = criarBotao("💰 Projetos\npara orçamento", estiloBtn, estiloHover);
         btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage).show());
+
+        Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
+        btnLogout.setOnAction(e -> stage.close());
 
         conteudoMenu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento);
 
-// Botão Log Out
-        Button btnLogout = new Button("↩ Sair");
-        btnLogout.setStyle(estiloBtn);
-        btnLogout.setOnAction(e -> stage.close());
-
-// Espaço para empurrar o botão para baixo
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
 
         menu.getChildren().addAll(conteudoMenu, espacoInferior, btnLogout);
         layout.setLeft(menu);
-
 
         // === CONTEÚDO CENTRAL ===
         VBox conteudo = new VBox(20);
@@ -85,7 +88,7 @@ public class ProjetosOrcamentoEspecialistaView {
         for (Orcamentoprojeto orc : orcamentos) {
             HBox card = new HBox(15);
             card.setPadding(new Insets(10));
-            card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5px; -fx-background-color: white;");
+            card.setStyle("-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);");
             card.setAlignment(Pos.CENTER_LEFT);
 
             VBox info = new VBox(5);
@@ -95,13 +98,10 @@ public class ProjetosOrcamentoEspecialistaView {
 
             info.getChildren().addAll(nomeProjeto, valor);
 
-            Button btnAbrir = new Button("Abrir");
-            btnAbrir.setOnAction(e -> {
-                new DetalhesProjetoOrcamentoEspecialistaView(orc).show();
-            });
+            Button btnAbrir = criarBotaoAcao("Abrir", false);
+            btnAbrir.setOnAction(e -> new DetalhesProjetoOrcamentoEspecialistaView(orc).show());
 
-            Button btnEliminar = new Button("🗑 Eliminar projeto");
-            btnEliminar.setStyle("-fx-text-fill: red;");
+            Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
             btnEliminar.setOnAction(e -> {
                 Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmacao.setTitle("Confirmação");
@@ -157,5 +157,36 @@ public class ProjetosOrcamentoEspecialistaView {
         stage.setScene(scene);
         stage.setTitle("Projetos para Orçamento");
         stage.show();
+    }
+
+    private Button criarBotao(String texto, String estiloBase, String estiloHover) {
+        Button button = new Button(texto);
+        button.setWrapText(true);
+        button.setStyle(estiloBase);
+        button.setOnMouseEntered(e -> button.setStyle(estiloBase + estiloHover));
+        button.setOnMouseExited(e -> button.setStyle(estiloBase));
+        return button;
+    }
+
+    private Button criarBotaoAcao(String texto, boolean vermelho) {
+        String estilo = "-fx-background-color: #ffffff; " +
+                "-fx-text-fill: " + (vermelho ? "red" : "#333333") + "; " +
+                "-fx-font-size: 12px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-padding: 6px 12px; " +
+                "-fx-background-radius: 8px; " +
+                "-fx-border-radius: 8px; " +
+                "-fx-border-color: " + (vermelho ? "red" : "#cccccc") + "; " +
+                "-fx-border-width: 1px; " +
+                "-fx-cursor: hand;";
+        Button button = new Button(texto);
+        button.setStyle(estilo);
+
+        button.setOnMouseEntered(e -> button.setStyle(estilo +
+                "-fx-background-color: " + (vermelho ? "#ffcccc" : "#e0e0e0") + "; " +
+                "-fx-scale-x: 1.05; " +
+                "-fx-scale-y: 1.05;"));
+        button.setOnMouseExited(e -> button.setStyle(estilo));
+        return button;
     }
 }

@@ -1,14 +1,22 @@
 package com.example.proj2;
 
-import com.example.proj2.models.Membrodepartamentofinanceiro;
-import com.example.proj2.services.MembrodepartamentofinanceiroService;
-import com.example.proj2.views.ProjetosEmCursoFinanceiroView;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.stage.Stage;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.example.proj2.models.Membrodepartamentofinanceiro;
+import com.example.proj2.services.MembrodepartamentofinanceiroService;
+import com.example.proj2.models.Gestordeprojeto;
+import com.example.proj2.views.GestorView;
+import com.example.proj2.views.ProjetosEmCursoFinanceiroView;
+import com.example.proj2.views.LoginView;
+import com.example.proj2.views.FinanceiroView;
+import com.example.proj2.models.Especialista;
+import com.example.proj2.views.EspecialistaView;
+
 
 @SpringBootApplication(scanBasePackages = "com.example.proj2")
 public class Proj2Application extends Application {
@@ -18,26 +26,45 @@ public class Proj2Application extends Application {
     @Override
     public void init() {
         context = new SpringApplicationBuilder(Proj2Application.class)
-                .web(WebApplicationType.NONE)
+                .web(WebApplicationType.NONE)  // 👈 esta linha impede o erro do servidor web
                 .headless(false)
                 .run();
 
-        SpringContext.setApplicationContext(context);
+        SpringContext.setApplicationContext(context); // 👈 agora está depois
     }
+
+    /*@Override
+    public void start(Stage primaryStage) {
+        Especialista especialistaFalso = new Especialista();
+        especialistaFalso.setNome("Especialista Exemplo");
+        new EspecialistaView(primaryStage, especialistaFalso).show();
+    }*/
 
     @Override
     public void start(Stage primaryStage) {
-        // Obter o serviço para buscar um Membrodepartamentofinanceiro
-        MembrodepartamentofinanceiroService financeiroService = context.getBean(MembrodepartamentofinanceiroService.class);
-
-        // Buscar um Membrodepartamentofinanceiro do banco de dados (exemplo: primeiro registro)
-        Membrodepartamentofinanceiro financeiro = financeiroService.listarMembros().stream()
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Nenhum membro do departamento financeiro encontrado no banco de dados"));
-
-        // Abrir a ProjetosEmCursoFinanceiroView com o Stage e o Membrodepartamentofinanceiro
-        new ProjetosEmCursoFinanceiroView(primaryStage, financeiro).show();
+        Gestordeprojeto gestorFalso = new Gestordeprojeto();
+        gestorFalso.setNome("Nome do Gestor");
+        new GestorView(primaryStage, gestorFalso).show();
     }
+
+    /*@Override
+    public void start(Stage primaryStage) {
+        Membrodepartamentofinanceiro financeiroFalso = new Membrodepartamentofinanceiro();
+        financeiroFalso.setNome("Nome do Financeiro");
+
+        new FinanceiroView(primaryStage, financeiroFalso).show();
+    }*/
+
+
+    /*@Override
+    public void start(Stage primaryStage) {
+        try {
+            new LoginView(primaryStage).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
+
 
     @Override
     public void stop() {
@@ -49,3 +76,5 @@ public class Proj2Application extends Application {
         launch(args);
     }
 }
+
+
