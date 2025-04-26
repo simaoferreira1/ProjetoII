@@ -50,7 +50,7 @@ public class ProjetoService {
 
     // Método para listar todos os projetos
     public List<Projeto> listarProjetos() {
-        return projetoRepository.findAll();
+        return projetoRepository.findAllWithGestordeprojeto();
     }
 
     // Método para buscar um projeto por ID

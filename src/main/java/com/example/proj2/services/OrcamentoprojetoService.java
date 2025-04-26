@@ -49,6 +49,11 @@ public class OrcamentoprojetoService {
         return orcamentoprojetoRepository.findAll();
     }
 
+    // Método para listar Orcamentoprojetos pendentes de orçamento
+    public List<Orcamentoprojeto> listarPendentes() {
+        return orcamentoprojetoRepository.findAllPendingWithProjetoAndGestordeprojeto();
+    }
+
     // Método para buscar um Orcamentoprojeto por ID
     public Optional<Orcamentoprojeto> buscarPorId(BigDecimal id) {
         return orcamentoprojetoRepository.findById(id);
