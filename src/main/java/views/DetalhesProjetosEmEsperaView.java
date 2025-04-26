@@ -18,23 +18,28 @@ public class DetalhesProjetosEmEsperaView {
 
     public void show() {
         Stage detalhesStage = new Stage();
-        VBox layout = new VBox(15);
-        layout.setPadding(new Insets(20));
-        layout.setAlignment(Pos.CENTER);
 
-        Label titulo = new Label("Detalhes do Projeto em Espera");
-        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        VBox layout = new VBox(20);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_LEFT);
+        layout.setStyle("-fx-background-color: white;");
 
-        Label nomeProjeto = new Label("Nome: " + (projeto.getNome() != null ? projeto.getNome() : "Não definido"));
-        Label descricao = new Label("Descrição: " + (projeto.getDescricao() != null ? projeto.getDescricao() : "Não definida"));
-        Label dataInicio = new Label("Data de Início: " + (projeto.getDatainicio() != null ? projeto.getDatainicio().toString() : "Não definida"));
-        Label dataFimPrevista = new Label("Data Fim Prevista: " + (projeto.getDatafimprevista() != null ? projeto.getDatafimprevista().toString() : "Não definida"));
-        Label estado = new Label("Estado: " + (projeto.getEstado() != null ? projeto.getEstado() : "Não definido"));
-        Label localizacao = new Label("Localização: " + (projeto.getLocalizacao() != null ? projeto.getLocalizacao() : "Não definida"));
+        Label titulo = new Label("📋 Detalhes do Projeto em Espera");
+        titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
-        layout.getChildren().addAll(titulo, nomeProjeto, descricao, dataInicio, dataFimPrevista, estado, localizacao);
+        Label nomeProjeto = new Label("📌 Nome: " + (projeto.getNome() != null ? projeto.getNome() : "N\u00e3o definido"));
+        Label descricao = new Label("📝 Descri\u00e7\u00e3o: " + (projeto.getDescricao() != null ? projeto.getDescricao() : "N\u00e3o definida"));
+        Label dataInicio = new Label("\uD83D\uDCC5 In\u00edcio: " + (projeto.getDatainicio() != null ? projeto.getDatainicio().toString() : "N\u00e3o definida"));
+        Label dataFimPrevista = new Label("\uD83D\uDCC5 Fim Previsto: " + (projeto.getDatafimprevista() != null ? projeto.getDatafimprevista().toString() : "N\u00e3o definida"));
+        Label estado = new Label("\u2699\uFE0F Estado: " + (projeto.getEstado() != null ? projeto.getEstado() : "N\u00e3o definido"));
+        Label localizacao = new Label("\uD83D\uDCCD Localiza\u00e7\u00e3o: " + (projeto.getLocalizacao() != null ? projeto.getLocalizacao() : "N\u00e3o definida"));
 
-        Scene scene = new Scene(layout, 400, 450);
+        VBox infoBox = new VBox(10);
+        infoBox.getChildren().addAll(nomeProjeto, descricao, dataInicio, dataFimPrevista, estado, localizacao);
+
+        layout.getChildren().addAll(titulo, infoBox);
+
+        Scene scene = new Scene(layout, 450, 350);
         detalhesStage.setScene(scene);
         detalhesStage.setTitle("Detalhes do Projeto em Espera");
         detalhesStage.show();

@@ -18,23 +18,28 @@ public class DetalhesProjetoOrcamentoView {
 
     public void show() {
         Stage detalhesStage = new Stage();
-        VBox layout = new VBox(15);
-        layout.setPadding(new Insets(20));
-        layout.setAlignment(Pos.CENTER);
 
-        Label titulo = new Label("Detalhes do Projeto para Orçamento");
-        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        VBox layout = new VBox(20);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_LEFT);
+        layout.setStyle("-fx-background-color: white;");
 
-        Label nomeProjeto = new Label("Projeto: " + (orcamentoprojeto.getProjeto() != null ? orcamentoprojeto.getProjeto().getNome() : "Não definido"));
-        Label valorTotal = new Label("Valor Total: " + (orcamentoprojeto.getValortotal() != null ? orcamentoprojeto.getValortotal() + " €" : "Não definido"));
-        Label dataAprovacao = new Label("Data de Aprovação: " + (orcamentoprojeto.getDataaprovacao() != null ? orcamentoprojeto.getDataaprovacao().toString() : "Não definida"));
-        Label estado = new Label("Estado: " + (orcamentoprojeto.getEstado() != null ? orcamentoprojeto.getEstado() : "Não definido"));
+        Label titulo = new Label("📋 Detalhes do Projeto para Orçamento");
+        titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
-        layout.getChildren().addAll(titulo, nomeProjeto, valorTotal, dataAprovacao, estado);
+        Label nomeProjeto = new Label("📌 Projeto: " + (orcamentoprojeto.getProjeto() != null ? orcamentoprojeto.getProjeto().getNome() : "N\u00e3o definido"));
+        Label valorTotal = new Label("\uD83D\uDCB0 Valor Total: " + (orcamentoprojeto.getValortotal() != null ? orcamentoprojeto.getValortotal() + " €" : "N\u00e3o definido"));
+        Label dataAprovacao = new Label("\uD83D\uDCC5 Data de Aprova\u00e7\u00e3o: " + (orcamentoprojeto.getDataaprovacao() != null ? orcamentoprojeto.getDataaprovacao().toString() : "N\u00e3o definida"));
+        Label estado = new Label("\u2699\uFE0F Estado: " + (orcamentoprojeto.getEstado() != null ? orcamentoprojeto.getEstado() : "N\u00e3o definido"));
 
-        Scene scene = new Scene(layout, 400, 400);
+        VBox infoBox = new VBox(10);
+        infoBox.getChildren().addAll(nomeProjeto, valorTotal, dataAprovacao, estado);
+
+        layout.getChildren().addAll(titulo, infoBox);
+
+        Scene scene = new Scene(layout, 450, 350);
         detalhesStage.setScene(scene);
-        detalhesStage.setTitle("Detalhes do Orçamento");
+        detalhesStage.setTitle("Detalhes do Or\u00e7amento");
         detalhesStage.show();
     }
 }

@@ -6,9 +6,7 @@ import com.example.proj2.services.OrcamentoprojetoService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -26,43 +24,51 @@ public class ProjetosOrcamentoEspecialistaView {
 
     public void show() {
         BorderPane layout = new BorderPane();
+        layout.setStyle("-fx-background-color: white;");
 
         // === MENU LATERAL ===
-        VBox menu = new VBox(15);
+        VBox menu = new VBox();
         menu.setStyle("-fx-background-color: #f1c40f;");
         menu.setPadding(new Insets(20));
         menu.setPrefWidth(200);
         menu.setAlignment(Pos.TOP_CENTER);
 
+// Layout interno do menu (para separar os itens de cima e o botão sair em baixo)
+        VBox conteudoMenu = new VBox(20);
+        conteudoMenu.setAlignment(Pos.TOP_CENTER);
+
         Label nome = new Label("👤 Especialista");
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        String estiloBtn = "-fx-background-color: white; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-pref-width: 180px; -fx-pref-height: 80px;";
-
-        Button btnProjetosOrcamento = new Button("💰 Projetos\npara orçamento");
-        btnProjetosOrcamento.setStyle(estiloBtn);
-        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage).show());
+        String estiloBtn = "-fx-background-color: white; " +
+                "-fx-text-fill: #333333; " +
+                "-fx-font-size: 14px; " +
+                "-fx-pref-width: 160px; " +
+                "-fx-pref-height: 60px; " +
+                "-fx-alignment: center;";
 
         Button btnProjetosCurso = new Button("🗂 Projetos\nem curso");
         btnProjetosCurso.setStyle(estiloBtn);
         btnProjetosCurso.setOnAction(e -> new ProjetosCursoEspecialistaView(stage).show());
 
-        Button btnLogout = new Button("↩ Log Out");
+        Button btnProjetosOrcamento = new Button("💰 Projetos\npara orçamento");
+        btnProjetosOrcamento.setStyle(estiloBtn);
+        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage).show());
+
+        conteudoMenu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento);
+
+// Botão Log Out
+        Button btnLogout = new Button("↩ Sair");
         btnLogout.setStyle(estiloBtn);
         btnLogout.setOnAction(e -> stage.close());
 
-        menu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento, btnLogout);
+// Espaço para empurrar o botão para baixo
+        Region espacoInferior = new Region();
+        VBox.setVgrow(espacoInferior, Priority.ALWAYS);
+
+        menu.getChildren().addAll(conteudoMenu, espacoInferior, btnLogout);
         layout.setLeft(menu);
 
-        // === TOPO DIREITA ===
-        VBox topoDireita = new VBox();
-        topoDireita.setAlignment(Pos.TOP_RIGHT);
-        topoDireita.setPadding(new Insets(10, 20, 0, 0));
-        ImageView logo = new ImageView(new Image(getClass().getResource("/images/Capacete.png").toExternalForm()));
-        logo.setFitHeight(80);
-        logo.setPreserveRatio(true);
-        topoDireita.getChildren().add(logo);
-        layout.setTop(topoDireita);
 
         // === CONTEÚDO CENTRAL ===
         VBox conteudo = new VBox(20);
@@ -97,9 +103,39 @@ public class ProjetosOrcamentoEspecialistaView {
             Button btnEliminar = new Button("🗑 Eliminar projeto");
             btnEliminar.setStyle("-fx-text-fill: red;");
             btnEliminar.setOnAction(e -> {
-                OrcamentoprojetoService serviceInterno = SpringContext.getBean(OrcamentoprojetoService.class);
-                serviceInterno.removerOrcamentoprojeto(orc.getId());
-                show(); // atualiza a página
+                Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmacao.setTitle("Confirmação");
+                confirmacao.setHeaderText("Tem certeza que deseja eliminar este projeto?");
+                confirmacao.setContentText("Esta ação é irreversível.");
+
+                confirmacao.showAndWait().ifPresent(resposta -> {
+                    if (resposta == ButtonType.OK) {
+                        OrcamentoprojetoService serviceInterno = SpringContext.getBean(OrcamentoprojetoService.class);
+                        serviceInterno.removerOrcamentoprojeto(orc.getId());
+
+                        // Mostrar imagem de sucesso
+                        Stage sucessoStage = new Stage();
+                        VBox sucessoLayout = new VBox(20);
+                        sucessoLayout.setAlignment(Pos.CENTER);
+                        sucessoLayout.setStyle("-fx-background-color: white; -fx-padding: 20px;");
+
+                        ImageView sucessoImg = new ImageView(new Image(getClass().getResource("/images/sucesso.png").toExternalForm()));
+                        sucessoImg.setFitHeight(100);
+                        sucessoImg.setPreserveRatio(true);
+
+                        Label sucessoLabel = new Label("Projeto eliminado com sucesso!");
+                        sucessoLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+                        sucessoLayout.getChildren().addAll(sucessoImg, sucessoLabel);
+
+                        Scene sucessoScene = new Scene(sucessoLayout, 300, 200);
+                        sucessoStage.setScene(sucessoScene);
+                        sucessoStage.setTitle("Sucesso");
+                        sucessoStage.show();
+
+                        show(); // Atualiza a lista
+                    }
+                });
             });
 
             HBox botoes = new HBox(10, btnAbrir, btnEliminar);
@@ -123,4 +159,3 @@ public class ProjetosOrcamentoEspecialistaView {
         stage.show();
     }
 }
-

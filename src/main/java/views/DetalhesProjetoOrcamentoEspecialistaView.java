@@ -8,8 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class DetalhesProjetoOrcamentoEspecialistaView {
@@ -25,38 +24,32 @@ public class DetalhesProjetoOrcamentoEspecialistaView {
 
         BorderPane layout = new BorderPane();
         layout.setPadding(new Insets(20));
+        layout.setStyle("-fx-background-color: white;");
 
-        // Topo - Logo
-        VBox topoDireita = new VBox();
-        topoDireita.setAlignment(Pos.TOP_RIGHT);
-        topoDireita.setPadding(new Insets(10, 20, 0, 0));
-        ImageView logo = new ImageView(new Image(getClass().getResource("/images/Capacete.png").toExternalForm()));
-        logo.setFitHeight(80);
-        logo.setPreserveRatio(true);
-        topoDireita.getChildren().add(logo);
-        layout.setTop(topoDireita);
 
-        // Centro - Detalhes
-        VBox conteudo = new VBox(15);
-        conteudo.setAlignment(Pos.CENTER_LEFT);
-        conteudo.setPadding(new Insets(20));
+        // === Centro - Detalhes ===
+        VBox conteudo = new VBox(20);
+        conteudo.setAlignment(Pos.TOP_LEFT);
+        conteudo.setPadding(new Insets(30));
 
-        Label titulo = new Label("Detalhes do Projeto para Orçamento");
-        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        Label titulo = new Label("📋 Detalhes do Projeto para Orçamento");
+        titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
-        Label nomeProjeto = new Label("Projeto: " + orcamento.getProjeto().getNome());
-        Label estado = new Label("Estado: " + orcamento.getEstado());
-        Label valor = new Label("Valor Total: " + orcamento.getValortotal() + " €");
-        Label dataAprovacao = new Label("Data de Aprovação: " + (orcamento.getDataaprovacao() != null ? orcamento.getDataaprovacao().toString() : "Não aprovada"));
+        Label nomeProjeto = new Label("📌 Projeto: " + orcamento.getProjeto().getNome());
+        Label estado = new Label("⚙️ Estado: " + orcamento.getEstado());
+        Label valor = new Label("💰 Valor Total: " + orcamento.getValortotal() + " €");
+        Label dataAprovacao = new Label("📅 Data de Aprovação: " +
+                (orcamento.getDataaprovacao() != null ? orcamento.getDataaprovacao().toString() : "Não aprovada"));
 
-        Button btnFechar = new Button("Fechar");
-        btnFechar.setOnAction(e -> detalheStage.close());
 
-        conteudo.getChildren().addAll(titulo, nomeProjeto, estado, valor, dataAprovacao, btnFechar);
+        VBox infoBox = new VBox(10);
+        infoBox.getChildren().addAll(nomeProjeto, estado, valor, dataAprovacao);
+
+        conteudo.getChildren().addAll(titulo, infoBox);
 
         layout.setCenter(conteudo);
 
-        Scene scene = new Scene(layout, 600, 400);
+        Scene scene = new Scene(layout, 500, 400);
         detalheStage.setScene(scene);
         detalheStage.setTitle("Detalhes do Projeto para Orçamento");
         detalheStage.show();

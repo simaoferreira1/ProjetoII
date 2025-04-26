@@ -4,7 +4,6 @@ import com.example.proj2.models.Solicitacaoprojeto;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -24,23 +23,27 @@ public class DetalhesSolicitacaoView {
         Stage detalhesStage = new Stage();
         detalhesStage.initOwner(parentStage);
         detalhesStage.initModality(Modality.APPLICATION_MODAL);
-        detalhesStage.setTitle("Detalhes da Solicitação");
+        detalhesStage.setTitle("Detalhes da Solicita\u00e7\u00e3o");
 
-        VBox layout = new VBox(15);
-        layout.setPadding(new Insets(20));
-        layout.setAlignment(Pos.CENTER_LEFT);
+        VBox layout = new VBox(20);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_LEFT);
+        layout.setStyle("-fx-background-color: white;");
 
-        Label lblId = new Label("ID: " + solicitacao.getId());
-        Label lblLocal = new Label("Local da reunião: " + solicitacao.getLocalreuniao());
-        Label lblEstado = new Label("Estado: " + solicitacao.getEstado());
-        Label lblData = new Label("Data da solicitação: " + solicitacao.getDatasolicitacao());
+        Label titulo = new Label("\uD83D\uDCCB Detalhes da Solicita\u00e7\u00e3o");
+        titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
-        Button btnFechar = new Button("Fechar");
-        btnFechar.setOnAction(e -> detalhesStage.close());
+        Label lblId = new Label("\uD83D\uDDC2 ID: " + (solicitacao.getId() != null ? solicitacao.getId() : "N\u00e3o definido"));
+        Label lblLocal = new Label("\uD83D\uDCCD Local da reuni\u00e3o: " + (solicitacao.getLocalreuniao() != null ? solicitacao.getLocalreuniao() : "N\u00e3o definido"));
+        Label lblEstado = new Label("\u2699\uFE0F Estado: " + (solicitacao.getEstado() != null ? solicitacao.getEstado() : "N\u00e3o definido"));
+        Label lblData = new Label("\uD83D\uDCC5 Data da solicita\u00e7\u00e3o: " + (solicitacao.getDatasolicitacao() != null ? solicitacao.getDatasolicitacao().toString() : "N\u00e3o definida"));
 
-        layout.getChildren().addAll(lblId, lblLocal, lblEstado, lblData, btnFechar);
+        VBox infoBox = new VBox(10);
+        infoBox.getChildren().addAll(lblId, lblLocal, lblEstado, lblData);
 
-        Scene scene = new Scene(layout, 400, 300);
+        layout.getChildren().addAll(titulo, infoBox);
+
+        Scene scene = new Scene(layout, 450, 350);
         detalhesStage.setScene(scene);
         detalhesStage.showAndWait();
     }

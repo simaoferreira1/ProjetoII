@@ -23,18 +23,27 @@ public class EspecialistaView {
 
     public void show() {
         BorderPane layout = new BorderPane();
+        layout.setStyle("-fx-background-color: white;");
 
         // === MENU LATERAL ===
-        VBox menu = new VBox(15);
+        VBox menu = new VBox();
         menu.setStyle("-fx-background-color: #f1c40f;");
         menu.setPadding(new Insets(20));
         menu.setPrefWidth(200);
         menu.setAlignment(Pos.TOP_CENTER);
 
+        VBox conteudoMenu = new VBox(20);
+        conteudoMenu.setAlignment(Pos.TOP_CENTER);
+
         Label nome = new Label("👤 Especialista");
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        String estiloBtn = "-fx-background-color: white; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-pref-width: 180px; -fx-pref-height: 80px;";
+        String estiloBtn = "-fx-background-color: white; " +
+                "-fx-text-fill: #333333; " +
+                "-fx-font-size: 14px; " +
+                "-fx-pref-width: 160px; " +
+                "-fx-pref-height: 60px; " +
+                "-fx-alignment: center;";
 
         Button btnProjetosCurso = new Button("📂 Projetos\nem curso");
         btnProjetosCurso.setStyle(estiloBtn);
@@ -44,11 +53,16 @@ public class EspecialistaView {
         btnProjetosOrcamento.setStyle(estiloBtn);
         btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage).show());
 
-        Button btnLogout = new Button("↩ Log Out");
+        conteudoMenu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento);
+
+        Button btnLogout = new Button("↩ Sair");
         btnLogout.setStyle(estiloBtn);
         btnLogout.setOnAction(e -> stage.close());
 
-        menu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento, btnLogout);
+        Region espacoInferior = new Region();
+        VBox.setVgrow(espacoInferior, Priority.ALWAYS);
+
+        menu.getChildren().addAll(conteudoMenu, espacoInferior, btnLogout);
         layout.setLeft(menu);
 
         // === CONTEÚDO CENTRAL COM IMAGEM DE FUNDO ===

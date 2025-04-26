@@ -4,11 +4,7 @@ import com.example.proj2.models.Projeto;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -21,44 +17,31 @@ public class DetalhesProjetosEmCursoView {
     }
 
     public void show() {
-        Stage stage = new Stage();
-        BorderPane root = new BorderPane();
+        Stage detalhesStage = new Stage();
 
-        // === TOPO COM LOGO ===
-        VBox topo = new VBox();
-        topo.setAlignment(Pos.TOP_RIGHT);
-        topo.setPadding(new Insets(10));
+        VBox layout = new VBox(20);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_LEFT);
+        layout.setStyle("-fx-background-color: white;");
 
-        ImageView logo = new ImageView(new Image(getClass().getResource("/images/Capacete.png").toExternalForm()));
-        logo.setFitHeight(80);
-        logo.setPreserveRatio(true);
-        topo.getChildren().add(logo);
-        root.setTop(topo);
+        Label titulo = new Label("📋 Detalhes do Projeto");
+        titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
-        // === CONTEÚDO CENTRAL ===
-        VBox conteudo = new VBox(15);
-        conteudo.setPadding(new Insets(20));
-        conteudo.setAlignment(Pos.CENTER_LEFT);
+        Label lblNome = new Label("📌 Nome: " + (projeto.getNome() != null ? projeto.getNome() : "N/A"));
+        Label lblDescricao = new Label("📝 Descri\u00e7\u00e3o: " + (projeto.getDescricao() != null ? projeto.getDescricao() : "N/A"));
+        Label lblEstado = new Label("\u2699\uFE0F Estado: " + (projeto.getEstado() != null ? projeto.getEstado() : "N/A"));
+        Label lblDataInicio = new Label("\uD83D\uDCC5 In\u00edcio: " + (projeto.getDatainicio() != null ? projeto.getDatainicio() : "N/A"));
+        Label lblDataFimPrevista = new Label("\uD83D\uDCC5 Fim Previsto: " + (projeto.getDatafimprevista() != null ? projeto.getDatafimprevista() : "N/A"));
+        Label lblLocalizacao = new Label("\uD83D\uDCCD Localiza\u00e7\u00e3o: " + (projeto.getLocalizacao() != null ? projeto.getLocalizacao() : "N/A"));
 
-        Label titulo = new Label("Detalhes do Projeto");
-        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        VBox infoBox = new VBox(10);
+        infoBox.getChildren().addAll(lblNome, lblDescricao, lblEstado, lblDataInicio, lblDataFimPrevista, lblLocalizacao);
 
-        Label lblNome = new Label("Nome: " + projeto.getNome());
-        Label lblDescricao = new Label("Descrição: " + projeto.getDescricao());
-        Label lblEstado = new Label("Estado: " + projeto.getEstado());
-        Label lblDataInicio = new Label("Data de Início: " + (projeto.getDatainicio() != null ? projeto.getDatainicio() : "N/A"));
-        Label lblDataFimPrevista = new Label("Data Fim Prevista: " + (projeto.getDatafimprevista() != null ? projeto.getDatafimprevista() : "N/A"));
-        Label lblLocalizacao = new Label("Localização: " + (projeto.getLocalizacao() != null ? projeto.getLocalizacao() : "N/A"));
+        layout.getChildren().addAll(titulo, infoBox);
 
-        Button btnFechar = new Button("Fechar");
-        btnFechar.setOnAction(e -> stage.close());
-
-        conteudo.getChildren().addAll(titulo, lblNome, lblDescricao, lblEstado, lblDataInicio, lblDataFimPrevista, lblLocalizacao, btnFechar);
-        root.setCenter(conteudo);
-
-        Scene scene = new Scene(root, 500, 400);
-        stage.setScene(scene);
-        stage.setTitle("Detalhes do Projeto");
-        stage.show();
+        Scene scene = new Scene(layout, 450, 350);
+        detalhesStage.setScene(scene);
+        detalhesStage.setTitle("Detalhes do Projeto");
+        detalhesStage.show();
     }
 }
