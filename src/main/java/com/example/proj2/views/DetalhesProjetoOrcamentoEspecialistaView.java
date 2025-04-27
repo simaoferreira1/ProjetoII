@@ -33,7 +33,7 @@ public class DetalhesProjetoOrcamentoEspecialistaView {
         titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
         Label nomeProjeto = new Label("📌 Projeto: " + orcamento.getProjeto().getNome());
-        Label estado = new Label("⚙️ Estado: " + orcamento.getEstado());
+        Label estado = new Label("• Estado: " + orcamento.getEstado());
         Label valor = new Label("💰 Valor Total: " + orcamento.getValortotal() + " €");
         Label dataAprovacao = new Label("📅 Data de Aprovação: " +
                 (orcamento.getDataaprovacao() != null ? orcamento.getDataaprovacao().toString() : "Não aprovada"));

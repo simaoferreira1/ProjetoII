@@ -3,11 +3,7 @@ package com.example.proj2.views;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -46,9 +42,23 @@ public class RegistarView {
         emailField.setPromptText("E-mail");
         emailField.setMaxWidth(250);
 
+        TextField telefoneField = new TextField();
+        telefoneField.setPromptText("Telefone");
+        telefoneField.setMaxWidth(250);
+
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Palavra-passe");
         passwordField.setMaxWidth(250);
+
+        ComboBox<String> tipoUtilizadorComboBox = new ComboBox<>();
+        tipoUtilizadorComboBox.getItems().addAll(
+                "Gestor de Projeto",
+                "Especialista",
+                "Membro Departamento Financeiro",
+                "Cliente" // <-- adicionei o Cliente aqui
+        );
+        tipoUtilizadorComboBox.setPromptText("Tipo de Utilizador");
+        tipoUtilizadorComboBox.setMaxWidth(250);
 
         Button registerButton = new Button("Registar");
         registerButton.setPrefWidth(250);
@@ -67,14 +77,30 @@ public class RegistarView {
             new LoginView(stage).show();
         });
 
-        // TODO: Aqui vais depois pôr a lógica de registar no botão
+        // Lógica do botão registar
         registerButton.setOnAction(e -> {
-            // Exemplo: guardar dados no banco de dados
+            String nome = nameField.getText();
+            String email = emailField.getText();
+            String telefone = telefoneField.getText();
+            String password = passwordField.getText();
+            String tipoUtilizador = tipoUtilizadorComboBox.getValue();
+
+            System.out.println("Nome: " + nome);
+            System.out.println("Email: " + email);
+            System.out.println("Telefone: " + telefone);
+            System.out.println("Password: " + password);
+            System.out.println("Tipo de Utilizador: " + tipoUtilizador);
+
+            // Aqui depois vais criar o objeto correto (Gestor/Especialista/Financeiro/Cliente) e guardar no banco
         });
 
-        root.getChildren().addAll(logo, separator, nameField, emailField, passwordField, registerButton, loginBox);
+        root.getChildren().addAll(
+                logo, separator,
+                nameField, emailField, telefoneField, passwordField, tipoUtilizadorComboBox,
+                registerButton, loginBox
+        );
 
-        Scene scene = new Scene(root, 400, 550);
+        Scene scene = new Scene(root, 400, 650);
         stage.setScene(scene);
         stage.setTitle("Registar - Betonarte");
         stage.show();

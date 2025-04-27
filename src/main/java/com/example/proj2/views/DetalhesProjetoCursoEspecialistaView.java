@@ -32,7 +32,8 @@ public class DetalhesProjetoCursoEspecialistaView {
         Label dataInicio = new Label("📅 Início: " + projeto.getDatainicio());
         Label dataFim = new Label("📅 Fim Previsto: " + projeto.getDatafimprevista());
         Label localizacao = new Label("📍 Localização: " + projeto.getLocalizacao());
-        Label estado = new Label("⚙️ Estado: " + projeto.getEstado());
+        Label estado = new Label("• Estado: " + projeto.getEstado());
+
 
         VBox infoBox = new VBox(10);
         infoBox.getChildren().addAll(nome, descricao, dataInicio, dataFim, localizacao, estado);
