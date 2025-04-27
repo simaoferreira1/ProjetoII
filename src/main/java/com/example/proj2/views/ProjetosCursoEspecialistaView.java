@@ -107,7 +107,7 @@ public class ProjetosCursoEspecialistaView {
             btnEliminar.setOnAction(e -> {
                 Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmacao.setTitle("Confirmação");
-                confirmacao.setHeaderText("Tem certeza que deseja eliminar este projeto?");
+                confirmacao.setHeaderText("Tem a certeza que deseja eliminar este projeto?");
                 confirmacao.setContentText("Esta ação é irreversível.");
 
                 confirmacao.showAndWait().ifPresent(resposta -> {
