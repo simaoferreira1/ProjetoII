@@ -64,7 +64,7 @@ public class RegistarView {
 
         // Ir para página de login quando clicar no link
         loginLink.setOnAction(e -> {
-            new com.example.proj2.views.LoginView(stage).show();
+            new LoginView(stage).show();
         });
 
         // TODO: Aqui vais depois pôr a lógica de registar no botão

@@ -1,25 +1,25 @@
 package com.example.proj2.views;
 
 import com.example.proj2.SpringContext;
+import com.example.proj2.models.Gestordeprojeto;
 import com.example.proj2.models.Projeto;
 import com.example.proj2.services.ProjetoService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.util.List;
 
-public class ProjetosEmEsperaView {
-
+public class ProjetosPrePlaneamentoView {
     private final Stage stage;
+    private final Gestordeprojeto gestor;
 
-    public ProjetosEmEsperaView(Stage stage) {
+    public ProjetosPrePlaneamentoView(Stage stage, Gestordeprojeto gestor) {
         this.stage = stage;
+        this.gestor = gestor;
     }
 
     public void show() {
@@ -36,7 +36,7 @@ public class ProjetosEmEsperaView {
         VBox conteudoMenu = new VBox(20);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("👤 Gestor");
+        Label nome = new Label("👤 Gestor: " + (gestor != null ? gestor.getNome() : "Desconhecido"));
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         String estiloBtn = "-fx-background-color: #ffffff; " +
@@ -56,23 +56,25 @@ public class ProjetosEmEsperaView {
                 "-fx-scale-x: 1.02; " +
                 "-fx-scale-y: 1.02;";
 
-        Button btnSolicitacoes = criarBotao("📋 Solicitações\n de Projeto", estiloBtn, estiloHover);
-        Button btnProjetosCurso = criarBotao("📂 Projetos\nem curso", estiloBtn, estiloHover);
-        Button btnProjetosOrcamento = criarBotao("💰 Projetos\npara orçamento", estiloBtn, estiloHover);
-        Button btnProjetosEspera = criarBotao("🕒 Projetos\nem espera", estiloBtn, estiloHover);
+        Button btnRegistrarCliente = criarBotao("👥 Registrar\nCliente", estiloBtn, estiloHover);
+        Button btnRegistrarProjeto = criarBotao("📋 Registrar\nProjeto", estiloBtn, estiloHover);
+        Button btnSolicitacoes = criarBotao("📋 Solicitações\nde Projeto", estiloBtn, estiloHover);
+        Button btnProjetosCurso = criarBotao("📂 Projetos\nem Curso", estiloBtn, estiloHover);
+        Button btnProjetosPrePlaneamento = criarBotao("📝 Projetos em\nPré-Planeamento", estiloBtn, estiloHover);
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
-        conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosOrcamento, btnProjetosEspera);
+        conteudoMenu.getChildren().addAll(nome, btnRegistrarCliente, btnRegistrarProjeto, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
 
         menu.getChildren().addAll(conteudoMenu, espacoInferior, btnLogout);
 
-        btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage).show());
-        btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage).show());
-        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoView(stage).show());
-        btnProjetosEspera.setOnAction(e -> new ProjetosEmEsperaView(stage).show());
+        btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage, gestor).show());
+        btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage, gestor).show());
+        btnProjetosPrePlaneamento.setOnAction(e -> new ProjetosPrePlaneamentoView(stage, gestor).show());
+        btnRegistrarCliente.setOnAction(e -> new GestorView(stage, gestor).show());
+        btnRegistrarProjeto.setOnAction(e -> new GestorView(stage, gestor).show());
         btnLogout.setOnAction(e -> stage.close());
 
         layout.setLeft(menu);
@@ -81,53 +83,69 @@ public class ProjetosEmEsperaView {
         VBox conteudo = new VBox(20);
         conteudo.setPadding(new Insets(20));
 
-        Label titulo = new Label("Projetos em espera");
+        Label titulo = new Label("Projetos em Pré-Planeamento");
         titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         conteudo.getChildren().add(titulo);
 
         ProjetoService service = SpringContext.getBean(ProjetoService.class);
-        List<Projeto> projetos = service.listarProjetos().stream()
-                .filter(p -> "em espera".equalsIgnoreCase(p.getEstado()))
+        List<Projeto> projetos = service.listarProjetos();
+
+        // Adicionar logs para depuração
+        System.out.println("Total de projetos carregados: " + projetos.size());
+        projetos.forEach(projeto -> System.out.println("Projeto: ID " + projeto.getId() + ", Nome: " + projeto.getNome() + ", Estado: " + projeto.getEstado()));
+
+        // Ajustar o filtro para corresponder ao estado real na tabela
+        List<Projeto> projetosPrePlaneamento = projetos.stream()
+                .filter(p -> p.getEstado() != null && "em pré-planeamento".equalsIgnoreCase(p.getEstado().trim()))
                 .toList();
 
-        VBox lista = new VBox(10);
-        for (Projeto projeto : projetos) {
-            HBox card = new HBox(15);
-            card.setPadding(new Insets(10));
-            card.setStyle("-fx-background-color: white;"); // Sem borda cinzenta
-            card.setAlignment(Pos.CENTER_LEFT);
+        System.out.println("Projetos em pré-planeamento encontrados: " + projetosPrePlaneamento.size());
 
-            VBox info = new VBox(5);
-            Label nomeProjeto = new Label("Projeto " + projeto.getNome());
-            nomeProjeto.setStyle("-fx-font-weight: bold;");
-            Label descricao = new Label(projeto.getDescricao());
+        if (projetosPrePlaneamento.isEmpty()) {
+            Label semProjetos = new Label("Nenhum projeto em pré-planeamento encontrado.");
+            semProjetos.setStyle("-fx-font-size: 14px; -fx-text-fill: #666666;");
+            conteudo.getChildren().add(semProjetos);
+        } else {
+            VBox lista = new VBox(10);
+            for (Projeto projeto : projetosPrePlaneamento) {
+                HBox card = new HBox(15);
+                card.setPadding(new Insets(10));
+                card.setStyle("-fx-background-color: white;");
+                card.setAlignment(Pos.CENTER_LEFT);
 
-            info.getChildren().addAll(nomeProjeto, descricao);
+                VBox info = new VBox(5);
+                Label nomeProjeto = new Label("Projeto: " + projeto.getNome());
+                nomeProjeto.setStyle("-fx-font-weight: bold;");
+                Label descricao = new Label(projeto.getDescricao());
 
-            Button btnAbrir = criarBotaoAcao("Abrir", false);
-            btnAbrir.setOnAction(e -> new DetalhesProjetosEmEsperaView(projeto).show());
+                info.getChildren().addAll(nomeProjeto, descricao);
 
-            Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
-            btnEliminar.setOnAction(e -> eliminarProjeto(projeto));
+                Button btnAbrir = criarBotaoAcao("Abrir", false);
+                btnAbrir.setOnAction(e -> new DetalhesProjetosEmCursoView(projeto, stage, gestor).show());
 
-            HBox botoes = new HBox(10, btnAbrir, btnEliminar);
-            botoes.setAlignment(Pos.CENTER_RIGHT);
+                Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
+                btnEliminar.setOnAction(e -> eliminarProjeto(projeto));
 
-            Region espaco = new Region();
-            HBox.setHgrow(espaco, Priority.ALWAYS);
+                HBox botoes = new HBox(10, btnAbrir, btnEliminar);
+                botoes.setAlignment(Pos.CENTER_RIGHT);
 
-            card.getChildren().addAll(info, espaco, botoes);
-            lista.getChildren().add(card);
+                Region espaco = new Region();
+                HBox.setHgrow(espaco, Priority.ALWAYS);
+
+                card.getChildren().addAll(info, espaco, botoes);
+                lista.getChildren().add(card);
+            }
+
+            ScrollPane scroll = new ScrollPane(lista);
+            scroll.setFitToWidth(true);
+            conteudo.getChildren().add(scroll);
         }
 
-        ScrollPane scroll = new ScrollPane(lista);
-        scroll.setFitToWidth(true);
-        conteudo.getChildren().add(scroll);
         layout.setCenter(conteudo);
 
         Scene scene = new Scene(layout, 900, 600);
         stage.setScene(scene);
-        stage.setTitle("Projetos em Espera");
+        stage.setTitle("Projetos em Pré-Planeamento");
         stage.show();
     }
 
@@ -141,7 +159,7 @@ public class ProjetosEmEsperaView {
             if (resposta == ButtonType.OK) {
                 ProjetoService service = SpringContext.getBean(ProjetoService.class);
                 service.removerProjeto(projeto.getId());
-                show(); // Atualiza
+                show();
             }
         });
     }

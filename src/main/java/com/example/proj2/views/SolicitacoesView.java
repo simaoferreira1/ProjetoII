@@ -1,25 +1,26 @@
 package com.example.proj2.views;
 
 import com.example.proj2.SpringContext;
-import com.example.proj2.models.Projeto;
-import com.example.proj2.services.ProjetoService;
+import com.example.proj2.models.Gestordeprojeto;
+import com.example.proj2.models.Solicitacaoprojeto;
+import com.example.proj2.services.SolicitacaoprojetoService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.util.List;
 
-public class ProjetosEmCursoView {
+public class SolicitacoesView {
 
     private final Stage stage;
+    private final Gestordeprojeto gestor;
 
-    public ProjetosEmCursoView(Stage stage) {
+    public SolicitacoesView(Stage stage, Gestordeprojeto gestor) {
         this.stage = stage;
+        this.gestor = gestor;
     }
 
     public void show() {
@@ -36,7 +37,7 @@ public class ProjetosEmCursoView {
         VBox conteudoMenu = new VBox(20);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("👤 Gestor");
+        Label nome = new Label("👤 Gestor: " + (gestor != null ? gestor.getNome() : "Desconhecido"));
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         String estiloBtn = "-fx-background-color: #ffffff; " +
@@ -56,23 +57,25 @@ public class ProjetosEmCursoView {
                 "-fx-scale-x: 1.02; " +
                 "-fx-scale-y: 1.02;";
 
-        Button btnSolicitacoes = criarBotao("📋 Solicitações\n de Projeto", estiloBtn, estiloHover);
-        Button btnProjetosCurso = criarBotao("📂 Projetos\nem curso", estiloBtn, estiloHover);
-        Button btnProjetosOrcamento = criarBotao("💰 Projetos\npara orçamento", estiloBtn, estiloHover);
-        Button btnProjetosEspera = criarBotao("🕒 Projetos\nem espera", estiloBtn, estiloHover);
+        Button btnRegistrarCliente = criarBotao("👥 Registrar\nCliente", estiloBtn, estiloHover);
+        Button btnRegistrarProjeto = criarBotao("📋 Registrar\nProjeto", estiloBtn, estiloHover);
+        Button btnSolicitacoes = criarBotao("📋 Solicitações\nde Projeto", estiloBtn, estiloHover);
+        Button btnProjetosCurso = criarBotao("📂 Projetos\nem Curso", estiloBtn, estiloHover);
+        Button btnProjetosPrePlaneamento = criarBotao("📝 Projetos em\nPré-Planeamento", estiloBtn, estiloHover);
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
-        conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosOrcamento, btnProjetosEspera);
+        conteudoMenu.getChildren().addAll(nome, btnRegistrarCliente, btnRegistrarProjeto, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
 
         menu.getChildren().addAll(conteudoMenu, espacoInferior, btnLogout);
 
-        btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage).show());
-        btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage).show());
-        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoView(stage).show());
-        btnProjetosEspera.setOnAction(e -> new ProjetosEmEsperaView(stage).show());
+        btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage, gestor).show());
+        btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage, gestor).show());
+        btnProjetosPrePlaneamento.setOnAction(e -> new ProjetosPrePlaneamentoView(stage, gestor).show());
+        btnRegistrarCliente.setOnAction(e -> new GestorView(stage, gestor).show());
+        btnRegistrarProjeto.setOnAction(e -> new GestorView(stage, gestor).show());
         btnLogout.setOnAction(e -> stage.close());
 
         layout.setLeft(menu);
@@ -81,67 +84,72 @@ public class ProjetosEmCursoView {
         VBox conteudo = new VBox(20);
         conteudo.setPadding(new Insets(20));
 
-        Label titulo = new Label("Projetos em curso");
+        Label titulo = new Label("Projetos Solicitados");
         titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         conteudo.getChildren().add(titulo);
 
-        ProjetoService service = SpringContext.getBean(ProjetoService.class);
-        List<Projeto> projetos = service.listarProjetos().stream()
-                .filter(p -> "em andamento".equalsIgnoreCase(p.getEstado()))
-                .toList();
+        SolicitacaoprojetoService service = SpringContext.getBean(SolicitacaoprojetoService.class);
+        List<Solicitacaoprojeto> solicitacoes = service.listarSolicitacoes();
 
-        VBox lista = new VBox(10);
-        for (Projeto projeto : projetos) {
-            HBox card = new HBox(15);
-            card.setPadding(new Insets(10));
-            card.setStyle("-fx-background-color: white;"); // Sem borda cinzenta
-            card.setAlignment(Pos.CENTER_LEFT);
+        if (solicitacoes.isEmpty()) {
+            Label semSolicitacoes = new Label("Nenhuma solicitação de projeto encontrada.");
+            semSolicitacoes.setStyle("-fx-font-size: 14px; -fx-text-fill: #666666;");
+            conteudo.getChildren().add(semSolicitacoes);
+        } else {
+            VBox lista = new VBox(10);
+            for (Solicitacaoprojeto sp : solicitacoes) {
+                HBox card = new HBox(15);
+                card.setPadding(new Insets(10));
+                card.setStyle("-fx-background-color: white;");
+                card.setAlignment(Pos.CENTER_LEFT);
 
-            VBox info = new VBox(5);
-            Label nomeProjeto = new Label("Projeto " + projeto.getNome());
-            nomeProjeto.setStyle("-fx-font-weight: bold;");
-            Label descricao = new Label(projeto.getDescricao());
+                VBox info = new VBox(5);
+                Label nomeProjeto = new Label("Projeto ID: " + sp.getId());
+                nomeProjeto.setStyle("-fx-font-weight: bold;");
+                Label descricao = new Label("Local: " + (sp.getLocalreuniao() != null ? sp.getLocalreuniao() : "N/A"));
 
-            info.getChildren().addAll(nomeProjeto, descricao);
+                info.getChildren().addAll(nomeProjeto, descricao);
 
-            Button btnAbrir = criarBotaoAcao("Abrir", false);
-            btnAbrir.setOnAction(e -> new DetalhesProjetosEmCursoView(projeto).show());
+                Button btnAbrir = criarBotaoAcao("Abrir", false);
+                btnAbrir.setOnAction(e -> new DetalhesSolicitacaoView(stage, sp).show());
 
-            Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
-            btnEliminar.setOnAction(e -> eliminarProjeto(projeto));
+                Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
+                btnEliminar.setOnAction(e -> eliminarProjeto(sp));
 
-            HBox botoes = new HBox(10, btnAbrir, btnEliminar);
-            botoes.setAlignment(Pos.CENTER_RIGHT);
+                HBox botoes = new HBox(10, btnAbrir, btnEliminar);
+                botoes.setAlignment(Pos.CENTER_RIGHT);
 
-            Region espaco = new Region();
-            HBox.setHgrow(espaco, Priority.ALWAYS);
+                Region espaco = new Region();
+                HBox.setHgrow(espaco, Priority.ALWAYS);
 
-            card.getChildren().addAll(info, espaco, botoes);
-            lista.getChildren().add(card);
+                card.getChildren().addAll(info, espaco, botoes);
+                lista.getChildren().add(card);
+            }
+
+            ScrollPane scroll = new ScrollPane(lista);
+            scroll.setFitToWidth(true);
+            conteudo.getChildren().add(scroll);
         }
 
-        ScrollPane scroll = new ScrollPane(lista);
-        scroll.setFitToWidth(true);
-        conteudo.getChildren().add(scroll);
         layout.setCenter(conteudo);
 
         Scene scene = new Scene(layout, 900, 600);
         stage.setScene(scene);
-        stage.setTitle("Projetos em Curso");
+        stage.setTitle("Solicitações de Projeto");
         stage.show();
     }
 
-    private void eliminarProjeto(Projeto projeto) {
+    private void eliminarProjeto(Solicitacaoprojeto sp) {
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacao.setTitle("Confirmação");
-        confirmacao.setHeaderText("Tem certeza que deseja eliminar este projeto?");
+        confirmacao.setHeaderText("Tem certeza que deseja eliminar esta solicitação?");
         confirmacao.setContentText("Esta ação é irreversível.");
 
         confirmacao.showAndWait().ifPresent(resposta -> {
             if (resposta == ButtonType.OK) {
-                ProjetoService service = SpringContext.getBean(ProjetoService.class);
-                service.removerProjeto(projeto.getId());
-                show(); // Atualiza
+                SolicitacaoprojetoService service = SpringContext.getBean(SolicitacaoprojetoService.class);
+                service.eliminarSolicitacao(sp.getId());
+                show();
             }
         });
     }

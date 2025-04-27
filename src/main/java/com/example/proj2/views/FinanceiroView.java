@@ -1,6 +1,6 @@
 package com.example.proj2.views;
 
-import com.example.proj2.models.Gestordeprojeto;
+import com.example.proj2.models.Membrodepartamentofinanceiro;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,13 +11,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-public class GestorView {
-    private final Stage stage;
-    private final Gestordeprojeto gestor;
+public class FinanceiroView {
 
-    public GestorView(Stage stage, Gestordeprojeto gestor) {
+    private final Stage stage;
+    private final Membrodepartamentofinanceiro financeiro;
+
+    public FinanceiroView(Stage stage, Membrodepartamentofinanceiro financeiro) {
         this.stage = stage;
-        this.gestor = gestor;
+        this.financeiro = financeiro;
     }
 
     public void show() {
@@ -30,14 +31,15 @@ public class GestorView {
         menu.setPrefWidth(200);
         menu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("👤 Gestor");
+        Label nome = new Label("👤 Financeiro");
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
+        // Estilos
         String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
                 "-fx-font-size: 14px; " +
                 "-fx-font-weight: bold; " +
-                "-fx-pref-width: 160px; " +
+                "-fx-pref-width: 180px; " +
                 "-fx-pref-height: 60px; " +
                 "-fx-background-radius: 10px; " +
                 "-fx-border-radius: 10px; " +
@@ -50,25 +52,31 @@ public class GestorView {
                 "-fx-scale-x: 1.02; " +
                 "-fx-scale-y: 1.02;";
 
-        Button btnSolicitacoes = criarBotao("📋 Solicitações\n de Projeto", estiloBtn, estiloHover);
-        Button btnProjetosCurso = criarBotao("📂 Projetos\nem curso", estiloBtn, estiloHover);
-        Button btnProjetosOrcamento = criarBotao("💰 Projetos\npara orçamento", estiloBtn, estiloHover);
-        Button btnProjetosEspera = criarBotao("🕒 Projetos\nem espera", estiloBtn, estiloHover);
-        Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
+        // Botões
+        Button btnPedidosOrcamento = new Button("💰 Pedidos de Orçamento");
+        Button btnProjetosCurso = new Button("🗂 Projetos em curso");
+        Button btnLogout = new Button("↩ Sair");
 
-        btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage).show());
-        btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage).show());
-        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoView(stage).show());
-        btnProjetosEspera.setOnAction(e -> new ProjetosEmEsperaView(stage).show());
+        for (Button btn : new Button[]{btnPedidosOrcamento, btnProjetosCurso, btnLogout}) {
+            btn.setStyle(estiloBtn);
+            btn.setWrapText(true);
+            btn.setOnMouseEntered(e -> btn.setStyle(estiloBtn + estiloHover));
+            btn.setOnMouseExited(e -> btn.setStyle(estiloBtn));
+        }
+
+        // Navegação dos botões
+        btnPedidosOrcamento.setOnAction(e -> new PedidosOrcamentoView(stage, financeiro).show());
+        btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoFinanceiroView(stage, financeiro).show());
         btnLogout.setOnAction(e -> stage.close());
 
-        VBox conteudoMenu = new VBox(20, nome, btnSolicitacoes, btnProjetosCurso, btnProjetosOrcamento, btnProjetosEspera);
+        VBox conteudoMenu = new VBox(20, nome, btnPedidosOrcamento, btnProjetosCurso);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
 
         menu.getChildren().addAll(conteudoMenu, espacoInferior, btnLogout);
+
         layout.setLeft(menu);
 
         // ==== LOGO CENTRAL ====
@@ -82,20 +90,12 @@ public class GestorView {
         logo.setOpacity(0.3);
 
         center.getChildren().add(logo);
+
         layout.setCenter(center);
 
         Scene scene = new Scene(layout, 900, 600);
         stage.setScene(scene);
-        stage.setTitle("Painel do Gestor");
+        stage.setTitle("Painel do Financeiro");
         stage.show();
-    }
-
-    private Button criarBotao(String texto, String estiloBase, String estiloHover) {
-        Button button = new Button(texto);
-        button.setWrapText(true);
-        button.setStyle(estiloBase);
-        button.setOnMouseEntered(e -> button.setStyle(estiloBase + estiloHover));
-        button.setOnMouseExited(e -> button.setStyle(estiloBase));
-        return button;
     }
 }
