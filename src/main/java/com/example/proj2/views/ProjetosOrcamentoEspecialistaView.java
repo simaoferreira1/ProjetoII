@@ -7,10 +7,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
 
 import java.util.List;
 
@@ -113,27 +112,14 @@ public class ProjetosOrcamentoEspecialistaView {
                         OrcamentoprojetoService serviceInterno = SpringContext.getBean(OrcamentoprojetoService.class);
                         serviceInterno.removerOrcamentoprojeto(orc.getId());
 
-                        // Mostrar imagem de sucesso
-                        Stage sucessoStage = new Stage();
-                        VBox sucessoLayout = new VBox(20);
-                        sucessoLayout.setAlignment(Pos.CENTER);
-                        sucessoLayout.setStyle("-fx-background-color: white; -fx-padding: 20px;");
+                        // Mostrar alerta de sucesso
+                        Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
+                        sucesso.setTitle("Sucesso");
+                        sucesso.setHeaderText(null);
+                        sucesso.setContentText("Projeto eliminado com sucesso!");
+                        sucesso.showAndWait();
 
-                        ImageView sucessoImg = new ImageView(new Image(getClass().getResource("/images/sucesso.png").toExternalForm()));
-                        sucessoImg.setFitHeight(100);
-                        sucessoImg.setPreserveRatio(true);
-
-                        Label sucessoLabel = new Label("Projeto eliminado com sucesso!");
-                        sucessoLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-                        sucessoLayout.getChildren().addAll(sucessoImg, sucessoLabel);
-
-                        Scene sucessoScene = new Scene(sucessoLayout, 300, 200);
-                        sucessoStage.setScene(sucessoScene);
-                        sucessoStage.setTitle("Sucesso");
-                        sucessoStage.show();
-
-                        show(); // Atualiza a lista
+                        show(); // Atualizar a view
                     }
                 });
             });
