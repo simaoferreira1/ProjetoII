@@ -29,7 +29,7 @@ public class DetalhesProjetoOrcamentoEspecialistaView {
         conteudo.setAlignment(Pos.TOP_LEFT);
         conteudo.setPadding(new Insets(30));
 
-        Label titulo = new Label("📋 Detalhes do Projeto para Orçamento");
+        Label titulo = new Label("📋 Detalhes do Projeto em pré-planeamento");
         titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
         Label nomeProjeto = new Label("📌 Projeto: " + orcamento.getProjeto().getNome());
@@ -48,7 +48,7 @@ public class DetalhesProjetoOrcamentoEspecialistaView {
 
         Scene scene = new Scene(layout, 500, 400);
         detalheStage.setScene(scene);
-        detalheStage.setTitle("Detalhes do Projeto para Orçamento");
+        detalheStage.setTitle("Detalhes do Projeto em pré-planeamento");
         detalheStage.show();
     }
 }

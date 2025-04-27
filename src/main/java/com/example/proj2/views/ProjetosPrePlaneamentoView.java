@@ -56,14 +56,12 @@ public class ProjetosPrePlaneamentoView {
                 "-fx-scale-x: 1.02; " +
                 "-fx-scale-y: 1.02;";
 
-        Button btnRegistrarCliente = criarBotao("👥 Registrar\nCliente", estiloBtn, estiloHover);
-        Button btnRegistrarProjeto = criarBotao("📋 Registrar\nProjeto", estiloBtn, estiloHover);
         Button btnSolicitacoes = criarBotao("📋 Solicitações\nde Projeto", estiloBtn, estiloHover);
         Button btnProjetosCurso = criarBotao("📂 Projetos\nem Curso", estiloBtn, estiloHover);
         Button btnProjetosPrePlaneamento = criarBotao("📝 Projetos em\nPré-Planeamento", estiloBtn, estiloHover);
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
-        conteudoMenu.getChildren().addAll(nome, btnRegistrarCliente, btnRegistrarProjeto, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
+        conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -73,8 +71,6 @@ public class ProjetosPrePlaneamentoView {
         btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage, gestor).show());
         btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage, gestor).show());
         btnProjetosPrePlaneamento.setOnAction(e -> new ProjetosPrePlaneamentoView(stage, gestor).show());
-        btnRegistrarCliente.setOnAction(e -> new GestorView(stage, gestor).show());
-        btnRegistrarProjeto.setOnAction(e -> new GestorView(stage, gestor).show());
         btnLogout.setOnAction(e -> stage.close());
 
         layout.setLeft(menu);
@@ -110,7 +106,7 @@ public class ProjetosPrePlaneamentoView {
             for (Projeto projeto : projetosPrePlaneamento) {
                 HBox card = new HBox(15);
                 card.setPadding(new Insets(10));
-                card.setStyle("-fx-background-color: white;");
+                card.setStyle("-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 1px;");
                 card.setAlignment(Pos.CENTER_LEFT);
 
                 VBox info = new VBox(5);
@@ -123,7 +119,7 @@ public class ProjetosPrePlaneamentoView {
                 Button btnAbrir = criarBotaoAcao("Abrir", false);
                 btnAbrir.setOnAction(e -> new DetalhesProjetosEmCursoView(projeto, stage, gestor).show());
 
-                Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
+                Button btnEliminar = criarBotaoAcao("🗑 Planeado", true);
                 btnEliminar.setOnAction(e -> eliminarProjeto(projeto));
 
                 HBox botoes = new HBox(10, btnAbrir, btnEliminar);
@@ -135,10 +131,7 @@ public class ProjetosPrePlaneamentoView {
                 card.getChildren().addAll(info, espaco, botoes);
                 lista.getChildren().add(card);
             }
-
-            ScrollPane scroll = new ScrollPane(lista);
-            scroll.setFitToWidth(true);
-            conteudo.getChildren().add(scroll);
+            conteudo.getChildren().add(lista);
         }
 
         layout.setCenter(conteudo);
@@ -153,7 +146,7 @@ public class ProjetosPrePlaneamentoView {
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacao.setTitle("Confirmação");
         confirmacao.setHeaderText("Tem certeza que deseja eliminar este projeto?");
-        confirmacao.setContentText("Esta ação é irreversível.");
+        confirmacao.setContentText("O projeto passará para o estado 'em curso'.");
 
         confirmacao.showAndWait().ifPresent(resposta -> {
             if (resposta == ButtonType.OK) {

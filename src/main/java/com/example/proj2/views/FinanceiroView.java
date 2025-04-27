@@ -31,7 +31,9 @@ public class FinanceiroView {
         menu.setPrefWidth(200);
         menu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("👤 Financeiro");
+        // Exibir o nome do financeiro no formato "👤 Financeiro: [Nome]"
+        String nomeFinanceiro = financeiro != null && financeiro.getNome() != null ? financeiro.getNome() : "Desconhecido";
+        Label nome = new Label("👤 Financeiro: " + nomeFinanceiro);
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         // Estilos

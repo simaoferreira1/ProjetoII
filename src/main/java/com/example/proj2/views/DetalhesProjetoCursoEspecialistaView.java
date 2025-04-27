@@ -27,18 +27,25 @@ public class DetalhesProjetoCursoEspecialistaView {
         Label titulo = new Label("📋 Detalhes do Projeto");
         titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
-        Label nome = new Label("📌 Nome: " + projeto.getNome());
-        Label descricao = new Label("📝 Descrição: " + projeto.getDescricao());
-        Label dataInicio = new Label("📅 Início: " + projeto.getDatainicio());
-        Label dataFim = new Label("📅 Fim Previsto: " + projeto.getDatafimprevista());
-        Label localizacao = new Label("📍 Localização: " + projeto.getLocalizacao());
-        Label estado = new Label("• Estado: " + projeto.getEstado());
+        layout.getChildren().add(titulo);
 
+        if (projeto == null) {
+            Label mensagem = new Label("⚠️ Nenhum projeto em curso disponível para mostrar.");
+            mensagem.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
+            layout.getChildren().add(mensagem);
+        } else {
+            Label nome = new Label("📌 Nome: " + projeto.getNome());
+            Label descricao = new Label("📝 Descrição: " + projeto.getDescricao());
+            Label dataInicio = new Label("📅 Início: " + projeto.getDatainicio());
+            Label dataFim = new Label("📅 Fim Previsto: " + projeto.getDatafimprevista());
+            Label localizacao = new Label("📍 Localização: " + projeto.getLocalizacao());
+            Label estado = new Label("• Estado: " + projeto.getEstado());
 
-        VBox infoBox = new VBox(10);
-        infoBox.getChildren().addAll(nome, descricao, dataInicio, dataFim, localizacao, estado);
+            VBox infoBox = new VBox(10);
+            infoBox.getChildren().addAll(nome, descricao, dataInicio, dataFim, localizacao, estado);
 
-        layout.getChildren().addAll(titulo, infoBox);
+            layout.getChildren().add(infoBox);
+        }
 
         Scene scene = new Scene(layout, 450, 350);
         detailsStage.setScene(scene);

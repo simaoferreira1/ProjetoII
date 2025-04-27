@@ -57,14 +57,12 @@ public class ProjetosEmCursoView {
                 "-fx-scale-x: 1.02; " +
                 "-fx-scale-y: 1.02;";
 
-        Button btnRegistrarCliente = criarBotao("👥 Registrar\nCliente", estiloBtn, estiloHover);
-        Button btnRegistrarProjeto = criarBotao("📋 Registrar\nProjeto", estiloBtn, estiloHover);
         Button btnSolicitacoes = criarBotao("📋 Solicitações\nde Projeto", estiloBtn, estiloHover);
         Button btnProjetosCurso = criarBotao("📂 Projetos\nem Curso", estiloBtn, estiloHover);
         Button btnProjetosPrePlaneamento = criarBotao("📝 Projetos em\nPré-Planeamento", estiloBtn, estiloHover);
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
-        conteudoMenu.getChildren().addAll(nome, btnRegistrarCliente, btnRegistrarProjeto, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
+        conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -74,8 +72,6 @@ public class ProjetosEmCursoView {
         btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage, gestor).show());
         btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage, gestor).show());
         btnProjetosPrePlaneamento.setOnAction(e -> new ProjetosPrePlaneamentoView(stage, gestor).show());
-        btnRegistrarCliente.setOnAction(e -> new GestorView(stage, gestor).show());
-        btnRegistrarProjeto.setOnAction(e -> new GestorView(stage, gestor).show());
         btnLogout.setOnAction(e -> stage.close());
 
         layout.setLeft(menu);
@@ -92,6 +88,9 @@ public class ProjetosEmCursoView {
         List<Projeto> projetos = service.listarProjetos().stream()
                 .filter(p -> "em curso".equalsIgnoreCase(p.getEstado()))
                 .toList();
+
+        // Adicionar log para depuração
+        System.out.println("Projetos em curso encontrados: " + projetos.size());
 
         if (projetos.isEmpty()) {
             Label semProjetos = new Label("Nenhum projeto em curso encontrado.");
@@ -115,7 +114,7 @@ public class ProjetosEmCursoView {
                 Button btnAbrir = criarBotaoAcao("Abrir", false);
                 btnAbrir.setOnAction(e -> new DetalhesProjetosEmCursoView(projeto, stage, gestor).show());
 
-                Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
+                Button btnEliminar = criarBotaoAcao("🗑 Terminado", true);
                 btnEliminar.setOnAction(e -> eliminarProjeto(projeto));
 
                 HBox botoes = new HBox(10, btnAbrir, btnEliminar);

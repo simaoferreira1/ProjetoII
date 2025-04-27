@@ -14,13 +14,11 @@ public class DetalhesProjetosEmCursoView {
     private final Projeto projeto;
     private final Stage stage;
     private final Gestordeprojeto gestor;
-    private String observacoes;
 
     public DetalhesProjetosEmCursoView(Projeto projeto, Stage stage, Gestordeprojeto gestor) {
         this.projeto = projeto;
         this.stage = stage;
         this.gestor = gestor;
-        this.observacoes = "";
     }
 
     public void show() {
@@ -60,11 +58,9 @@ public class DetalhesProjetosEmCursoView {
         Button btnSolicitacoes = criarBotao("📋 Solicitações\nde Projeto", estiloBtn, estiloHover);
         Button btnProjetosCurso = criarBotao("📂 Projetos\nem Curso", estiloBtn, estiloHover);
         Button btnProjetosPrePlaneamento = criarBotao("📝 Projetos em\nPré-Planeamento", estiloBtn, estiloHover);
-        Button btnRegistrarCliente = criarBotao("👥 Registrar\nCliente", estiloBtn, estiloHover);
-        Button btnRegistrarProjeto = criarBotao("📋 Registrar\nProjeto", estiloBtn, estiloHover);
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
-        conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento, btnRegistrarCliente, btnRegistrarProjeto);
+        conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -74,8 +70,6 @@ public class DetalhesProjetosEmCursoView {
         btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage, gestor).show());
         btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage, gestor).show());
         btnProjetosPrePlaneamento.setOnAction(e -> new ProjetosPrePlaneamentoView(stage, gestor).show());
-        btnRegistrarCliente.setOnAction(e -> new GestorView(stage, gestor).show());
-        btnRegistrarProjeto.setOnAction(e -> new GestorView(stage, gestor).show());
         btnLogout.setOnAction(e -> stage.close());
 
         layout.setLeft(menu);
@@ -93,49 +87,31 @@ public class DetalhesProjetosEmCursoView {
                 new Label("📌 Nome: " + (projeto.getNome() != null ? projeto.getNome() : "N/A")),
                 new Label("📝 Descrição: " + (projeto.getDescricao() != null ? projeto.getDescricao() : "N/A")),
                 new Label("⚙️ Estado: " + (projeto.getEstado() != null ? projeto.getEstado() : "N/A")),
-                new Label("📅 Início: " + (projeto.getDatainicio() != null ? projeto.getDatainicio() : "N/A")),
-                new Label("📅 Fim Previsto: " + (projeto.getDatafimprevista() != null ? projeto.getDatafimprevista() : "N/A")),
-                new Label("📍 Localização: " + (projeto.getLocalizacao() != null ? projeto.getLocalizacao() : "N/A")),
-                new Label("👤 Cliente: " + (projeto.getIdcliente() != null ? projeto.getIdcliente().getNome() : "N/A")),
-                new Label("📜 Licenças: [Não disponível]"),
-                new Label("📈 Progresso: [Não disponível]"),
-                new Label("📋 Requisitos: [Não disponível]"),
-                new Label("💰 Orçamento: [Não disponível]"),
-                new Label("📊 Relatórios Financeiros: [Não disponível]")
+                new Label("📅 Data de Solicitação: " + (projeto.getDatainicio() != null ? projeto.getDatainicio() : "N/A")),
+                new Label("📍 Local da Reunião: " + (projeto.getLocalizacao() != null ? projeto.getLocalizacao() : "N/A")),
+                new Label("👤 ID do Cliente: " + (projeto.getIdcliente() != null ? projeto.getIdcliente() : "N/A"))
         );
-
-        // Seção de Observações
-        Label labelObservacoes = new Label("📝 Observações:");
-        labelObservacoes.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-        TextArea observacoesField = new TextArea();
-        observacoesField.setText(observacoes);
-        observacoesField.setPromptText("Digite suas observações aqui...");
-        observacoesField.setPrefRowCount(5);
-        observacoesField.setPrefColumnCount(40);
 
         Button btnSalvarObservacoes = criarBotaoAcao("Salvar Observações", false);
         btnSalvarObservacoes.setOnAction(e -> {
-            observacoes = observacoesField.getText();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Observações Salvas");
             alert.setHeaderText(null);
-            alert.setContentText("Observações salvas com sucesso!\n\n" + observacoes);
+            alert.setContentText("Observações salvas com sucesso!");
             alert.showAndWait();
         });
 
-        // Botão para Agendar Visita
-        Button btnAgendarVisita = criarBotaoAcao("📅 Agendar Visita", false);
+        Button btnAgendarVisita = criarBotaoAcao("Agendar Visita", false);
         btnAgendarVisita.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Visita Agendada");
             alert.setHeaderText(null);
-            alert.setContentText("Visita agendada para o projeto " + projeto.getNome() + " com o cliente " +
-                    (projeto.getIdcliente() != null ? projeto.getIdcliente().getNome() : "N/A"));
+            alert.setContentText("Visita agendada para o projeto " + projeto.getNome() + " com o cliente ID " +
+                    (projeto.getIdcliente() != null ? projeto.getIdcliente() : "N/A"));
             alert.showAndWait();
         });
 
-        conteudo.getChildren().addAll(titulo, infoBox, labelObservacoes, observacoesField, btnSalvarObservacoes, btnAgendarVisita);
+        conteudo.getChildren().addAll(titulo, infoBox, btnSalvarObservacoes, btnAgendarVisita);
         layout.setCenter(conteudo);
 
         Scene scene = new Scene(layout, 900, 600);

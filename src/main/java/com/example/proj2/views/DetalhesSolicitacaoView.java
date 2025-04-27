@@ -11,40 +11,58 @@ import javafx.stage.Stage;
 
 public class DetalhesSolicitacaoView {
 
-    private final Stage parentStage;
+    private final Stage stage;
     private final Solicitacaoprojeto solicitacao;
 
     public DetalhesSolicitacaoView(Stage parentStage, Solicitacaoprojeto solicitacao) {
-        this.parentStage = parentStage;
         this.solicitacao = solicitacao;
+        this.stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(parentStage);
     }
 
     public void show() {
-        Stage detalhesStage = new Stage();
-        detalhesStage.initOwner(parentStage);
-        detalhesStage.initModality(Modality.APPLICATION_MODAL);
-        detalhesStage.setTitle("Detalhes da Solicita\u00e7\u00e3o");
-
-        VBox layout = new VBox(20);
-        layout.setPadding(new Insets(30));
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.TOP_LEFT);
-        layout.setStyle("-fx-background-color: white;");
+        layout.setStyle("-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-background-radius: 10px; -fx-border-radius: 10px;");
 
-        Label titulo = new Label("\uD83D\uDCCB Detalhes da Solicita\u00e7\u00e3o");
-        titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+        Label titulo = new Label("Detalhes da Solicitação");
+        titulo.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        Label lblId = new Label("\uD83D\uDDC2 ID: " + (solicitacao.getId() != null ? solicitacao.getId() : "N\u00e3o definido"));
-        Label lblLocal = new Label("\uD83D\uDCCD Local da reuni\u00e3o: " + (solicitacao.getLocalreuniao() != null ? solicitacao.getLocalreuniao() : "N\u00e3o definido"));
-        Label lblEstado = new Label("\u2699\uFE0F Estado: " + (solicitacao.getEstado() != null ? solicitacao.getEstado() : "N\u00e3o definido"));
-        Label lblData = new Label("\uD83D\uDCC5 Data da solicita\u00e7\u00e3o: " + (solicitacao.getDatasolicitacao() != null ? solicitacao.getDatasolicitacao().toString() : "N\u00e3o definida"));
+        // Informações do cliente
+        String nomeCliente = "N/A";
+        String emailCliente = "N/A";
+        String telefoneCliente = "N/A";
+        try {
+            nomeCliente = solicitacao.getCliente() != null && solicitacao.getCliente().getNome() != null
+                    ? solicitacao.getCliente().getNome()
+                    : "N/A";
+            emailCliente = solicitacao.getCliente() != null && solicitacao.getCliente().getEmail() != null
+                    ? solicitacao.getCliente().getEmail()
+                    : "N/A";
+            telefoneCliente = solicitacao.getCliente() != null && solicitacao.getCliente().getTelefone() != null
+                    ? solicitacao.getCliente().getTelefone().toString() // Convertendo BigDecimal para String
+                    : "N/A";
+        } catch (Exception e) {
+            System.out.println("Erro ao obter dados do cliente para solicitação: " + e.getMessage());
+        }
+        Label clienteLabel = new Label("Cliente: " + nomeCliente);
+        Label emailLabel = new Label("Email: " + emailCliente);
+        Label telefoneLabel = new Label("Telefone: " + telefoneCliente);
 
-        VBox infoBox = new VBox(10);
-        infoBox.getChildren().addAll(lblId, lblLocal, lblEstado, lblData);
+        // Informações da solicitação
+        Label nomeSolicitacaoLabel = new Label("Nome da Solicitação: " + (solicitacao.getNome() != null ? solicitacao.getNome() : "N/A"));
+        Label descricaoLabel = new Label("Descrição: " + (solicitacao.getDescricao() != null ? solicitacao.getDescricao() : "N/A"));
+        Label dataLabel = new Label("Data da solicitação: " + (solicitacao.getDatasolicitacao() != null ? solicitacao.getDatasolicitacao() : "N/A"));
+        Label estadoLabel = new Label("Estado: " + (solicitacao.getEstado() != null ? solicitacao.getEstado() : "N/A"));
 
-        layout.getChildren().addAll(titulo, infoBox);
+        layout.getChildren().addAll(titulo, clienteLabel, emailLabel, telefoneLabel,
+                nomeSolicitacaoLabel, descricaoLabel, dataLabel, estadoLabel);
 
-        Scene scene = new Scene(layout, 450, 350);
-        detalhesStage.setScene(scene);
-        detalhesStage.showAndWait();
+        Scene scene = new Scene(layout, 400, 300);
+        stage.setScene(scene);
+        stage.setTitle("Detalhes da Solicitação");
+        stage.show();
     }
 }

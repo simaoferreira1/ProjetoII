@@ -42,8 +42,11 @@ public class ProjetosEmCursoFinanceiroView {
         menu.setPrefWidth(200);
         menu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("👤 Financeiro");
-        nome.setStyle("-fx-font-size: 16px;");
+        // Exibir o nome do financeiro no formato "👤 Financeiro: [Nome]"
+        String nomeFinanceiro = financeiro != null && financeiro.getNome() != null ? financeiro.getNome() : "Desconhecido";
+        Label nomeLabel = new Label("👤 Financeiro: " + nomeFinanceiro);
+        nomeLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        nomeLabel.setWrapText(true); // Habilitar quebra de texto para nomes longos
 
         // Estilo para os botões com texto centralizado
         String estiloBtn = "-fx-background-color: #ffffff; " +
@@ -83,7 +86,7 @@ public class ProjetosEmCursoFinanceiroView {
         Region spacerMenu = new Region();
         VBox.setVgrow(spacerMenu, Priority.ALWAYS);
 
-        menu.getChildren().addAll(nome, btnPedidosOrcamento, btnProjetosCurso, spacerMenu, btnSair);
+        menu.getChildren().addAll(nomeLabel, btnPedidosOrcamento, btnProjetosCurso, spacerMenu, btnSair);
 
         // === CONTEÚDO CENTRAL ===
         VBox content = new VBox(20);
@@ -93,7 +96,6 @@ public class ProjetosEmCursoFinanceiroView {
         titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         content.getChildren().add(titulo);
 
-        VBox listaProjetos = new VBox(10);
         ProjetoService projetoService = SpringContext.getBean(ProjetoService.class);
         OrcamentoprojetoService orcamentoService = SpringContext.getBean(OrcamentoprojetoService.class);
         PagamentoRepository pagamentoRepository = SpringContext.getBean(PagamentoRepository.class);
@@ -104,185 +106,193 @@ public class ProjetosEmCursoFinanceiroView {
         // Buscar todos os orçamentos para associar aos projetos
         List<Orcamentoprojeto> orcamentos = orcamentoService.listarOrcamentoprojetos();
 
-        for (Projeto projeto : projetos) {
-            HBox card = new HBox(15);
-            card.setPadding(new Insets(10));
-            card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5px;");
-            card.setAlignment(Pos.CENTER_LEFT);
+        // Verificar se há projetos em curso
+        if (projetos.isEmpty()) {
+            Label semProjetosLabel = new Label("Nenhum projeto em curso disponível.");
+            semProjetosLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #666666;");
+            content.getChildren().add(semProjetosLabel);
+        } else {
+            VBox listaProjetos = new VBox(10);
 
-            VBox info = new VBox(5);
-            Label nomeProjeto = new Label(projeto.getNome());
-            nomeProjeto.setStyle("-fx-font-weight: bold;");
-            Label descricao = new Label(projeto.getDescricao());
+            for (Projeto projeto : projetos) {
+                HBox card = new HBox(15);
+                card.setPadding(new Insets(10));
+                card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5px;");
+                card.setAlignment(Pos.CENTER_LEFT);
 
-            info.getChildren().addAll(nomeProjeto, descricao);
+                VBox info = new VBox(5);
+                Label nomeProjeto = new Label(projeto.getNome());
+                nomeProjeto.setStyle("-fx-font-weight: bold;");
+                Label descricao = new Label(projeto.getDescricao());
 
-            // Buscar o orçamento do projeto
-            Optional<Orcamentoprojeto> orcamentoOpt = orcamentos.stream()
-                    .filter(o -> o.getProjeto() != null && o.getProjeto().getId().equals(projeto.getId()))
-                    .findFirst();
-            BigDecimal orcamentoAtual = orcamentoOpt.map(Orcamentoprojeto::getValortotal).orElse(BigDecimal.ZERO);
+                info.getChildren().addAll(nomeProjeto, descricao);
 
-            // Botões do card
-            Button btnAbrir = new Button("Abrir");
-            btnAbrir.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black;");
+                // Buscar o orçamento do projeto
+                Optional<Orcamentoprojeto> orcamentoOpt = orcamentos.stream()
+                        .filter(o -> o.getProjeto() != null && o.getProjeto().getId().equals(projeto.getId()))
+                        .findFirst();
+                BigDecimal orcamentoAtual = orcamentoOpt.map(Orcamentoprojeto::getValortotal).orElse(BigDecimal.ZERO);
 
-            Button btnAlterarOrcamento = new Button("Alterar Orçamento");
-            btnAlterarOrcamento.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black;");
+                // Botões do card
+                Button btnAbrir = new Button("Abrir");
+                btnAbrir.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black;");
 
-            Button btnGerarRelatorio = new Button("Gerar Relatório");
-            btnGerarRelatorio.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black;");
+                Button btnAlterarOrcamento = new Button("Alterar Orçamento");
+                btnAlterarOrcamento.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black;");
 
-            // Ação do botão "Abrir" (Consultar Entradas/Saídas e Verificar Pagamentos)
-            btnAbrir.setOnAction(event -> {
-                // Buscar o cliente associado ao projeto
-                Cliente cliente = projeto.getIdcliente();
-                BigDecimal entradasFinanceiras = BigDecimal.ZERO;
-                if (cliente != null) {
-                    // Buscar os pagamentos associados ao cliente
-                    List<Pagamento> pagamentos = pagamentoRepository.findByCliente(cliente);
-                    // Calcular Entradas Financeiras (baseado nos pagamentos realizados)
-                    entradasFinanceiras = pagamentos.stream()
-                            .map(Pagamento::getValor)
-                            .filter(valor -> valor != null) // Evitar NullPointerException
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
-                }
+                Button btnGerarRelatorio = new Button("Gerar Relatório");
+                btnGerarRelatorio.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black;");
 
-                // Calcular Saídas Financeiras (baseado no orçamento aprovado)
-                BigDecimal saidasFinanceiras = orcamentoAtual;
-
-                // Calcular Pagamentos Pendentes
-                BigDecimal pagamentosPendentes = entradasFinanceiras.subtract(saidasFinanceiras);
-
-                // Buscar o gestor encarregue do projeto usando o relacionamento direto
-                String nomeGestor = "Desconhecido";
-                Gestordeprojeto gestor = projeto.getGestordeprojeto();
-                if (gestor != null) {
-                    nomeGestor = gestor.getNome() != null ? gestor.getNome() : "Desconhecido";
-                }
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Detalhes do Projeto");
-                alert.setHeaderText(projeto.getNome());
-                alert.setContentText("Descrição: " + projeto.getDescricao() + "\n" +
-                        "Data de Início: " + projeto.getDatainicio() + "\n" +
-                        "Data de Fim Prevista: " + projeto.getDatafimprevista() + "\n" +
-                        "Localização: " + projeto.getLocalizacao() + "\n" +
-                        "Estado: " + projeto.getEstado() + "\n" +
-                        "Entradas Financeiras: €" + entradasFinanceiras + "\n" +
-                        "Saídas Financeiras: €" + saidasFinanceiras + "\n" +
-                        "Pagamentos Pendentes: €" + pagamentosPendentes + "\n" +
-                        "Pagamentos Realizados: €" + entradasFinanceiras + "\n" +
-                        "Gestor Encarregue: " + nomeGestor + "\n" +
-                        "Orçamento: €" + orcamentoAtual);
-                alert.showAndWait();
-            });
-
-            // Ação do botão "Alterar Orçamento"
-            btnAlterarOrcamento.setOnAction(event -> {
-                TextInputDialog dialog = new TextInputDialog(orcamentoAtual.toString());
-                dialog.setTitle("Alterar Orçamento");
-                dialog.setHeaderText("Digite o novo orçamento para o projeto \"" + projeto.getNome() + "\":");
-                dialog.setContentText("Novo Orçamento (€):");
-
-                dialog.showAndWait().ifPresent(novoOrcamento -> {
-                    try {
-                        BigDecimal novoValor = new BigDecimal(novoOrcamento);
-
-                        // Criar ou atualizar o orçamento
-                        Orcamentoprojeto orcamento;
-                        if (orcamentoOpt.isPresent()) {
-                            // Atualizar orçamento existente
-                            orcamento = orcamentoOpt.get();
-                            orcamento.setValortotal(novoValor);
-                            orcamento.setDataaprovacao(LocalDate.now());
-                            orcamento.setEstado("aprovado");
-                            orcamentoService.atualizarOrcamentoprojeto(orcamento);
-                        } else {
-                            // Criar novo orçamento
-                            orcamento = new Orcamentoprojeto();
-                            orcamento.setId(BigDecimal.valueOf(orcamentoService.listarOrcamentoprojetos().size() + 1));
-                            orcamento.setValortotal(novoValor);
-                            orcamento.setDataaprovacao(LocalDate.now());
-                            orcamento.setEstado("aprovado");
-                            orcamento.setProjeto(projeto);
-                            orcamentoService.salvarOrcamentoprojeto(orcamento);
-                        }
-
-                        Alert success = new Alert(Alert.AlertType.INFORMATION);
-                        success.setTitle("Sucesso");
-                        success.setHeaderText(null);
-                        success.setContentText("Orçamento atualizado com sucesso!");
-                        success.showAndWait();
-
-                        show(); // Recarrega a página para atualizar a lista
-                    } catch (NumberFormatException e) {
-                        Alert error = new Alert(Alert.AlertType.ERROR);
-                        error.setTitle("Erro");
-                        error.setHeaderText(null);
-                        error.setContentText("Por favor, insira um valor numérico válido.");
-                        error.showAndWait();
-                    } catch (IllegalArgumentException e) {
-                        Alert error = new Alert(Alert.AlertType.ERROR);
-                        error.setTitle("Erro");
-                        error.setHeaderText(null);
-                        error.setContentText(e.getMessage());
-                        error.showAndWait();
+                // Ação do botão "Abrir" (Consultar Entradas/Saídas e Verificar Pagamentos)
+                btnAbrir.setOnAction(event -> {
+                    // Buscar o cliente associado ao projeto
+                    Cliente cliente = projeto.getIdcliente();
+                    BigDecimal entradasFinanceiras = BigDecimal.ZERO;
+                    if (cliente != null) {
+                        // Buscar os pagamentos associados ao cliente
+                        List<Pagamento> pagamentos = pagamentoRepository.findByCliente(cliente);
+                        // Calcular Entradas Financeiras (baseado nos pagamentos realizados)
+                        entradasFinanceiras = pagamentos.stream()
+                                .map(Pagamento::getValor)
+                                .filter(valor -> valor != null) // Evitar NullPointerException
+                                .reduce(BigDecimal.ZERO, BigDecimal::add);
                     }
+
+                    // Calcular Saídas Financeiras (baseado no orçamento aprovado)
+                    BigDecimal saidasFinanceiras = orcamentoAtual;
+
+                    // Calcular Pagamentos Pendentes
+                    BigDecimal pagamentosPendentes = entradasFinanceiras.subtract(saidasFinanceiras);
+
+                    // Buscar o gestor encarregue do projeto usando o relacionamento direto
+                    String nomeGestor = "Desconhecido";
+                    Gestordeprojeto gestor = projeto.getGestordeprojeto();
+                    if (gestor != null) {
+                        nomeGestor = gestor.getNome() != null ? gestor.getNome() : "Desconhecido";
+                    }
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Detalhes do Projeto");
+                    alert.setHeaderText(projeto.getNome());
+                    alert.setContentText("Descrição: " + projeto.getDescricao() + "\n" +
+                            "Data de Início: " + projeto.getDatainicio() + "\n" +
+                            "Data de Fim Prevista: " + projeto.getDatafimprevista() + "\n" +
+                            "Localização: " + projeto.getLocalizacao() + "\n" +
+                            "Estado: " + projeto.getEstado() + "\n" +
+                            "Entradas Financeiras: €" + entradasFinanceiras + "\n" +
+                            "Saídas Financeiras: €" + saidasFinanceiras + "\n" +
+                            "Pagamentos Pendentes: €" + pagamentosPendentes + "\n" +
+                            "Pagamentos Realizados: €" + entradasFinanceiras + "\n" +
+                            "Gestor Encarregue: " + nomeGestor + "\n" +
+                            "Orçamento: €" + orcamentoAtual);
+                    alert.showAndWait();
                 });
-            });
 
-            // Ação do botão "Gerar Relatório" (Criar Relatório Financeiro de Progresso)
-            btnGerarRelatorio.setOnAction(event -> {
-                // Buscar o cliente associado ao projeto
-                Cliente cliente = projeto.getIdcliente();
-                BigDecimal entradasFinanceiras = BigDecimal.ZERO;
-                if (cliente != null) {
-                    // Buscar os pagamentos associados ao cliente
-                    List<Pagamento> pagamentos = pagamentoRepository.findByCliente(cliente);
-                    // Calcular Entradas Financeiras (baseado nos pagamentos realizados)
-                    entradasFinanceiras = pagamentos.stream()
-                            .map(Pagamento::getValor)
-                            .filter(valor -> valor != null) // Evitar NullPointerException
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
-                }
+                // Ação do botão "Alterar Orçamento"
+                btnAlterarOrcamento.setOnAction(event -> {
+                    TextInputDialog dialog = new TextInputDialog(orcamentoAtual.toString());
+                    dialog.setTitle("Alterar Orçamento");
+                    dialog.setHeaderText("Digite o novo orçamento para o projeto \"" + projeto.getNome() + "\":");
+                    dialog.setContentText("Novo Orçamento (€):");
 
-                // Calcular Saídas Financeiras (baseado no orçamento aprovado)
-                BigDecimal saidasFinanceiras = orcamentoAtual;
+                    dialog.showAndWait().ifPresent(novoOrcamento -> {
+                        try {
+                            BigDecimal novoValor = new BigDecimal(novoOrcamento);
 
-                // Percentual do orçamento utilizado (se orçamento > 0)
-                BigDecimal percentualOrcamentoUtilizado = orcamentoAtual.compareTo(BigDecimal.ZERO) > 0 ?
-                        saidasFinanceiras.divide(orcamentoAtual, 2, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)) :
-                        BigDecimal.ZERO;
+                            // Criar ou atualizar o orçamento
+                            Orcamentoprojeto orcamento;
+                            if (orcamentoOpt.isPresent()) {
+                                // Atualizar orçamento existente
+                                orcamento = orcamentoOpt.get();
+                                orcamento.setValortotal(novoValor);
+                                orcamento.setDataaprovacao(LocalDate.now());
+                                orcamento.setEstado("aprovado");
+                                orcamentoService.atualizarOrcamentoprojeto(orcamento);
+                            } else {
+                                // Criar novo orçamento
+                                orcamento = new Orcamentoprojeto();
+                                orcamento.setId(BigDecimal.valueOf(orcamentoService.listarOrcamentoprojetos().size() + 1));
+                                orcamento.setValortotal(novoValor);
+                                orcamento.setDataaprovacao(LocalDate.now());
+                                orcamento.setEstado("aprovado");
+                                orcamento.setProjeto(projeto);
+                                orcamentoService.salvarOrcamentoprojeto(orcamento);
+                            }
 
-                // Progresso fictício (pode ser ajustado com dados reais)
-                BigDecimal progresso = new BigDecimal("40.00");
+                            Alert success = new Alert(Alert.AlertType.INFORMATION);
+                            success.setTitle("Sucesso");
+                            success.setHeaderText(null);
+                            success.setContentText("Orçamento atualizado com sucesso!");
+                            success.showAndWait();
 
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Relatório Financeiro de Progresso");
-                alert.setHeaderText("Relatório para o projeto \"" + projeto.getNome() + "\"");
-                alert.setContentText("Entradas Financeiras: €" + entradasFinanceiras + "\n" +
-                        "Saídas Financeiras: €" + saidasFinanceiras + "\n" +
-                        "Saldo (Entradas - Saídas): €" + entradasFinanceiras.subtract(saidasFinanceiras) + "\n" +
-                        "Orçamento Total: €" + orcamentoAtual + "\n" +
-                        "Percentual do Orçamento Utilizado: " + percentualOrcamentoUtilizado + "%\n" +
-                        "Progresso do Projeto: " + progresso + "%");
-                alert.showAndWait();
-            });
+                            show(); // Recarrega a página para atualizar a lista
+                        } catch (NumberFormatException e) {
+                            Alert error = new Alert(Alert.AlertType.ERROR);
+                            error.setTitle("Erro");
+                            error.setHeaderText(null);
+                            error.setContentText("Por favor, insira um valor numérico válido.");
+                            error.showAndWait();
+                        } catch (IllegalArgumentException e) {
+                            Alert error = new Alert(Alert.AlertType.ERROR);
+                            error.setTitle("Erro");
+                            error.setHeaderText(null);
+                            error.setContentText(e.getMessage());
+                            error.showAndWait();
+                        }
+                    });
+                });
 
-            HBox botoes = new HBox(10, btnAbrir, btnAlterarOrcamento, btnGerarRelatorio);
-            botoes.setAlignment(Pos.CENTER_RIGHT);
+                // Ação do botão "Gerar Relatório" (Criar Relatório Financeiro de Progresso)
+                btnGerarRelatorio.setOnAction(event -> {
+                    // Buscar o cliente associado ao projeto
+                    Cliente cliente = projeto.getIdcliente();
+                    BigDecimal entradasFinanceiras = BigDecimal.ZERO;
+                    if (cliente != null) {
+                        // Buscar os pagamentos associados ao cliente
+                        List<Pagamento> pagamentos = pagamentoRepository.findByCliente(cliente);
+                        // Calcular Entradas Financeiras (baseado nos pagamentos realizados)
+                        entradasFinanceiras = pagamentos.stream()
+                                .map(Pagamento::getValor)
+                                .filter(valor -> valor != null) // Evitar NullPointerException
+                                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    }
 
-            Region spacer = new Region();
-            HBox.setHgrow(spacer, Priority.ALWAYS);
+                    // Calcular Saídas Financeiras (baseado no orçamento aprovado)
+                    BigDecimal saidasFinanceiras = orcamentoAtual;
 
-            card.getChildren().addAll(info, spacer, botoes);
-            listaProjetos.getChildren().add(card);
+                    // Percentual do orçamento utilizado (se orçamento > 0)
+                    BigDecimal percentualOrcamentoUtilizado = orcamentoAtual.compareTo(BigDecimal.ZERO) > 0 ?
+                            saidasFinanceiras.divide(orcamentoAtual, 2, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)) :
+                            BigDecimal.ZERO;
+
+                    // Progresso fictício (pode ser ajustado com dados reais)
+                    BigDecimal progresso = new BigDecimal("40.00");
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Relatório Financeiro de Progresso");
+                    alert.setHeaderText("Relatório para o projeto \"" + projeto.getNome() + "\"");
+                    alert.setContentText("Entradas Financeiras: €" + entradasFinanceiras + "\n" +
+                            "Saídas Financeiras: €" + saidasFinanceiras + "\n" +
+                            "Saldo (Entradas - Saídas): €" + entradasFinanceiras.subtract(saidasFinanceiras) + "\n" +
+                            "Orçamento Total: €" + orcamentoAtual + "\n" +
+                            "Percentual do Orçamento Utilizado: " + percentualOrcamentoUtilizado + "%\n" +
+                            "Progresso do Projeto: " + progresso + "%");
+                    alert.showAndWait();
+                });
+
+                HBox botoes = new HBox(10, btnAbrir, btnAlterarOrcamento, btnGerarRelatorio);
+                botoes.setAlignment(Pos.CENTER_RIGHT);
+
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                card.getChildren().addAll(info, spacer, botoes);
+                listaProjetos.getChildren().add(card);
+            }
+
+            // Adicionar a lista ao content
+            content.getChildren().add(listaProjetos);
         }
-
-        // Remover a barra de rolagem
-        listaProjetos.setPrefHeight(Region.USE_COMPUTED_SIZE); // Ajusta a altura para o conteúdo
-        content.getChildren().add(listaProjetos); // Adiciona diretamente sem ScrollPane
 
         root.setLeft(menu);
         root.setCenter(content);

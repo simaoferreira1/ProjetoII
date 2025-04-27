@@ -3,7 +3,9 @@ package com.example.proj2.views;
 import com.example.proj2.SpringContext;
 import com.example.proj2.models.Gestordeprojeto;
 import com.example.proj2.models.Solicitacaoprojeto;
+import com.example.proj2.models.Projeto;
 import com.example.proj2.services.SolicitacaoprojetoService;
+import com.example.proj2.services.ProjetoService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class SolicitacoesView {
@@ -57,14 +60,12 @@ public class SolicitacoesView {
                 "-fx-scale-x: 1.02; " +
                 "-fx-scale-y: 1.02;";
 
-        Button btnRegistrarCliente = criarBotao("👥 Registrar\nCliente", estiloBtn, estiloHover);
-        Button btnRegistrarProjeto = criarBotao("📋 Registrar\nProjeto", estiloBtn, estiloHover);
         Button btnSolicitacoes = criarBotao("📋 Solicitações\nde Projeto", estiloBtn, estiloHover);
         Button btnProjetosCurso = criarBotao("📂 Projetos\nem Curso", estiloBtn, estiloHover);
         Button btnProjetosPrePlaneamento = criarBotao("📝 Projetos em\nPré-Planeamento", estiloBtn, estiloHover);
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
-        conteudoMenu.getChildren().addAll(nome, btnRegistrarCliente, btnRegistrarProjeto, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
+        conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -74,8 +75,6 @@ public class SolicitacoesView {
         btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage, gestor).show());
         btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage, gestor).show());
         btnProjetosPrePlaneamento.setOnAction(e -> new ProjetosPrePlaneamentoView(stage, gestor).show());
-        btnRegistrarCliente.setOnAction(e -> new GestorView(stage, gestor).show());
-        btnRegistrarProjeto.setOnAction(e -> new GestorView(stage, gestor).show());
         btnLogout.setOnAction(e -> stage.close());
 
         layout.setLeft(menu);
@@ -91,7 +90,7 @@ public class SolicitacoesView {
         SolicitacaoprojetoService service = SpringContext.getBean(SolicitacaoprojetoService.class);
         List<Solicitacaoprojeto> solicitacoes = service.listarSolicitacoes();
 
-        if (solicitacoes.isEmpty()) {
+        if (solicitacoes == null || solicitacoes.isEmpty()) {
             Label semSolicitacoes = new Label("Nenhuma solicitação de projeto encontrada.");
             semSolicitacoes.setStyle("-fx-font-size: 14px; -fx-text-fill: #666666;");
             conteudo.getChildren().add(semSolicitacoes);
@@ -100,23 +99,63 @@ public class SolicitacoesView {
             for (Solicitacaoprojeto sp : solicitacoes) {
                 HBox card = new HBox(15);
                 card.setPadding(new Insets(10));
-                card.setStyle("-fx-background-color: white;");
+                card.setStyle("-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 1px;");
                 card.setAlignment(Pos.CENTER_LEFT);
 
                 VBox info = new VBox(5);
-                Label nomeProjeto = new Label("Projeto ID: " + sp.getId());
-                nomeProjeto.setStyle("-fx-font-weight: bold;");
-                Label descricao = new Label("Local: " + (sp.getLocalreuniao() != null ? sp.getLocalreuniao() : "N/A"));
+                String nomeCliente = sp.getCliente() != null && sp.getCliente().getNome() != null ? sp.getCliente().getNome() : "N/A";
+                String emailCliente = sp.getCliente() != null && sp.getCliente().getEmail() != null ? sp.getCliente().getEmail() : "N/A";
 
-                info.getChildren().addAll(nomeProjeto, descricao);
+                Label clienteLabel = new Label("Cliente: " + nomeCliente);
+                clienteLabel.setStyle("-fx-font-weight: bold;");
+                Label emailLabel = new Label("Email: " + emailCliente);
+
+                info.getChildren().addAll(clienteLabel, emailLabel);
 
                 Button btnAbrir = criarBotaoAcao("Abrir", false);
                 btnAbrir.setOnAction(e -> new DetalhesSolicitacaoView(stage, sp).show());
 
-                Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
-                btnEliminar.setOnAction(e -> eliminarProjeto(sp));
+                Button btnAceitar = criarBotaoAcao("✔ Aceitar", false);
+                btnAceitar.setStyle("-fx-background-color: #ffffff; " +
+                        "-fx-text-fill: green; " +
+                        "-fx-font-size: 12px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-padding: 6px 12px; " +
+                        "-fx-background-radius: 8px; " +
+                        "-fx-border-radius: 8px; " +
+                        "-fx-border-color: green; " +
+                        "-fx-border-width: 1px; " +
+                        "-fx-cursor: hand;");
+                btnAceitar.setOnMouseEntered(e -> btnAceitar.setStyle(
+                        "-fx-background-color: #ccffcc; " +
+                                "-fx-text-fill: green; " +
+                                "-fx-font-size: 12px; " +
+                                "-fx-font-weight: bold; " +
+                                "-fx-padding: 6px 12px; " +
+                                "-fx-background-radius: 8px; " +
+                                "-fx-border-radius: 8px; " +
+                                "-fx-border-color: green; " +
+                                "-fx-border-width: 1px; " +
+                                "-fx-cursor: hand; " +
+                                "-fx-scale-x: 1.05; " +
+                                "-fx-scale-y: 1.05;"));
+                btnAceitar.setOnMouseExited(e -> btnAceitar.setStyle(
+                        "-fx-background-color: #ffffff; " +
+                                "-fx-text-fill: green; " +
+                                "-fx-font-size: 12px; " +
+                                "-fx-font-weight: bold; " +
+                                "-fx-padding: 6px 12px; " +
+                                "-fx-background-radius: 8px; " +
+                                "-fx-border-radius: 8px; " +
+                                "-fx-border-color: green; " +
+                                "-fx-border-width: 1px; " +
+                                "-fx-cursor: hand;"));
+                btnAceitar.setOnAction(e -> aceitarSolicitacao(sp));
 
-                HBox botoes = new HBox(10, btnAbrir, btnEliminar);
+                Button btnRecusar = criarBotaoAcao("🗑 Recusar", true);
+                btnRecusar.setOnAction(e -> eliminarProjeto(sp));
+
+                HBox botoes = new HBox(10, btnAbrir, btnAceitar, btnRecusar);
                 botoes.setAlignment(Pos.CENTER_RIGHT);
 
                 Region espaco = new Region();
@@ -125,10 +164,7 @@ public class SolicitacoesView {
                 card.getChildren().addAll(info, espaco, botoes);
                 lista.getChildren().add(card);
             }
-
-            ScrollPane scroll = new ScrollPane(lista);
-            scroll.setFitToWidth(true);
-            conteudo.getChildren().add(scroll);
+            conteudo.getChildren().add(lista);
         }
 
         layout.setCenter(conteudo);
@@ -139,10 +175,56 @@ public class SolicitacoesView {
         stage.show();
     }
 
+    private void aceitarSolicitacao(Solicitacaoprojeto sp) {
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setTitle("Confirmação");
+        confirmacao.setHeaderText("Tem certeza que deseja aceitar esta solicitação?");
+        confirmacao.setContentText("O projeto será movido para o estado 'em pré-planeamento'.");
+
+        confirmacao.showAndWait().ifPresent(resposta -> {
+            if (resposta == ButtonType.OK) {
+                Projeto projeto = new Projeto();
+                projeto.setNome(sp.getNome() != null ? sp.getNome() : "Projeto ID " + sp.getId());
+                projeto.setDescricao(sp.getDescricao() != null ? sp.getDescricao() : "Descrição não fornecida");
+                projeto.setLocalizacao(sp.getLocalreuniao() != null ? sp.getLocalreuniao() : "Não especificado");
+                projeto.setDatainicio(sp.getDatasolicitacao());
+                projeto.setDatafimprevista(null);
+                projeto.setIdcliente(sp.getCliente());
+                projeto.setEstado("em pré-planeamento");
+
+                ProjetoService projetoService = SpringContext.getBean(ProjetoService.class);
+                List<Projeto> projetosExistentes = projetoService.listarProjetos();
+                BigDecimal novoId = BigDecimal.ONE;
+                if (!projetosExistentes.isEmpty()) {
+                    BigDecimal maiorId = projetosExistentes.stream()
+                            .map(Projeto::getId)
+                            .filter(id -> id != null)
+                            .max(BigDecimal::compareTo)
+                            .orElse(BigDecimal.ZERO);
+                    novoId = maiorId.add(BigDecimal.ONE);
+                }
+                projeto.setId(novoId);
+
+                projetoService.salvarProjeto(projeto);
+
+                SolicitacaoprojetoService solicitacaoService = SpringContext.getBean(SolicitacaoprojetoService.class);
+                solicitacaoService.eliminarSolicitacao(sp.getId());
+
+                Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
+                sucesso.setTitle("Sucesso");
+                sucesso.setHeaderText(null);
+                sucesso.setContentText("Solicitação aceita com sucesso! O projeto foi movido para 'em pré-planeamento'.");
+                sucesso.showAndWait();
+
+                show();
+            }
+        });
+    }
+
     private void eliminarProjeto(Solicitacaoprojeto sp) {
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacao.setTitle("Confirmação");
-        confirmacao.setHeaderText("Tem certeza que deseja eliminar esta solicitação?");
+        confirmacao.setHeaderText("Tem certeza que deseja recusar esta solicitação?");
         confirmacao.setContentText("Esta ação é irreversível.");
 
         confirmacao.showAndWait().ifPresent(resposta -> {

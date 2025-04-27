@@ -44,7 +44,7 @@ public class RegistarView {
 
         TextField telefoneField = new TextField();
         telefoneField.setPromptText("Telefone");
-        telefoneField.setMaxWidth(250);
+        emailField.setMaxWidth(250);
 
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Palavra-passe");
@@ -55,14 +55,14 @@ public class RegistarView {
                 "Gestor de Projeto",
                 "Especialista",
                 "Membro Departamento Financeiro",
-                "Cliente" // <-- adicionei o Cliente aqui
+                "Cliente"
         );
         tipoUtilizadorComboBox.setPromptText("Tipo de Utilizador");
         tipoUtilizadorComboBox.setMaxWidth(250);
 
         Button registerButton = new Button("Registar");
         registerButton.setPrefWidth(250);
-        registerButton.setStyle("-fx-background-color: #f5c242; -fx-text-fill: white; -fx-font-weight: bold;");
+        registerButton.setStyle("-fx-background-color: #f5c242; -fx-text-fill: black; -fx-font-weight: bold;");
 
         HBox loginBox = new HBox(5);
         loginBox.setAlignment(Pos.CENTER);
@@ -85,13 +85,30 @@ public class RegistarView {
             String password = passwordField.getText();
             String tipoUtilizador = tipoUtilizadorComboBox.getValue();
 
-            System.out.println("Nome: " + nome);
-            System.out.println("Email: " + email);
-            System.out.println("Telefone: " + telefone);
-            System.out.println("Password: " + password);
-            System.out.println("Tipo de Utilizador: " + tipoUtilizador);
+            // Validação básica
+            if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty() || password.isEmpty() || tipoUtilizador == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erro");
+                alert.setHeaderText(null);
+                alert.setContentText("Por favor, preencha todos os campos!");
+                alert.showAndWait();
+            } else {
+                System.out.println("Nome: " + nome);
+                System.out.println("Email: " + email);
+                System.out.println("Telefone: " + telefone);
+                System.out.println("Password: " + password);
+                System.out.println("Tipo de Utilizador: " + tipoUtilizador);
 
-            // Aqui depois vais criar o objeto correto (Gestor/Especialista/Financeiro/Cliente) e guardar no banco
+                // Aqui você pode adicionar a lógica para salvar o utilizador no banco de dados
+                // Por enquanto, após o registro bem-sucedido, voltamos para a tela de login
+                Alert success = new Alert(Alert.AlertType.INFORMATION);
+                success.setTitle("Sucesso");
+                success.setHeaderText(null);
+                success.setContentText("Utilizador registrado com sucesso!");
+                success.showAndWait();
+
+                new LoginView(stage).show();
+            }
         });
 
         root.getChildren().addAll(

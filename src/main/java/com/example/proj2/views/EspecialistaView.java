@@ -60,7 +60,7 @@ public class EspecialistaView {
         Button btnProjetosCurso = criarBotao("📂 Projetos\nem curso", estiloBtn, estiloHover);
         btnProjetosCurso.setOnAction(e -> new ProjetosCursoEspecialistaView(stage).show());
 
-        Button btnProjetosOrcamento = criarBotao("💰 Projetos\npara orçamento", estiloBtn, estiloHover);
+        Button btnProjetosOrcamento = criarBotao("💰 Projetos\nem pré-planeamento", estiloBtn, estiloHover);
         btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage).show());
 
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);

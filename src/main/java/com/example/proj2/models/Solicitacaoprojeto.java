@@ -13,7 +13,7 @@ public class Solicitacaoprojeto {
     private BigDecimal id;
 
     @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "idsolicitacao", nullable = false)
     private Cliente cliente;
 
@@ -25,6 +25,12 @@ public class Solicitacaoprojeto {
 
     @Column(name = "estado", length = 20)
     private String estado;
+
+    @Column(name = "nome", length = 100) // Novo campo para o nome da solicitação
+    private String nome;
+
+    @Column(name = "descricao", length = 500) // Novo campo para a descrição da solicitação
+    private String descricao;
 
     public BigDecimal getId() {
         return id;
@@ -66,4 +72,19 @@ public class Solicitacaoprojeto {
         this.estado = estado;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 }
