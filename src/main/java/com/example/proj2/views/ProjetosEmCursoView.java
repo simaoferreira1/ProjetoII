@@ -85,9 +85,8 @@ public class ProjetosEmCursoView {
         conteudo.getChildren().add(titulo);
 
         ProjetoService service = SpringContext.getBean(ProjetoService.class);
-        List<Projeto> projetos = service.listarProjetos().stream()
-                .filter(p -> "em curso".equalsIgnoreCase(p.getEstado()))
-                .toList();
+        List<Projeto> projetos = service.listarProjetosPorEstadoComCliente("em curso");
+
 
         // Adicionar log para depuração
         System.out.println("Projetos em curso encontrados: " + projetos.size());
@@ -112,7 +111,10 @@ public class ProjetosEmCursoView {
                 info.getChildren().addAll(nomeProjeto, descricao);
 
                 Button btnAbrir = criarBotaoAcao("Abrir", false);
-                btnAbrir.setOnAction(e -> new DetalhesProjetosEmCursoView(projeto, stage, gestor).show());
+                btnAbrir.setOnAction(e -> {
+                    DetalhesProjetosEmCursoView detalhesView = new DetalhesProjetosEmCursoView(projeto, new Stage(), gestor);
+                    detalhesView.show();
+                });
 
                 Button btnEliminar = criarBotaoAcao("🗑 Terminado", true);
                 btnEliminar.setOnAction(e -> eliminarProjeto(projeto));

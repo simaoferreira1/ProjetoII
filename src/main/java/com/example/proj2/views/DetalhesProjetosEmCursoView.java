@@ -22,103 +22,38 @@ public class DetalhesProjetosEmCursoView {
     }
 
     public void show() {
-        BorderPane layout = new BorderPane();
-        layout.setStyle("-fx-background-color: white;");
+        Stage detalheStage = new Stage(); // Nova janela
 
-        // === MENU LATERAL ===
-        VBox menu = new VBox();
-        menu.setStyle("-fx-background-color: #f1c40f;");
-        menu.setPadding(new Insets(20));
-        menu.setPrefWidth(200);
-        menu.setAlignment(Pos.TOP_CENTER);
-
-        VBox conteudoMenu = new VBox(20);
-        conteudoMenu.setAlignment(Pos.TOP_CENTER);
-
-        Label nome = new Label("👤 Gestor: " + (gestor != null ? gestor.getNome() : "Desconhecido"));
-        nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-        String estiloBtn = "-fx-background-color: #ffffff; " +
-                "-fx-text-fill: #333333; " +
-                "-fx-font-size: 14px; " +
-                "-fx-font-weight: bold; " +
-                "-fx-pref-width: 160px; " +
-                "-fx-pref-height: 60px; " +
-                "-fx-background-radius: 10px; " +
-                "-fx-border-radius: 10px; " +
-                "-fx-border-color: #cccccc; " +
-                "-fx-border-width: 1px; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2); " +
-                "-fx-alignment: center;";
-
-        String estiloHover = "-fx-background-color: #e0e0e0; " +
-                "-fx-scale-x: 1.02; " +
-                "-fx-scale-y: 1.02;";
-
-        Button btnSolicitacoes = criarBotao("📋 Solicitações\nde Projeto", estiloBtn, estiloHover);
-        Button btnProjetosCurso = criarBotao("📂 Projetos\nem Curso", estiloBtn, estiloHover);
-        Button btnProjetosPrePlaneamento = criarBotao("📝 Projetos em\nPré-Planeamento", estiloBtn, estiloHover);
-        Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
-
-        conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
-
-        Region espacoInferior = new Region();
-        VBox.setVgrow(espacoInferior, Priority.ALWAYS);
-
-        menu.getChildren().addAll(conteudoMenu, espacoInferior, btnLogout);
-
-        btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage, gestor).show());
-        btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoView(stage, gestor).show());
-        btnProjetosPrePlaneamento.setOnAction(e -> new ProjetosPrePlaneamentoView(stage, gestor).show());
-        btnLogout.setOnAction(e -> stage.close());
-
-        layout.setLeft(menu);
-
-        // === CONTEÚDO CENTRAL ===
-        VBox conteudo = new VBox(20);
-        conteudo.setPadding(new Insets(30));
+        VBox conteudo = new VBox(15);
+        conteudo.setPadding(new Insets(25));
+        conteudo.setStyle("-fx-background-color: white;");
         conteudo.setAlignment(Pos.TOP_LEFT);
 
         Label titulo = new Label("📋 Detalhes do Projeto");
-        titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+        titulo.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
-        VBox infoBox = new VBox(10);
+        VBox infoBox = new VBox(8);
         infoBox.getChildren().addAll(
                 new Label("📌 Nome: " + (projeto.getNome() != null ? projeto.getNome() : "N/A")),
                 new Label("📝 Descrição: " + (projeto.getDescricao() != null ? projeto.getDescricao() : "N/A")),
                 new Label("⚙️ Estado: " + (projeto.getEstado() != null ? projeto.getEstado() : "N/A")),
-                new Label("📅 Data de Solicitação: " + (projeto.getDatainicio() != null ? projeto.getDatainicio() : "N/A")),
-                new Label("📍 Local da Reunião: " + (projeto.getLocalizacao() != null ? projeto.getLocalizacao() : "N/A")),
-                new Label("👤 ID do Cliente: " + (projeto.getIdcliente() != null ? projeto.getIdcliente() : "N/A"))
+                new Label("📅 Data de Início: " + (projeto.getDatainicio() != null ? projeto.getDatainicio() : "N/A")),
+                new Label("📆 Data Fim Prevista: " + (projeto.getDatafimprevista() != null ? projeto.getDatafimprevista() : "N/A")),
+                new Label("📍 Localização: " + (projeto.getLocalizacao() != null ? projeto.getLocalizacao() : "N/A")),
+                new Label("👤 Cliente: " + (projeto.getIdcliente() != null && projeto.getIdcliente().getNome() != null
+                        ? projeto.getIdcliente().getNome() : "N/A"))
         );
 
-        Button btnSalvarObservacoes = criarBotaoAcao("Salvar Observações", false);
-        btnSalvarObservacoes.setOnAction(e -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Observações Salvas");
-            alert.setHeaderText(null);
-            alert.setContentText("Observações salvas com sucesso!");
-            alert.showAndWait();
-        });
 
-        Button btnAgendarVisita = criarBotaoAcao("Agendar Visita", false);
-        btnAgendarVisita.setOnAction(e -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Visita Agendada");
-            alert.setHeaderText(null);
-            alert.setContentText("Visita agendada para o projeto " + projeto.getNome() + " com o cliente ID " +
-                    (projeto.getIdcliente() != null ? projeto.getIdcliente() : "N/A"));
-            alert.showAndWait();
-        });
+        conteudo.getChildren().addAll(titulo, infoBox);
 
-        conteudo.getChildren().addAll(titulo, infoBox, btnSalvarObservacoes, btnAgendarVisita);
-        layout.setCenter(conteudo);
-
-        Scene scene = new Scene(layout, 900, 600);
-        stage.setScene(scene);
-        stage.setTitle("Detalhes do Projeto");
-        stage.show();
+        Scene scene = new Scene(conteudo, 420, 350);
+        detalheStage.setScene(scene);
+        detalheStage.setTitle("Detalhes do Projeto");
+        detalheStage.initOwner(stage); // liga à janela principal
+        detalheStage.show();
     }
+
 
     private Button criarBotao(String texto, String estiloBase, String estiloHover) {
         Button button = new Button(texto);

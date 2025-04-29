@@ -70,4 +70,9 @@ public class ProjetoService {
     public void removerProjeto(BigDecimal id) {
         projetoRepository.deleteById(id);
     }
+
+    public List<Projeto> listarProjetosPorEstadoComCliente(String estado) {
+        return projetoRepository.findByEstadoWithCliente(estado);
+    }
+
 }

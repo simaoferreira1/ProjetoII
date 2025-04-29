@@ -3,6 +3,7 @@ package com.example.proj2.repository;
 import com.example.proj2.models.Projeto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param; // <-- IMPORTANTE!
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -14,4 +15,8 @@ public interface ProjetoRepository extends JpaRepository<Projeto, BigDecimal> {
 
     @Query("SELECT p FROM Projeto p LEFT JOIN FETCH p.gestordeprojeto")
     List<Projeto> findAllWithGestordeprojeto();
+
+    @Query("SELECT p FROM Projeto p LEFT JOIN FETCH p.idcliente WHERE p.estado = :estado")
+    List<Projeto> findByEstadoWithCliente(@Param("estado") String estado);
+
 }

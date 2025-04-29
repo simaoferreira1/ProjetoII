@@ -84,7 +84,7 @@ public class ProjetosPrePlaneamentoView {
         conteudo.getChildren().add(titulo);
 
         ProjetoService service = SpringContext.getBean(ProjetoService.class);
-        List<Projeto> projetos = service.listarProjetos();
+        List<Projeto> projetos = service.listarProjetosPorEstadoComCliente("em pré-planeamento");
 
         // Adicionar logs para depuração
         System.out.println("Total de projetos carregados: " + projetos.size());
