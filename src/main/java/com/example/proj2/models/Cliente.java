@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class Cliente {
     @Id
     @Column(name = "idcliente", nullable = false, precision = 10)
-    private Long id;
+    private BigDecimal id;
 
     @Column(name = "nome", length = 50)
     private String nome;
@@ -26,11 +26,11 @@ public class Cliente {
     @Column(name = "password", length = 20)
     private String password;
 
-    public Long getId() {
+    public BigDecimal getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(BigDecimal id) {
         this.id = id;
     }
 

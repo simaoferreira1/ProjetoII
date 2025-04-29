@@ -1,13 +1,13 @@
 package com.example.proj2.views;
 
+import com.example.proj2.models.Especialista;
+import com.example.proj2.models.Gestordeprojeto;
+import com.example.proj2.models.Membrodepartamentofinanceiro;
+import com.example.proj2.services.AuthService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -32,9 +32,8 @@ public class LoginView {
         // Logo
         Image logoImage = new Image(getClass().getResource("/images/Capacete.png").toExternalForm());
         ImageView logo = new ImageView(logoImage);
-        logo.setFitWidth(150); // Ajusta o tamanho conforme queiras
+        logo.setFitWidth(150);
         logo.setPreserveRatio(true);
-
 
         Region separator = new Region();
         separator.setPrefHeight(10);
@@ -51,15 +50,37 @@ public class LoginView {
         loginButton.setPrefWidth(250);
         loginButton.setStyle("-fx-background-color: #f5c242; -fx-text-fill: white; -fx-font-weight: bold;");
 
+        loginButton.setOnAction(e -> {
+            String email = emailField.getText().trim();
+            String password = passwordField.getText().trim();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                showAlert("Erro", "Por favor, preencha todos os campos.");
+                return;
+            }
+
+            AuthService authService = new AuthService();
+            Object user = authService.autenticar(email, password);
+
+            if (user instanceof Gestordeprojeto gestor) {
+                new GestorView(stage, gestor).show();
+            } else if (user instanceof Especialista especialista) {
+                new EspecialistaView(stage, especialista).show();
+            } else if (user instanceof Membrodepartamentofinanceiro financeiro) {
+                new FinanceiroView(stage, financeiro).show();
+            } else {
+                showAlert("Erro", "Credenciais inválidas.");
+            }
+        });
+
         HBox registerBox = new HBox(5);
         registerBox.setAlignment(Pos.CENTER);
         Label noAccount = new Label("Não tem uma conta?");
         Hyperlink registerLink = new Hyperlink("Registar");
         registerLink.setStyle("-fx-text-fill: #f5c242; -fx-font-weight: bold;");
         registerLink.setOnAction(e -> {
-            new com.example.proj2.views.RegistarView(stage).show(); // Abrir a página de registar
+            new RegistarView(stage).show();
         });
-
 
         registerBox.getChildren().addAll(noAccount, registerLink);
 
@@ -69,5 +90,13 @@ public class LoginView {
         stage.setScene(scene);
         stage.setTitle("Login - Betonarte");
         stage.show();
+    }
+
+    private void showAlert(String titulo, String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
     }
 }
