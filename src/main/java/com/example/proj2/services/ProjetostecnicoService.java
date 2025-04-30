@@ -48,7 +48,7 @@ public class ProjetostecnicoService {
     }
 
     // Método para buscar um projeto técnico por ID
-    public Optional<Projetostecnico> buscarProjetostecnicoPorId(BigDecimal id) {
+    public Optional<Projetostecnico> buscarProjetostecnicoPorId(Integer id) {
         return projetostecnicoRepository.findById(id);
     }
 
@@ -62,7 +62,7 @@ public class ProjetostecnicoService {
     }
 
     // Método para remover um projeto técnico por ID
-    public void removerProjetostecnico(BigDecimal id) {
+    public void removerProjetostecnico(Integer id) {
         projetostecnicoRepository.deleteById(id);
     }
 }

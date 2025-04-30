@@ -44,7 +44,7 @@ public class PagamentoService {
     }
 
     // Método para buscar um pagamento por ID
-    public Optional<Pagamento> buscarPagamentoPorId(BigDecimal id) {
+    public Optional<Pagamento> buscarPagamentoPorId(Integer id) {
         return pagamentoRepository.findById(id);
     }
 
@@ -58,7 +58,7 @@ public class PagamentoService {
     }
 
     // Método para remover um pagamento por ID
-    public void removerPagamento(BigDecimal id) {
+    public void removerPagamento(Integer id) {
         pagamentoRepository.deleteById(id);
     }
 }

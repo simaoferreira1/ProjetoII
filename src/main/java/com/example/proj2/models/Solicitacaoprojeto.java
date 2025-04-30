@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class Solicitacaoprojeto {
     @Id
     @Column(name = "idsolicitacao", nullable = false, precision = 5)
-    private BigDecimal id;
+    private Integer id;
 
     @MapsId
     @OneToOne(fetch = FetchType.EAGER, optional = false)
@@ -32,11 +32,11 @@ public class Solicitacaoprojeto {
     @Column(name = "descricao", length = 500) // Novo campo para a descrição da solicitação
     private String descricao;
 
-    public BigDecimal getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

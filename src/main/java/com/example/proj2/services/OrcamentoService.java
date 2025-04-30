@@ -48,7 +48,7 @@ public class OrcamentoService {
     }
 
     // Método para buscar um orçamento por ID
-    public Optional<Orcamento> buscarOrcamentoPorId(BigDecimal id) {
+    public Optional<Orcamento> buscarOrcamentoPorId(Integer id) {
         return orcamentoRepository.findById(id);
     }
 
@@ -62,7 +62,7 @@ public class OrcamentoService {
     }
 
     // Método para remover um orçamento por ID
-    public void removerOrcamento(BigDecimal id) {
+    public void removerOrcamento(Integer id) {
         orcamentoRepository.deleteById(id);
     }
 }

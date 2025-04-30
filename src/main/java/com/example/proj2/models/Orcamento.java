@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class Orcamento {
     @Id
     @Column(name = "idorcamentototal", nullable = false, precision = 10)
-    private BigDecimal id;
+    private Integer id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
@@ -29,11 +29,11 @@ public class Orcamento {
     @Column(name = "estado", length = 50)
     private String estado;
 
-    public BigDecimal getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

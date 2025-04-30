@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;
 
-public interface UtilizadorRepository extends JpaRepository<Utilizador, BigDecimal> {
+public interface UtilizadorRepository extends JpaRepository<Utilizador, Integer> {
 }

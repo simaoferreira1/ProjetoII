@@ -35,7 +35,7 @@ public class TipoutilizadorService {
     }
 
     // Método para buscar um tipo de utilizador por ID
-    public Optional<Tipoutilizador> buscarTipoutilizadorPorId(BigDecimal id) {
+    public Optional<Tipoutilizador> buscarTipoutilizadorPorId(Integer id) {
         return tipoutilizadorRepository.findById(id);
     }
 
@@ -48,7 +48,7 @@ public class TipoutilizadorService {
     }
 
     // Método para remover um tipo de utilizador por ID
-    public void removerTipoutilizador(BigDecimal id) {
+    public void removerTipoutilizador(Integer id) {
         tipoutilizadorRepository.deleteById(id);
     }
 }

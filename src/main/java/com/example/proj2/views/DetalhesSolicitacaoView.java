@@ -9,6 +9,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.math.BigDecimal;
+
 public class DetalhesSolicitacaoView {
 
     private final Stage stage;
@@ -30,37 +32,37 @@ public class DetalhesSolicitacaoView {
         Label titulo = new Label("Detalhes da Solicitação");
         titulo.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        // Informações do cliente
-        String nomeCliente = "N/A";
-        String emailCliente = "N/A";
-        String telefoneCliente = "N/A";
-        try {
-            nomeCliente = solicitacao.getCliente() != null && solicitacao.getCliente().getNome() != null
+        if (solicitacao == null) {
+            Label mensagem = new Label("⚠️ Nenhuma solicitação disponível para mostrar.");
+            mensagem.setStyle("-fx-font-size: 14px; -fx-text-fill: gray;");
+            layout.getChildren().addAll(titulo, mensagem);
+        } else {
+            // Informações do cliente
+            String nomeCliente = solicitacao.getCliente() != null && solicitacao.getCliente().getNome() != null
                     ? solicitacao.getCliente().getNome()
                     : "N/A";
-            emailCliente = solicitacao.getCliente() != null && solicitacao.getCliente().getEmail() != null
+            String emailCliente = solicitacao.getCliente() != null && solicitacao.getCliente().getEmail() != null
                     ? solicitacao.getCliente().getEmail()
                     : "N/A";
-            telefoneCliente = solicitacao.getCliente() != null && solicitacao.getCliente().getTelefone() != null
-                    ? solicitacao.getCliente().getTelefone().toString() // Convertendo BigDecimal para String
-                    : "N/A";
-        } catch (Exception e) {
-            System.out.println("Erro ao obter dados do cliente para solicitação: " + e.getMessage());
+            BigDecimal telefoneCliente = solicitacao.getCliente() != null && solicitacao.getCliente().getTelefone() != null
+                    ? solicitacao.getCliente().getTelefone() // Telefone é String, não BigDecimal
+                    : null;
+
+            Label clienteLabel = new Label("👤 Cliente: " + nomeCliente);
+            Label emailLabel = new Label("📧 Email: " + emailCliente);
+            Label telefoneLabel = new Label("📞 Telefone: " + telefoneCliente);
+
+            // Informações da solicitação
+            Label nomeSolicitacaoLabel = new Label("📌 Nome da Solicitação: " + (solicitacao.getNome() != null ? solicitacao.getNome() : "N/A"));
+            Label descricaoLabel = new Label("📝 Descrição: " + (solicitacao.getDescricao() != null ? solicitacao.getDescricao() : "N/A"));
+            Label dataLabel = new Label("📅 Data da Solicitação: " + (solicitacao.getDatasolicitacao() != null ? solicitacao.getDatasolicitacao() : "N/A"));
+            Label localReuniaoLabel = new Label("📍 Local da Reunião: " + (solicitacao.getLocalreuniao() != null ? solicitacao.getLocalreuniao() : "N/A"));
+
+            layout.getChildren().addAll(titulo, clienteLabel, emailLabel, telefoneLabel,
+                    nomeSolicitacaoLabel, descricaoLabel, dataLabel, localReuniaoLabel);
         }
-        Label clienteLabel = new Label("Cliente: " + nomeCliente);
-        Label emailLabel = new Label("Email: " + emailCliente);
-        Label telefoneLabel = new Label("Telefone: " + telefoneCliente);
 
-        // Informações da solicitação
-        Label nomeSolicitacaoLabel = new Label("Nome da Solicitação: " + (solicitacao.getNome() != null ? solicitacao.getNome() : "N/A"));
-        Label descricaoLabel = new Label("Descrição: " + (solicitacao.getDescricao() != null ? solicitacao.getDescricao() : "N/A"));
-        Label dataLabel = new Label("Data da solicitação: " + (solicitacao.getDatasolicitacao() != null ? solicitacao.getDatasolicitacao() : "N/A"));
-        Label estadoLabel = new Label("Estado: " + (solicitacao.getEstado() != null ? solicitacao.getEstado() : "N/A"));
-
-        layout.getChildren().addAll(titulo, clienteLabel, emailLabel, telefoneLabel,
-                nomeSolicitacaoLabel, descricaoLabel, dataLabel, estadoLabel);
-
-        Scene scene = new Scene(layout, 400, 300);
+        Scene scene = new Scene(layout, 400, 350); // Aumentei a altura para acomodar o novo campo
         stage.setScene(scene);
         stage.setTitle("Detalhes da Solicitação");
         stage.show();

@@ -54,8 +54,7 @@ public class RegistarView {
         tipoUtilizadorComboBox.getItems().addAll(
                 "Gestor de Projeto",
                 "Especialista",
-                "Membro Departamento Financeiro",
-                "Cliente"
+                "Membro Departamento Financeiro"
         );
         tipoUtilizadorComboBox.setPromptText("Tipo de Utilizador");
         tipoUtilizadorComboBox.setMaxWidth(250);
@@ -104,7 +103,7 @@ public class RegistarView {
                 Alert success = new Alert(Alert.AlertType.INFORMATION);
                 success.setTitle("Sucesso");
                 success.setHeaderText(null);
-                success.setContentText("Utilizador registrado com sucesso!");
+                success.setContentText("Utilizador registado com sucesso!");
                 success.showAndWait();
 
                 new LoginView(stage).show();

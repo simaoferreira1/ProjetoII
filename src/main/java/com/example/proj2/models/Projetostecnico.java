@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class Projetostecnico {
     @Id
     @Column(name = "idprojetotecnico", nullable = false, precision = 10)
-    private BigDecimal id;
+    private Integer id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
@@ -26,11 +26,11 @@ public class Projetostecnico {
     @Column(name = "datacriacao")
     private LocalDate datacriacao;
 
-    public BigDecimal getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

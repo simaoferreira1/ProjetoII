@@ -30,7 +30,7 @@ public class EspecialistaRepository {
         }
     }
 
-    public Especialista findById(BigDecimal id) {
+    public Especialista findById(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.get(Especialista.class, id);
         }
@@ -42,7 +42,7 @@ public class EspecialistaRepository {
         }
     }
 
-    public void deleteById(BigDecimal id) {
+    public void deleteById(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             Especialista especialista = session.get(Especialista.class, id);

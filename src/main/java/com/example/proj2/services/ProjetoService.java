@@ -54,7 +54,7 @@ public class ProjetoService {
     }
 
     // Método para buscar um projeto por ID
-    public Optional<Projeto> buscarProjetoPorId(BigDecimal id) {
+    public Optional<Projeto> buscarProjetoPorId(Integer id) {
         return projetoRepository.findById(id);
     }
 
@@ -67,7 +67,7 @@ public class ProjetoService {
     }
 
     // Método para remover um projeto por ID
-    public void removerProjeto(BigDecimal id) {
+    public void removerProjeto(Integer id) {
         projetoRepository.deleteById(id);
     }
 

@@ -36,7 +36,7 @@ public class ProjetosPrePlaneamentoView {
         VBox conteudoMenu = new VBox(20);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("👤 Gestor: " + (gestor != null ? gestor.getNome() : "Desconhecido"));
+        Label nome = new Label("👤 Gestor: " + (gestor != null && gestor.getNome() != null ? gestor.getNome() : "Desconhecido"));
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         String estiloBtn = "-fx-background-color: #ffffff; " +
@@ -84,18 +84,11 @@ public class ProjetosPrePlaneamentoView {
         conteudo.getChildren().add(titulo);
 
         ProjetoService service = SpringContext.getBean(ProjetoService.class);
-        List<Projeto> projetos = service.listarProjetosPorEstadoComCliente("em pré-planeamento");
+        List<Projeto> projetos = service.listarProjetos();
 
-        // Adicionar logs para depuração
-        System.out.println("Total de projetos carregados: " + projetos.size());
-        projetos.forEach(projeto -> System.out.println("Projeto: ID " + projeto.getId() + ", Nome: " + projeto.getNome() + ", Estado: " + projeto.getEstado()));
-
-        // Ajustar o filtro para corresponder ao estado real na tabela
         List<Projeto> projetosPrePlaneamento = projetos.stream()
-                .filter(p -> p.getEstado() != null && "em pré-planeamento".equalsIgnoreCase(p.getEstado().trim()))
+                .filter(p -> p != null && p.getEstado() != null && "em pré-planeamento".equalsIgnoreCase(p.getEstado().trim()))
                 .toList();
-
-        System.out.println("Projetos em pré-planeamento encontrados: " + projetosPrePlaneamento.size());
 
         if (projetosPrePlaneamento.isEmpty()) {
             Label semProjetos = new Label("Nenhum projeto em pré-planeamento encontrado.");
@@ -103,26 +96,61 @@ public class ProjetosPrePlaneamentoView {
             conteudo.getChildren().add(semProjetos);
         } else {
             VBox lista = new VBox(10);
+            lista.setStyle("-fx-background-color: #f2f2f2; -fx-padding: 10px; -fx-border-radius: 5px; -fx-border-color: #cccccc; -fx-border-width: 1px;");
             for (Projeto projeto : projetosPrePlaneamento) {
                 HBox card = new HBox(15);
                 card.setPadding(new Insets(10));
-                card.setStyle("-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 1px;");
+                card.setStyle("-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-background-radius: 5px; -fx-border-radius: 5px;");
                 card.setAlignment(Pos.CENTER_LEFT);
 
                 VBox info = new VBox(5);
-                Label nomeProjeto = new Label("Projeto: " + projeto.getNome());
+                Label nomeProjeto = new Label("📌 Projeto: " + (projeto.getNome() != null ? projeto.getNome() : "N/A"));
                 nomeProjeto.setStyle("-fx-font-weight: bold;");
-                Label descricao = new Label(projeto.getDescricao());
+                Label descricao = new Label("📝 Descrição: " + (projeto.getDescricao() != null ? projeto.getDescricao() : "N/A"));
 
                 info.getChildren().addAll(nomeProjeto, descricao);
 
                 Button btnAbrir = criarBotaoAcao("Abrir", false);
                 btnAbrir.setOnAction(e -> new DetalhesProjetosEmCursoView(projeto, stage, gestor).show());
 
-                Button btnEliminar = criarBotaoAcao("🗑 Planeado", true);
-                btnEliminar.setOnAction(e -> eliminarProjeto(projeto));
+                Button btnPlaneado = criarBotaoAcao("✔ Planeado", true);
+                btnPlaneado.setStyle("-fx-background-color: #ffffff; " +
+                        "-fx-text-fill: green; " +
+                        "-fx-font-size: 12px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-padding: 6px 12px; " +
+                        "-fx-background-radius: 8px; " +
+                        "-fx-border-radius: 8px; " +
+                        "-fx-border-color: green; " +
+                        "-fx-border-width: 1px; " +
+                        "-fx-cursor: hand;");
+                btnPlaneado.setOnMouseEntered(e -> btnPlaneado.setStyle(
+                        "-fx-background-color: #ccffcc; " +
+                                "-fx-text-fill: green; " +
+                                "-fx-font-size: 12px; " +
+                                "-fx-font-weight: bold; " +
+                                "-fx-padding: 6px 12px; " +
+                                "-fx-background-radius: 8px; " +
+                                "-fx-border-radius: 8px; " +
+                                "-fx-border-color: green; " +
+                                "-fx-border-width: 1px; " +
+                                "-fx-cursor: hand; " +
+                                "-fx-scale-x: 1.05; " +
+                                "-fx-scale-y: 1.05;"));
+                btnPlaneado.setOnMouseExited(e -> btnPlaneado.setStyle(
+                        "-fx-background-color: #ffffff; " +
+                                "-fx-text-fill: green; " +
+                                "-fx-font-size: 12px; " +
+                                "-fx-font-weight: bold; " +
+                                "-fx-padding: 6px 12px; " +
+                                "-fx-background-radius: 8px; " +
+                                "-fx-border-radius: 8px; " +
+                                "-fx-border-color: green; " +
+                                "-fx-border-width: 1px; " +
+                                "-fx-cursor: hand;"));
+                btnPlaneado.setOnAction(e -> planejarProjeto(projeto));
 
-                HBox botoes = new HBox(10, btnAbrir, btnEliminar);
+                HBox botoes = new HBox(10, btnAbrir, btnPlaneado);
                 botoes.setAlignment(Pos.CENTER_RIGHT);
 
                 Region espaco = new Region();
@@ -142,16 +170,24 @@ public class ProjetosPrePlaneamentoView {
         stage.show();
     }
 
-    private void eliminarProjeto(Projeto projeto) {
+    private void planejarProjeto(Projeto projeto) {
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacao.setTitle("Confirmação");
-        confirmacao.setHeaderText("Tem certeza que deseja eliminar este projeto?");
+        confirmacao.setHeaderText("Tem certeza que deseja marcar este projeto como planeado?");
         confirmacao.setContentText("O projeto passará para o estado 'em curso'.");
 
         confirmacao.showAndWait().ifPresent(resposta -> {
             if (resposta == ButtonType.OK) {
                 ProjetoService service = SpringContext.getBean(ProjetoService.class);
-                service.removerProjeto(projeto.getId());
+                projeto.setEstado("em curso");
+                service.atualizarProjeto(projeto);
+
+                Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
+                sucesso.setTitle("Sucesso");
+                sucesso.setHeaderText(null);
+                sucesso.setContentText("Projeto marcado como 'em curso' com sucesso!");
+                sucesso.showAndWait();
+
                 show();
             }
         });
@@ -166,22 +202,22 @@ public class ProjetosPrePlaneamentoView {
         return button;
     }
 
-    private Button criarBotaoAcao(String texto, boolean vermelho) {
+    private Button criarBotaoAcao(String texto, boolean verde) {
         String estilo = "-fx-background-color: #ffffff; " +
-                "-fx-text-fill: " + (vermelho ? "red" : "#333333") + "; " +
+                "-fx-text-fill: " + (verde ? "green" : "#333333") + "; " +
                 "-fx-font-size: 12px; " +
                 "-fx-font-weight: bold; " +
                 "-fx-padding: 6px 12px; " +
                 "-fx-background-radius: 8px; " +
                 "-fx-border-radius: 8px; " +
-                "-fx-border-color: " + (vermelho ? "red" : "#cccccc") + "; " +
+                "-fx-border-color: " + (verde ? "green" : "#cccccc") + "; " +
                 "-fx-border-width: 1px; " +
                 "-fx-cursor: hand;";
         Button button = new Button(texto);
         button.setStyle(estilo);
 
         button.setOnMouseEntered(e -> button.setStyle(estilo +
-                "-fx-background-color: " + (vermelho ? "#ffcccc" : "#e0e0e0") + "; " +
+                "-fx-background-color: " + (verde ? "#ccffcc" : "#e0e0e0") + "; " +
                 "-fx-scale-x: 1.05; " +
                 "-fx-scale-y: 1.05;"));
         button.setOnMouseExited(e -> button.setStyle(estilo));

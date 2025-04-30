@@ -44,7 +44,7 @@ public class UtilizadorService {
     }
 
     // Método para procurar um utilizador por ID
-    public Optional<Utilizador> buscarUtilizadorPorId(BigDecimal id) {
+    public Optional<Utilizador> buscarUtilizadorPorId(Integer id) {
         return utilizadorRepository.findById(id);
     }
 
@@ -57,7 +57,7 @@ public class UtilizadorService {
     }
 
     // Método para remover um utilizador por ID
-    public void removerUtilizador(BigDecimal id) {
+    public void removerUtilizador(Integer id) {
         utilizadorRepository.deleteById(id);
     }
 }

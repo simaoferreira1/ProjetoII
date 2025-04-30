@@ -34,6 +34,7 @@ public class ProjetosEmCursoFinanceiroView {
 
     public void show() {
         BorderPane root = new BorderPane();
+        root.setStyle("-fx-background-color: white;");
 
         // === MENU LATERAL ===
         VBox menu = new VBox(15);
@@ -42,13 +43,15 @@ public class ProjetosEmCursoFinanceiroView {
         menu.setPrefWidth(200);
         menu.setAlignment(Pos.TOP_CENTER);
 
-        // Exibir o nome do financeiro no formato "👤 Financeiro: [Nome]"
-        String nomeFinanceiro = financeiro != null && financeiro.getNome() != null ? financeiro.getNome() : "Desconhecido";
-        Label nomeLabel = new Label("👤 Financeiro: " + nomeFinanceiro);
+        // Exibir o nome e ID do financeiro
+        Label nomeLabel = new Label("👤 Financeiro: " + (financeiro != null && financeiro.getNome() != null ? financeiro.getNome() : "Desconhecido"));
         nomeLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        nomeLabel.setWrapText(true); // Habilitar quebra de texto para nomes longos
+        nomeLabel.setWrapText(true);
 
-        // Estilo para os botões com texto centralizado
+        Label idFinanceiro = new Label("🆔 ID: " + (financeiro != null && financeiro.getId() != null ? financeiro.getId() : "N/A"));
+        idFinanceiro.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
+
+        // Estilo para os botões
         String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
                 "-fx-font-size: 14px; " +
@@ -60,125 +63,104 @@ public class ProjetosEmCursoFinanceiroView {
                 "-fx-border-color: #cccccc; " +
                 "-fx-border-width: 1px; " +
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2); " +
-                "-fx-alignment: center;"; // Centralizar o texto dentro do botão
+                "-fx-alignment: center;";
 
-        // Estilo para o efeito de hover
         String estiloHover = "-fx-background-color: #e0e0e0; " +
                 "-fx-scale-x: 1.02; " +
-                "-fx-scale-y: 1.02; ";
+                "-fx-scale-y: 1.02;";
 
-        Button btnPedidosOrcamento = new Button("💰 Pedidos de Orçamento");
-        Button btnProjetosCurso = new Button("🗂 Projetos em curso");
-        Button btnSair = new Button("↩ Sair");
-
-        for (Button btn : new Button[]{btnPedidosOrcamento, btnProjetosCurso, btnSair}) {
-            btn.setStyle(estiloBtn);
-            btn.setWrapText(true);
-            // Adicionar efeito de hover
-            btn.setOnMouseEntered(e -> btn.setStyle(estiloBtn + estiloHover));
-            btn.setOnMouseExited(e -> btn.setStyle(estiloBtn));
-        }
+        Button btnPedidosOrcamento = criarBotao("💰 Pedidos de\nOrçamento", estiloBtn, estiloHover);
+        Button btnProjetosCurso = criarBotao("🗂 Projetos\nem curso", estiloBtn, estiloHover);
+        Button btnSair = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
         btnPedidosOrcamento.setOnAction(event -> new PedidosOrcamentoView(stage, financeiro).show());
+        btnProjetosCurso.setOnAction(event -> new ProjetosEmCursoFinanceiroView(stage, financeiro).show());
         btnSair.setOnAction(event -> stage.close());
 
-        // Adicionar espaçador para empurrar o botão "Sair" para o final
         Region spacerMenu = new Region();
         VBox.setVgrow(spacerMenu, Priority.ALWAYS);
 
-        menu.getChildren().addAll(nomeLabel, btnPedidosOrcamento, btnProjetosCurso, spacerMenu, btnSair);
+        menu.getChildren().addAll(nomeLabel, idFinanceiro, btnPedidosOrcamento, btnProjetosCurso, spacerMenu, btnSair);
+        root.setLeft(menu);
 
         // === CONTEÚDO CENTRAL ===
         VBox content = new VBox(20);
         content.setPadding(new Insets(30, 20, 20, 20));
 
-        Label titulo = new Label("Projetos em curso");
+        Label titulo = new Label("Projetos em Curso");
         titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         content.getChildren().add(titulo);
 
         ProjetoService projetoService = SpringContext.getBean(ProjetoService.class);
         OrcamentoprojetoService orcamentoService = SpringContext.getBean(OrcamentoprojetoService.class);
         PagamentoRepository pagamentoRepository = SpringContext.getBean(PagamentoRepository.class);
-        List<Projeto> projetos = projetoService.listarProjetos().stream()
-                .filter(p -> "em curso".equalsIgnoreCase(p.getEstado()))
+        List<Projeto> projetos = projetoService.listarProjetos();
+
+        // Filtrar projetos no estado "em curso"
+        List<Projeto> projetosFiltrados = projetos.stream()
+                .filter(p -> p != null && p.getEstado() != null && "em curso".equalsIgnoreCase(p.getEstado().trim()))
                 .toList();
 
-        // Buscar todos os orçamentos para associar aos projetos
         List<Orcamentoprojeto> orcamentos = orcamentoService.listarOrcamentoprojetos();
 
-        // Verificar se há projetos em curso
-        if (projetos.isEmpty()) {
+        if (projetosFiltrados.isEmpty()) {
             Label semProjetosLabel = new Label("Nenhum projeto em curso disponível.");
             semProjetosLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #666666;");
             content.getChildren().add(semProjetosLabel);
         } else {
             VBox listaProjetos = new VBox(10);
 
-            for (Projeto projeto : projetos) {
+            for (Projeto projeto : projetosFiltrados) {
                 HBox card = new HBox(15);
                 card.setPadding(new Insets(10));
-                card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5px;");
+                card.setStyle("-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-background-radius: 5px; -fx-border-radius: 5px;");
                 card.setAlignment(Pos.CENTER_LEFT);
 
                 VBox info = new VBox(5);
-                Label nomeProjeto = new Label(projeto.getNome());
+                Label idProjeto = new Label("🆔 ID: " + (projeto.getId() != null ? projeto.getId() : "N/A"));
+                Label nomeProjeto = new Label("📌 Projeto: " + (projeto.getNome() != null ? projeto.getNome() : "N/A"));
                 nomeProjeto.setStyle("-fx-font-weight: bold;");
-                Label descricao = new Label(projeto.getDescricao());
+                Label descricao = new Label("📝 Descrição: " + (projeto.getDescricao() != null ? projeto.getDescricao() : "N/A"));
 
-                info.getChildren().addAll(nomeProjeto, descricao);
+                info.getChildren().addAll(idProjeto, nomeProjeto, descricao);
 
-                // Buscar o orçamento do projeto
                 Optional<Orcamentoprojeto> orcamentoOpt = orcamentos.stream()
-                        .filter(o -> o.getProjeto() != null && o.getProjeto().getId().equals(projeto.getId()))
+                        .filter(o -> o != null && o.getProjeto() != null && o.getProjeto().getId() != null && o.getProjeto().getId().equals(projeto.getId()))
                         .findFirst();
                 BigDecimal orcamentoAtual = orcamentoOpt.map(Orcamentoprojeto::getValortotal).orElse(BigDecimal.ZERO);
 
-                // Botões do card
-                Button btnAbrir = new Button("Abrir");
-                btnAbrir.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black;");
+                Button btnAbrir = criarBotaoAcao("Abrir", false);
+                Button btnAlterarOrcamento = criarBotaoAcao("Alterar\nOrçamento", false);
+                Button btnGerarRelatorio = criarBotaoAcao("Gerar\nRelatório", false);
 
-                Button btnAlterarOrcamento = new Button("Alterar Orçamento");
-                btnAlterarOrcamento.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black;");
-
-                Button btnGerarRelatorio = new Button("Gerar Relatório");
-                btnGerarRelatorio.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black;");
-
-                // Ação do botão "Abrir" (Consultar Entradas/Saídas e Verificar Pagamentos)
                 btnAbrir.setOnAction(event -> {
-                    // Buscar o cliente associado ao projeto
                     Cliente cliente = projeto.getIdcliente();
                     BigDecimal entradasFinanceiras = BigDecimal.ZERO;
                     if (cliente != null) {
-                        // Buscar os pagamentos associados ao cliente
                         List<Pagamento> pagamentos = pagamentoRepository.findByCliente(cliente);
-                        // Calcular Entradas Financeiras (baseado nos pagamentos realizados)
                         entradasFinanceiras = pagamentos.stream()
                                 .map(Pagamento::getValor)
-                                .filter(valor -> valor != null) // Evitar NullPointerException
+                                .filter(valor -> valor != null)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
                     }
 
-                    // Calcular Saídas Financeiras (baseado no orçamento aprovado)
                     BigDecimal saidasFinanceiras = orcamentoAtual;
+                    BigDecimal pagamentosPendentes = orcamentoAtual.subtract(entradasFinanceiras);
 
-                    // Calcular Pagamentos Pendentes
-                    BigDecimal pagamentosPendentes = entradasFinanceiras.subtract(saidasFinanceiras);
-
-                    // Buscar o gestor encarregue do projeto usando o relacionamento direto
                     String nomeGestor = "Desconhecido";
                     Gestordeprojeto gestor = projeto.getGestordeprojeto();
-                    if (gestor != null) {
-                        nomeGestor = gestor.getNome() != null ? gestor.getNome() : "Desconhecido";
+                    if (gestor != null && gestor.getNome() != null) {
+                        nomeGestor = gestor.getNome();
                     }
 
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Detalhes do Projeto");
-                    alert.setHeaderText(projeto.getNome());
-                    alert.setContentText("Descrição: " + projeto.getDescricao() + "\n" +
-                            "Data de Início: " + projeto.getDatainicio() + "\n" +
-                            "Data de Fim Prevista: " + projeto.getDatafimprevista() + "\n" +
-                            "Localização: " + projeto.getLocalizacao() + "\n" +
-                            "Estado: " + projeto.getEstado() + "\n" +
+                    alert.setHeaderText(projeto.getNome() != null ? projeto.getNome() : "N/A");
+                    alert.setContentText("Descrição: " + (projeto.getDescricao() != null ? projeto.getDescricao() : "N/A") + "\n" +
+                            "Data de Início: " + (projeto.getDatainicio() != null ? projeto.getDatainicio() : "N/A") + "\n" +
+                            "Data de Fim Prevista: " + (projeto.getDatafimprevista() != null ? projeto.getDatafimprevista() : "N/A") + "\n" +
+                            "Localização: " + (projeto.getLocalizacao() != null ? projeto.getLocalizacao() : "N/A") + "\n" +
+                            "Estado: " + (projeto.getEstado() != null ? projeto.getEstado() : "N/A") + "\n" +
                             "Entradas Financeiras: €" + entradasFinanceiras + "\n" +
                             "Saídas Financeiras: €" + saidasFinanceiras + "\n" +
                             "Pagamentos Pendentes: €" + pagamentosPendentes + "\n" +
@@ -188,30 +170,25 @@ public class ProjetosEmCursoFinanceiroView {
                     alert.showAndWait();
                 });
 
-                // Ação do botão "Alterar Orçamento"
                 btnAlterarOrcamento.setOnAction(event -> {
                     TextInputDialog dialog = new TextInputDialog(orcamentoAtual.toString());
                     dialog.setTitle("Alterar Orçamento");
-                    dialog.setHeaderText("Digite o novo orçamento para o projeto \"" + projeto.getNome() + "\":");
+                    dialog.setHeaderText("Digite o novo orçamento para o projeto \"" + (projeto.getNome() != null ? projeto.getNome() : "N/A") + "\":");
                     dialog.setContentText("Novo Orçamento (€):");
 
                     dialog.showAndWait().ifPresent(novoOrcamento -> {
                         try {
                             BigDecimal novoValor = new BigDecimal(novoOrcamento);
 
-                            // Criar ou atualizar o orçamento
                             Orcamentoprojeto orcamento;
                             if (orcamentoOpt.isPresent()) {
-                                // Atualizar orçamento existente
                                 orcamento = orcamentoOpt.get();
                                 orcamento.setValortotal(novoValor);
                                 orcamento.setDataaprovacao(LocalDate.now());
                                 orcamento.setEstado("aprovado");
                                 orcamentoService.atualizarOrcamentoprojeto(orcamento);
                             } else {
-                                // Criar novo orçamento
                                 orcamento = new Orcamentoprojeto();
-                                orcamento.setId(BigDecimal.valueOf(orcamentoService.listarOrcamentoprojetos().size() + 1));
                                 orcamento.setValortotal(novoValor);
                                 orcamento.setDataaprovacao(LocalDate.now());
                                 orcamento.setEstado("aprovado");
@@ -225,7 +202,7 @@ public class ProjetosEmCursoFinanceiroView {
                             success.setContentText("Orçamento atualizado com sucesso!");
                             success.showAndWait();
 
-                            show(); // Recarrega a página para atualizar a lista
+                            show();
                         } catch (NumberFormatException e) {
                             Alert error = new Alert(Alert.AlertType.ERROR);
                             error.setTitle("Erro");
@@ -242,35 +219,27 @@ public class ProjetosEmCursoFinanceiroView {
                     });
                 });
 
-                // Ação do botão "Gerar Relatório" (Criar Relatório Financeiro de Progresso)
                 btnGerarRelatorio.setOnAction(event -> {
-                    // Buscar o cliente associado ao projeto
                     Cliente cliente = projeto.getIdcliente();
                     BigDecimal entradasFinanceiras = BigDecimal.ZERO;
                     if (cliente != null) {
-                        // Buscar os pagamentos associados ao cliente
                         List<Pagamento> pagamentos = pagamentoRepository.findByCliente(cliente);
-                        // Calcular Entradas Financeiras (baseado nos pagamentos realizados)
                         entradasFinanceiras = pagamentos.stream()
                                 .map(Pagamento::getValor)
-                                .filter(valor -> valor != null) // Evitar NullPointerException
+                                .filter(valor -> valor != null)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
                     }
 
-                    // Calcular Saídas Financeiras (baseado no orçamento aprovado)
                     BigDecimal saidasFinanceiras = orcamentoAtual;
-
-                    // Percentual do orçamento utilizado (se orçamento > 0)
                     BigDecimal percentualOrcamentoUtilizado = orcamentoAtual.compareTo(BigDecimal.ZERO) > 0 ?
                             saidasFinanceiras.divide(orcamentoAtual, 2, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)) :
                             BigDecimal.ZERO;
 
-                    // Progresso fictício (pode ser ajustado com dados reais)
                     BigDecimal progresso = new BigDecimal("40.00");
 
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Relatório Financeiro de Progresso");
-                    alert.setHeaderText("Relatório para o projeto \"" + projeto.getNome() + "\"");
+                    alert.setHeaderText("Relatório para o projeto \"" + (projeto.getNome() != null ? projeto.getNome() : "N/A") + "\"");
                     alert.setContentText("Entradas Financeiras: €" + entradasFinanceiras + "\n" +
                             "Saídas Financeiras: €" + saidasFinanceiras + "\n" +
                             "Saldo (Entradas - Saídas): €" + entradasFinanceiras.subtract(saidasFinanceiras) + "\n" +
@@ -290,11 +259,11 @@ public class ProjetosEmCursoFinanceiroView {
                 listaProjetos.getChildren().add(card);
             }
 
-            // Adicionar a lista ao content
-            content.getChildren().add(listaProjetos);
+            ScrollPane scroll = new ScrollPane(listaProjetos);
+            scroll.setFitToWidth(true);
+            content.getChildren().add(scroll);
         }
 
-        root.setLeft(menu);
         root.setCenter(content);
 
         Scene scene = new Scene(root, 900, 600);
@@ -304,5 +273,37 @@ public class ProjetosEmCursoFinanceiroView {
         stage.setMinHeight(600);
         stage.setResizable(true);
         stage.show();
+    }
+
+    private Button criarBotao(String texto, String estiloBase, String estiloHover) {
+        Button button = new Button(texto);
+        button.setWrapText(true);
+        button.setStyle(estiloBase);
+        button.setOnMouseEntered(e -> button.setStyle(estiloBase + estiloHover));
+        button.setOnMouseExited(e -> button.setStyle(estiloBase));
+        return button;
+    }
+
+    private Button criarBotaoAcao(String texto, boolean cinza) {
+        String estilo = "-fx-background-color: " + (cinza ? "#e0e0e0" : "#ffffff") + "; " +
+                "-fx-text-fill: #333333; " +
+                "-fx-font-size: 12px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-padding: 6px 12px; " +
+                "-fx-background-radius: 8px; " +
+                "-fx-border-radius: 8px; " +
+                "-fx-border-color: #cccccc; " +
+                "-fx-border-width: 1px; " +
+                "-fx-cursor: hand;";
+        Button button = new Button(texto);
+        button.setWrapText(true);
+        button.setStyle(estilo);
+
+        button.setOnMouseEntered(e -> button.setStyle(estilo +
+                "-fx-background-color: " + (cinza ? "#d0d0d0" : "#e0e0e0") + "; " +
+                "-fx-scale-x: 1.05; " +
+                "-fx-scale-y: 1.05;"));
+        button.setOnMouseExited(e -> button.setStyle(estilo));
+        return button;
     }
 }

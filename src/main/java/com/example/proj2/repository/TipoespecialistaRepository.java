@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;
 
-public interface TipoespecialistaRepository extends JpaRepository<Tipoespecialista, BigDecimal> {
+public interface TipoespecialistaRepository extends JpaRepository<Tipoespecialista, Integer> {
 }

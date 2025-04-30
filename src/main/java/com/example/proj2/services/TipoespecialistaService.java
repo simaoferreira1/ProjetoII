@@ -35,7 +35,7 @@ public class TipoespecialistaService {
     }
 
     // Método para buscar um tipo de especialista por ID
-    public Optional<Tipoespecialista> buscarTipoespecialistaPorId(BigDecimal id) {
+    public Optional<Tipoespecialista> buscarTipoespecialistaPorId(Integer id) {
         return tipoespecialistaRepository.findById(id);
     }
 
@@ -48,7 +48,7 @@ public class TipoespecialistaService {
     }
 
     // Método para remover um tipo de especialista por ID
-    public void removerTipoespecialista(BigDecimal id) {
+    public void removerTipoespecialista(Integer id) {
         tipoespecialistaRepository.deleteById(id);
     }
 }

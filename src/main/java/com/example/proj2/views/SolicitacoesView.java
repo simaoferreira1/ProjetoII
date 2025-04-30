@@ -13,7 +13,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class SolicitacoesView {
@@ -53,7 +52,7 @@ public class SolicitacoesView {
                 "-fx-border-radius: 10px; " +
                 "-fx-border-color: #cccccc; " +
                 "-fx-border-width: 1px; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2); " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 0, 2); " +
                 "-fx-alignment: center;";
 
         String estiloHover = "-fx-background-color: #e0e0e0; " +
@@ -152,7 +151,7 @@ public class SolicitacoesView {
                                 "-fx-cursor: hand;"));
                 btnAceitar.setOnAction(e -> aceitarSolicitacao(sp));
 
-                Button btnRecusar = criarBotaoAcao("🗑 Recusar", true);
+                Button btnRecusar = criarBotaoAcao(" Recusar", true);
                 btnRecusar.setOnAction(e -> eliminarProjeto(sp));
 
                 HBox botoes = new HBox(10, btnAbrir, btnAceitar, btnRecusar);
@@ -190,22 +189,11 @@ public class SolicitacoesView {
                 projeto.setDatainicio(sp.getDatasolicitacao());
                 projeto.setDatafimprevista(null);
                 projeto.setIdcliente(sp.getCliente());
+                projeto.setGestordeprojeto(gestor); // Adicionado o gestor atual
                 projeto.setEstado("em pré-planeamento");
 
                 ProjetoService projetoService = SpringContext.getBean(ProjetoService.class);
-                List<Projeto> projetosExistentes = projetoService.listarProjetos();
-                BigDecimal novoId = BigDecimal.ONE;
-                if (!projetosExistentes.isEmpty()) {
-                    BigDecimal maiorId = projetosExistentes.stream()
-                            .map(Projeto::getId)
-                            .filter(id -> id != null)
-                            .max(BigDecimal::compareTo)
-                            .orElse(BigDecimal.ZERO);
-                    novoId = maiorId.add(BigDecimal.ONE);
-                }
-                projeto.setId(novoId);
-
-                projetoService.salvarProjeto(projeto);
+                projetoService.salvarProjeto(projeto); // O ID será gerado automaticamente pelo banco de dados
 
                 SolicitacaoprojetoService solicitacaoService = SpringContext.getBean(SolicitacaoprojetoService.class);
                 solicitacaoService.eliminarSolicitacao(sp.getId());

@@ -55,7 +55,7 @@ public class OrcamentoprojetoService {
     }
 
     // Método para buscar um Orcamentoprojeto por ID
-    public Optional<Orcamentoprojeto> buscarPorId(BigDecimal id) {
+    public Optional<Orcamentoprojeto> buscarPorId(Integer id) {
         return orcamentoprojetoRepository.findById(id);
     }
 
@@ -69,7 +69,7 @@ public class OrcamentoprojetoService {
     }
 
     // Método para remover um Orcamentoprojeto por ID
-    public void removerOrcamentoprojeto(BigDecimal id) {
+    public void removerOrcamentoprojeto(Integer id) {
         orcamentoprojetoRepository.deleteById(id);
     }
 }

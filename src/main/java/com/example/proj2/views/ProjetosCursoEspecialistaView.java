@@ -1,6 +1,7 @@
 package com.example.proj2.views;
 
 import com.example.proj2.SpringContext;
+import com.example.proj2.models.Especialista;
 import com.example.proj2.models.Projeto;
 import com.example.proj2.services.ProjetoService;
 import javafx.geometry.Insets;
@@ -10,15 +11,21 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class ProjetosCursoEspecialistaView {
 
     private final Stage stage;
+    private final Especialista especialista;
 
     public ProjetosCursoEspecialistaView(Stage stage) {
         this.stage = stage;
+        this.especialista = null; // Mantido para compatibilidade
+    }
+
+    public ProjetosCursoEspecialistaView(Stage stage, Especialista especialista) {
+        this.stage = stage;
+        this.especialista = especialista;
     }
 
     public void show() {
@@ -35,8 +42,11 @@ public class ProjetosCursoEspecialistaView {
         VBox conteudoMenu = new VBox(20);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("👤 Especialista");
+        Label nome = new Label("👤 Especialista: " + (especialista != null && especialista.getNome() != null ? especialista.getNome() : "N/A"));
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        Label idEspecialista = new Label("🆔 ID: " + (especialista != null && especialista.getId() != null ? especialista.getId() : "N/A"));
+        idEspecialista.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
 
         String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
@@ -56,15 +66,15 @@ public class ProjetosCursoEspecialistaView {
                 "-fx-scale-y: 1.02;";
 
         Button btnProjetosCurso = criarBotao("🗂 Projetos\nem curso", estiloBtn, estiloHover);
-        btnProjetosCurso.setOnAction(e -> new ProjetosCursoEspecialistaView(stage).show());
+        btnProjetosCurso.setOnAction(e -> new ProjetosCursoEspecialistaView(stage, especialista).show());
 
         Button btnProjetosOrcamento = criarBotao("💰 Projetos\nem pré-planeamento", estiloBtn, estiloHover);
-        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage).show());
+        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage, especialista).show());
 
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
         btnLogout.setOnAction(e -> stage.close());
 
-        conteudoMenu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento);
+        conteudoMenu.getChildren().addAll(nome, idEspecialista, btnProjetosCurso, btnProjetosOrcamento);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -76,50 +86,52 @@ public class ProjetosCursoEspecialistaView {
         VBox conteudo = new VBox(20);
         conteudo.setPadding(new Insets(20));
 
-        Label titulo = new Label("Projetos em curso");
+        Label titulo = new Label("Projetos em Curso");
         titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         conteudo.getChildren().add(titulo);
 
         ProjetoService service = SpringContext.getBean(ProjetoService.class);
-        List<Projeto> projetos = service.listarProjetos().stream()
-                .filter(p -> "em andamento".equalsIgnoreCase(p.getEstado()))
+        List<Projeto> projetos = service.listarProjetos();
+
+        // Filtrar projetos no estado "em curso"
+        List<Projeto> projetosFiltrados = projetos.stream()
+                .filter(p -> p != null && p.getEstado() != null && "em curso".equalsIgnoreCase(p.getEstado().trim()))
                 .toList();
 
-        VBox lista = new VBox(10);
-
-        // MENSAGEM QUANDO NÃO EXISTEM PROJETOS
-        if (projetos.isEmpty()) {
+        if (projetosFiltrados.isEmpty()) {
             Label semProjetosLabel = new Label("Nenhum projeto em curso disponível.");
             semProjetosLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #666666;");
             conteudo.getChildren().add(semProjetosLabel);
         } else {
-            for (Projeto projeto : projetos) {
+            VBox lista = new VBox(10);
+            for (Projeto projeto : projetosFiltrados) {
                 HBox card = new HBox(15);
                 card.setPadding(new Insets(10));
                 card.setStyle("-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);");
                 card.setAlignment(Pos.CENTER_LEFT);
 
                 VBox info = new VBox(5);
-                Label nomeProjeto = new Label("Projeto " + projeto.getNome());
+                Label idProjeto = new Label("🆔 ID: " + (projeto.getId() != null ? projeto.getId() : "N/A"));
+                Label nomeProjeto = new Label("📌 Projeto: " + (projeto.getNome() != null ? projeto.getNome() : "N/A"));
                 nomeProjeto.setStyle("-fx-font-weight: bold;");
-                Label descricao = new Label(projeto.getDescricao());
+                Label descricao = new Label("📝 Descrição: " + (projeto.getDescricao() != null ? projeto.getDescricao() : "N/A"));
 
-                info.getChildren().addAll(nomeProjeto, descricao);
+                info.getChildren().addAll(idProjeto, nomeProjeto, descricao);
 
                 Button btnAbrir = criarBotaoAcao("Abrir", false);
                 btnAbrir.setOnAction(e -> new DetalhesProjetoCursoEspecialistaView(projeto).show());
 
-                Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
+                Button btnEliminar = criarBotaoAcao("🗑 Eliminar", true);
                 btnEliminar.setOnAction(e -> {
                     Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
                     confirmacao.setTitle("Confirmação");
-                    confirmacao.setHeaderText("Tem a certeza que deseja eliminar este projeto?");
+                    confirmacao.setHeaderText("Tem certeza que deseja eliminar este projeto?");
                     confirmacao.setContentText("Esta ação é irreversível.");
 
                     confirmacao.showAndWait().ifPresent(resposta -> {
                         if (resposta == ButtonType.OK) {
                             ProjetoService serviceInterno = SpringContext.getBean(ProjetoService.class);
-                            serviceInterno.removerProjeto(new BigDecimal(projeto.getId().toString()));
+                            serviceInterno.removerProjeto(projeto.getId());
 
                             Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
                             sucesso.setTitle("Sucesso");

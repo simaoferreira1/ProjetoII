@@ -35,7 +35,7 @@ public class TipopagamentoService {
     }
 
     // Método para buscar um tipo de pagamento por ID
-    public Optional<Tipopagamento> buscarTipopagamentoPorId(BigDecimal id) {
+    public Optional<Tipopagamento> buscarTipopagamentoPorId(Integer id) {
         return tipopagamentoRepository.findById(id);
     }
 
@@ -48,7 +48,7 @@ public class TipopagamentoService {
     }
 
     // Método para remover um tipo de pagamento por ID
-    public void removerTipopagamento(BigDecimal id) {
+    public void removerTipopagamento(Integer id) {
         tipopagamentoRepository.deleteById(id);
     }
 }

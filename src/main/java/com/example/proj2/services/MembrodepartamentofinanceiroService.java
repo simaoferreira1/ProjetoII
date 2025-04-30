@@ -18,11 +18,11 @@ public class MembrodepartamentofinanceiroService {
         return membroRepository.findAll();
     }
 
-    public Membrodepartamentofinanceiro findById(Long id) {
+    public Membrodepartamentofinanceiro findById(Integer id) {
         return membroRepository.findById(id);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         membroRepository.deleteById(id);
     }
 }

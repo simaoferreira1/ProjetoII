@@ -1,6 +1,5 @@
 package com.example.proj2.views;
 
-import com.example.proj2.SpringContext;
 import com.example.proj2.models.Gestordeprojeto;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,6 +22,7 @@ public class GestorView {
 
     public void show() {
         BorderPane layout = new BorderPane();
+        layout.setStyle("-fx-background-color: white;");
 
         // Criar e adicionar o menu lateral
         VBox menu = criarMenuLateral();
@@ -44,7 +44,10 @@ public class GestorView {
 
         Scene scene = new Scene(layout, 900, 600);
         stage.setScene(scene);
-        stage.setTitle("Gestor");
+        stage.setTitle("Painel do Gestor");
+        stage.setMinWidth(900);
+        stage.setMinHeight(600);
+        stage.setResizable(true);
         stage.show();
     }
 
@@ -58,8 +61,9 @@ public class GestorView {
         VBox conteudoMenu = new VBox(20);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("👤 Gestor: " + (gestor != null ? gestor.getNome() : "Desconhecido"));
+        Label nome = new Label("👤 Gestor: " + (gestor != null && gestor.getNome() != null ? gestor.getNome() : "Desconhecido"));
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        nome.setWrapText(true);
 
         String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +

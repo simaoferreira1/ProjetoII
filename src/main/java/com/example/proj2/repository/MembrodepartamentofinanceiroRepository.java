@@ -30,7 +30,7 @@ public class MembrodepartamentofinanceiroRepository {
         }
     }
 
-    public Membrodepartamentofinanceiro findById(Long id) {
+    public Membrodepartamentofinanceiro findById(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.get(Membrodepartamentofinanceiro.class, id);
         }
@@ -42,7 +42,7 @@ public class MembrodepartamentofinanceiroRepository {
         }
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             Membrodepartamentofinanceiro membro = session.get(Membrodepartamentofinanceiro.class, id);

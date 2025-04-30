@@ -44,7 +44,7 @@ public class SolicitacaoprojetoService {
     }
 
     // Método para buscar uma solicitação por ID
-    public Optional<Solicitacaoprojeto> buscarSolicitacaoPorId(BigDecimal id) {
+    public Optional<Solicitacaoprojeto> buscarSolicitacaoPorId(Integer id) {
         return solicitacaoprojetoRepository.findById(id);
     }
 
@@ -57,7 +57,7 @@ public class SolicitacaoprojetoService {
     }
 
     // Método para eliminar uma solicitação por ID
-    public void eliminarSolicitacao(BigDecimal id) {
+    public void eliminarSolicitacao(Integer id) {
         solicitacaoprojetoRepository.deleteById(id);
     }
 }

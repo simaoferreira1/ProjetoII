@@ -19,7 +19,7 @@ public class GestordeprojetoService {
         }
     }
 
-    public Gestordeprojeto findById(Long id) {
+    public Gestordeprojeto findById(Integer id) {
         return gestordeprojetoRepository.findById(id);
     }
 
@@ -27,7 +27,7 @@ public class GestordeprojetoService {
         return gestordeprojetoRepository.findAll();
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         gestordeprojetoRepository.deleteById(id);
     }
 }

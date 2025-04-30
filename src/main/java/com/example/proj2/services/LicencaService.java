@@ -51,7 +51,7 @@ public class LicencaService {
     }
 
     // Método para buscar uma licença por ID
-    public Optional<Licenca> buscarLicencaPorId(BigDecimal id) {
+    public Optional<Licenca> buscarLicencaPorId(Integer id) {
         return licencaRepository.findById(id);
     }
 
@@ -65,7 +65,7 @@ public class LicencaService {
     }
 
     // Método para remover uma licença por ID
-    public void removerLicenca(BigDecimal id) {
+    public void removerLicenca(Integer id) {
         licencaRepository.deleteById(id);
     }
 }

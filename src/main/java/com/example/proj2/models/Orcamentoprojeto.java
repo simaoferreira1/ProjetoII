@@ -13,7 +13,7 @@ public class Orcamentoprojeto {
 
     @Id
     @Column(name = "idorcamentoprojeto", nullable = false, precision = 10)
-    private BigDecimal id;
+    private Integer id;
 
     @Column(name = "valortotal", precision = 10)
     private BigDecimal valortotal;
@@ -29,11 +29,11 @@ public class Orcamentoprojeto {
     private Projeto projeto;
 
     // Getters e Setters
-    public BigDecimal getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;
 
-public interface OrcamentoRepository extends JpaRepository<Orcamento, BigDecimal> {
+public interface OrcamentoRepository extends JpaRepository<Orcamento, Integer> {
 }

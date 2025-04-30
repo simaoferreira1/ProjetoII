@@ -20,7 +20,7 @@ public class EspecialistaService {
         }
     }
 
-    public Especialista findById(BigDecimal id) {
+    public Especialista findById(Integer id) {
         return especialistaRepository.findById(id);
     }
 
@@ -28,7 +28,7 @@ public class EspecialistaService {
         return especialistaRepository.findAll();
     }
 
-    public void deleteById(BigDecimal id) {
+    public void deleteById(Integer id) {
         especialistaRepository.deleteById(id);
     }
 }

@@ -9,6 +9,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface PagamentoRepository extends JpaRepository<Pagamento, BigDecimal> {
+public interface PagamentoRepository extends JpaRepository<Pagamento, Integer> {
     List<Pagamento> findByCliente(Cliente cliente);
 }

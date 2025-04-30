@@ -23,6 +23,7 @@ public class FinanceiroView {
 
     public void show() {
         BorderPane layout = new BorderPane();
+        layout.setStyle("-fx-background-color: white;");
 
         // ==== MENU LATERAL PADRONIZADO ====
         VBox menu = new VBox(20);
@@ -31,12 +32,15 @@ public class FinanceiroView {
         menu.setPrefWidth(200);
         menu.setAlignment(Pos.TOP_CENTER);
 
-        // Exibir o nome do financeiro no formato "👤 Financeiro: [Nome]"
-        String nomeFinanceiro = financeiro != null && financeiro.getNome() != null ? financeiro.getNome() : "Desconhecido";
-        Label nome = new Label("👤 Financeiro: " + nomeFinanceiro);
+        // Exibir o nome e ID do financeiro
+        Label nome = new Label("👤 Financeiro: " + (financeiro != null && financeiro.getNome() != null ? financeiro.getNome() : "Desconhecido"));
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        nome.setWrapText(true);
 
-        // Estilos
+        Label idFinanceiro = new Label("🆔 ID: " + (financeiro != null && financeiro.getId() != null ? financeiro.getId() : "N/A"));
+        idFinanceiro.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
+
+        // Estilos dos botões
         String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
                 "-fx-font-size: 14px; " +
@@ -55,30 +59,22 @@ public class FinanceiroView {
                 "-fx-scale-y: 1.02;";
 
         // Botões
-        Button btnPedidosOrcamento = new Button("💰 Pedidos de Orçamento");
-        Button btnProjetosCurso = new Button("🗂 Projetos em curso");
-        Button btnLogout = new Button("↩ Sair");
-
-        for (Button btn : new Button[]{btnPedidosOrcamento, btnProjetosCurso, btnLogout}) {
-            btn.setStyle(estiloBtn);
-            btn.setWrapText(true);
-            btn.setOnMouseEntered(e -> btn.setStyle(estiloBtn + estiloHover));
-            btn.setOnMouseExited(e -> btn.setStyle(estiloBtn));
-        }
+        Button btnPedidosOrcamento = criarBotao("💰 Pedidos de\nOrçamento", estiloBtn, estiloHover);
+        Button btnProjetosCurso = criarBotao("🗂 Projetos\nem curso", estiloBtn, estiloHover);
+        Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
         // Navegação dos botões
         btnPedidosOrcamento.setOnAction(e -> new PedidosOrcamentoView(stage, financeiro).show());
         btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoFinanceiroView(stage, financeiro).show());
         btnLogout.setOnAction(e -> stage.close());
 
-        VBox conteudoMenu = new VBox(20, nome, btnPedidosOrcamento, btnProjetosCurso);
+        VBox conteudoMenu = new VBox(20, nome, idFinanceiro, btnPedidosOrcamento, btnProjetosCurso);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
 
         menu.getChildren().addAll(conteudoMenu, espacoInferior, btnLogout);
-
         layout.setLeft(menu);
 
         // ==== LOGO CENTRAL ====
@@ -92,12 +88,23 @@ public class FinanceiroView {
         logo.setOpacity(0.3);
 
         center.getChildren().add(logo);
-
         layout.setCenter(center);
 
         Scene scene = new Scene(layout, 900, 600);
         stage.setScene(scene);
         stage.setTitle("Painel do Financeiro");
+        stage.setMinWidth(900);
+        stage.setMinHeight(600);
+        stage.setResizable(true);
         stage.show();
+    }
+
+    private Button criarBotao(String texto, String estiloBase, String estiloHover) {
+        Button button = new Button(texto);
+        button.setWrapText(true);
+        button.setStyle(estiloBase);
+        button.setOnMouseEntered(e -> button.setStyle(estiloBase + estiloHover));
+        button.setOnMouseExited(e -> button.setStyle(estiloBase));
+        return button;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.proj2.views;
 
 import com.example.proj2.SpringContext;
+import com.example.proj2.models.Especialista;
 import com.example.proj2.models.Orcamentoprojeto;
 import com.example.proj2.services.OrcamentoprojetoService;
 import javafx.geometry.Insets;
@@ -10,15 +11,21 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-
 import java.util.List;
 
 public class ProjetosOrcamentoEspecialistaView {
 
     private final Stage stage;
+    private final Especialista especialista;
 
     public ProjetosOrcamentoEspecialistaView(Stage stage) {
         this.stage = stage;
+        this.especialista = null; // Especialista não está sendo passado no construtor atual
+    }
+
+    public ProjetosOrcamentoEspecialistaView(Stage stage, Especialista especialista) {
+        this.stage = stage;
+        this.especialista = especialista;
     }
 
     public void show() {
@@ -35,8 +42,11 @@ public class ProjetosOrcamentoEspecialistaView {
         VBox conteudoMenu = new VBox(20);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("👤 Especialista");
+        Label nome = new Label("👤 Especialista: " + (especialista != null && especialista.getNome() != null ? especialista.getNome() : "N/A"));
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        Label idEspecialista = new Label("🆔 ID: " + (especialista != null && especialista.getId() != null ? especialista.getId() : "N/A"));
+        idEspecialista.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
 
         String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
@@ -56,15 +66,15 @@ public class ProjetosOrcamentoEspecialistaView {
                 "-fx-scale-y: 1.02;";
 
         Button btnProjetosCurso = criarBotao("🗂 Projetos\nem curso", estiloBtn, estiloHover);
-        btnProjetosCurso.setOnAction(e -> new ProjetosCursoEspecialistaView(stage).show());
+        btnProjetosCurso.setOnAction(e -> new ProjetosCursoEspecialistaView(stage, especialista).show());
 
         Button btnProjetosOrcamento = criarBotao("💰 Projetos\nem pré-planeamento", estiloBtn, estiloHover);
-        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage).show());
+        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage, especialista).show());
 
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
         btnLogout.setOnAction(e -> stage.close());
 
-        conteudoMenu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento);
+        conteudoMenu.getChildren().addAll(nome, idEspecialista, btnProjetosCurso, btnProjetosOrcamento);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -76,72 +86,86 @@ public class ProjetosOrcamentoEspecialistaView {
         VBox conteudo = new VBox(20);
         conteudo.setPadding(new Insets(20));
 
-        Label titulo = new Label("Projetos para orçamento");
+        Label titulo = new Label("Projetos em pré-Planeamento)");
         titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         conteudo.getChildren().add(titulo);
 
         OrcamentoprojetoService service = SpringContext.getBean(OrcamentoprojetoService.class);
         List<Orcamentoprojeto> orcamentos = service.listarOrcamentoprojetos();
 
-        VBox lista = new VBox(10);
-        for (Orcamentoprojeto orc : orcamentos) {
-            HBox card = new HBox(15);
-            card.setPadding(new Insets(10));
-            card.setStyle("-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);");
-            card.setAlignment(Pos.CENTER_LEFT);
+        // Filtrar orçamentos para projetos em pré-planeamento
+        List<Orcamentoprojeto> orcamentosFiltrados = orcamentos.stream()
+                .filter(orc -> orc != null && orc.getProjeto() != null && orc.getProjeto().getEstado() != null &&
+                        "em pré-planeamento".equalsIgnoreCase(orc.getProjeto().getEstado().trim()))
+                .toList();
 
-            VBox info = new VBox(5);
-            Label nomeProjeto = new Label("Projeto " + orc.getProjeto().getNome());
-            nomeProjeto.setStyle("-fx-font-weight: bold;");
-            Label valor = new Label("Valor: " + orc.getValortotal() + " €");
+        if (orcamentosFiltrados.isEmpty()) {
+            Label semProjetos = new Label("Nenhum projeto em pré-planeamento encontrado.");
+            semProjetos.setStyle("-fx-font-size: 14px; -fx-text-fill: #666666;");
+            conteudo.getChildren().add(semProjetos);
+        } else {
+            VBox lista = new VBox(10);
+            for (Orcamentoprojeto orc : orcamentosFiltrados) {
+                HBox card = new HBox(15);
+                card.setPadding(new Insets(10));
+                card.setStyle("-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);");
+                card.setAlignment(Pos.CENTER_LEFT);
 
-            info.getChildren().addAll(nomeProjeto, valor);
+                VBox info = new VBox(5);
+                Label idOrcamento = new Label("🆔 ID Orçamento: " + (orc.getId() != null ? orc.getId() : "N/A"));
+                Label idProjeto = new Label("🆔 ID Projeto: " + (orc.getProjeto() != null && orc.getProjeto().getId() != null ? orc.getProjeto().getId() : "N/A"));
+                Label nomeProjeto = new Label("📌 Projeto: " + (orc.getProjeto() != null && orc.getProjeto().getNome() != null ? orc.getProjeto().getNome() : "N/A"));
+                nomeProjeto.setStyle("-fx-font-weight: bold;");
+                Label valor = new Label("💰 Valor: " + (orc.getValortotal() != null ? orc.getValortotal() + " €" : "N/A"));
 
-            Button btnAbrir = criarBotaoAcao("Abrir", false);
-            btnAbrir.setOnAction(e -> new DetalhesProjetoOrcamentoEspecialistaView(orc).show());
+                info.getChildren().addAll(idOrcamento, idProjeto, nomeProjeto, valor);
 
-            Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
-            btnEliminar.setOnAction(e -> {
-                Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-                confirmacao.setTitle("Confirmação");
-                confirmacao.setHeaderText("Tem a certeza que deseja eliminar este projeto?");
-                confirmacao.setContentText("Esta ação é irreversível.");
+                Button btnAbrir = criarBotaoAcao("Abrir", false);
+                btnAbrir.setOnAction(e -> new DetalhesProjetoOrcamentoEspecialistaView(orc).show());
 
-                confirmacao.showAndWait().ifPresent(resposta -> {
-                    if (resposta == ButtonType.OK) {
-                        OrcamentoprojetoService serviceInterno = SpringContext.getBean(OrcamentoprojetoService.class);
-                        serviceInterno.removerOrcamentoprojeto(orc.getId());
+                Button btnEliminar = criarBotaoAcao("🗑 Eliminar", true);
+                btnEliminar.setOnAction(e -> {
+                    Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmacao.setTitle("Confirmação");
+                    confirmacao.setHeaderText("Tem certeza que deseja eliminar este orçamento?");
+                    confirmacao.setContentText("Esta ação é irreversível.");
 
-                        // Mostrar alerta de sucesso
-                        Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
-                        sucesso.setTitle("Sucesso");
-                        sucesso.setHeaderText(null);
-                        sucesso.setContentText("Projeto eliminado com sucesso!");
-                        sucesso.showAndWait();
+                    confirmacao.showAndWait().ifPresent(resposta -> {
+                        if (resposta == ButtonType.OK) {
+                            OrcamentoprojetoService serviceInterno = SpringContext.getBean(OrcamentoprojetoService.class);
+                            serviceInterno.removerOrcamentoprojeto(orc.getId());
 
-                        show(); // Atualizar a view
-                    }
+                            Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
+                            sucesso.setTitle("Sucesso");
+                            sucesso.setHeaderText(null);
+                            sucesso.setContentText("Orçamento eliminado com sucesso!");
+                            sucesso.showAndWait();
+
+                            show(); // Atualizar a view
+                        }
+                    });
                 });
-            });
 
-            HBox botoes = new HBox(10, btnAbrir, btnEliminar);
-            botoes.setAlignment(Pos.CENTER_RIGHT);
+                HBox botoes = new HBox(10, btnAbrir, btnEliminar);
+                botoes.setAlignment(Pos.CENTER_RIGHT);
 
-            Region espaco = new Region();
-            HBox.setHgrow(espaco, Priority.ALWAYS);
+                Region espaco = new Region();
+                HBox.setHgrow(espaco, Priority.ALWAYS);
 
-            card.getChildren().addAll(info, espaco, botoes);
-            lista.getChildren().add(card);
+                card.getChildren().addAll(info, espaco, botoes);
+                lista.getChildren().add(card);
+            }
+
+            ScrollPane scroll = new ScrollPane(lista);
+            scroll.setFitToWidth(true);
+            conteudo.getChildren().add(scroll);
         }
 
-        ScrollPane scroll = new ScrollPane(lista);
-        scroll.setFitToWidth(true);
-        conteudo.getChildren().add(scroll);
         layout.setCenter(conteudo);
 
         Scene scene = new Scene(layout, 900, 600);
         stage.setScene(scene);
-        stage.setTitle("Projetos em pré-planeamento");
+        stage.setTitle("Projetos em Pré-Planeamento");
         stage.show();
     }
 

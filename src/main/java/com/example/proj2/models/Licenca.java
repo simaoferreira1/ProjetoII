@@ -10,7 +10,7 @@ public class Licenca {
 
     @Id
     @Column(name = "idlicenca", nullable = false, precision = 10)
-    private BigDecimal id;
+    private Integer id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
@@ -27,11 +27,11 @@ public class Licenca {
     @Column(name = "versao")
     private Integer versao;
 
-    public BigDecimal getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

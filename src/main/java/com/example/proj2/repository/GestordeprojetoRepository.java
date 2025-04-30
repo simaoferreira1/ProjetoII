@@ -32,14 +32,14 @@ public class GestordeprojetoRepository {
     }
 
     // Buscar por ID
-    public Gestordeprojeto findById(Long id) {
+    public Gestordeprojeto findById(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.get(Gestordeprojeto.class, id);
         }
     }
 
     // Verificar se existe por ID
-    public boolean existsById(Long id) {
+    public boolean existsById(Integer id) {
         return findById(id) != null;
     }
 
@@ -51,7 +51,7 @@ public class GestordeprojetoRepository {
     }
 
     // Apagar por ID
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             Gestordeprojeto gestor = session.get(Gestordeprojeto.class, id);

@@ -27,19 +27,28 @@ public class DetalhesProjetoOrcamentoView {
         Label titulo = new Label("📋 Detalhes do Projeto para Orçamento");
         titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
-        Label nomeProjeto = new Label("📌 Projeto: " + (orcamentoprojeto.getProjeto() != null ? orcamentoprojeto.getProjeto().getNome() : "N\u00e3o definido"));
-        Label valorTotal = new Label("\uD83D\uDCB0 Valor Total: " + (orcamentoprojeto.getValortotal() != null ? orcamentoprojeto.getValortotal() + " €" : "N\u00e3o definido"));
-        Label dataAprovacao = new Label("\uD83D\uDCC5 Data de Aprova\u00e7\u00e3o: " + (orcamentoprojeto.getDataaprovacao() != null ? orcamentoprojeto.getDataaprovacao().toString() : "N\u00e3o definida"));
-        Label estado = new Label("\u2699\uFE0F Estado: " + (orcamentoprojeto.getEstado() != null ? orcamentoprojeto.getEstado() : "N\u00e3o definido"));
+        if (orcamentoprojeto == null) {
+            Label mensagem = new Label("⚠️ Nenhum orçamento disponível para mostrar.");
+            mensagem.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
+            layout.getChildren().addAll(titulo, mensagem);
+        } else {
+            // Adicionando verificações de null e exibindo IDs
+            Label idOrcamento = new Label("🆔 ID do Orçamento: " + (orcamentoprojeto.getId() != null ? orcamentoprojeto.getId() : "N/A"));
+            Label idProjeto = new Label("🆔 ID do Projeto: " + (orcamentoprojeto.getProjeto() != null && orcamentoprojeto.getProjeto().getId() != null ? orcamentoprojeto.getProjeto().getId() : "N/A"));
+            Label nomeProjeto = new Label("📌 Projeto: " + (orcamentoprojeto.getProjeto() != null && orcamentoprojeto.getProjeto().getNome() != null ? orcamentoprojeto.getProjeto().getNome() : "Não definido"));
+            Label valorTotal = new Label("💰 Valor Total: " + (orcamentoprojeto.getValortotal() != null ? orcamentoprojeto.getValortotal() + " €" : "Não definido"));
+            Label dataAprovacao = new Label("📅 Data de Aprovação: " + (orcamentoprojeto.getDataaprovacao() != null ? orcamentoprojeto.getDataaprovacao().toString() : "Não definida"));
+            Label estado = new Label("⚙️ Estado: " + (orcamentoprojeto.getEstado() != null ? orcamentoprojeto.getEstado() : "Não definido"));
 
-        VBox infoBox = new VBox(10);
-        infoBox.getChildren().addAll(nomeProjeto, valorTotal, dataAprovacao, estado);
+            VBox infoBox = new VBox(10);
+            infoBox.getChildren().addAll(idOrcamento, idProjeto, nomeProjeto, valorTotal, dataAprovacao, estado);
 
-        layout.getChildren().addAll(titulo, infoBox);
+            layout.getChildren().addAll(titulo, infoBox);
+        }
 
         Scene scene = new Scene(layout, 450, 350);
         detalhesStage.setScene(scene);
-        detalhesStage.setTitle("Detalhes do Or\u00e7amento");
+        detalhesStage.setTitle("Detalhes do Orçamento");
         detalhesStage.show();
     }
 }

@@ -35,8 +35,12 @@ public class EspecialistaView {
         VBox conteudoMenu = new VBox(20);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("👤 Especialista");
-        nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        // Apenas mostra o nome se estiver disponível
+        Label nome = null;
+        if (especialista != null && especialista.getNome() != null) {
+            nome = new Label("👤 Especialista: " + especialista.getNome());
+            nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        }
 
         // Estilos de Botões
         String estiloBtn = "-fx-background-color: #ffffff; " +
@@ -66,7 +70,11 @@ public class EspecialistaView {
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
         btnLogout.setOnAction(e -> stage.close());
 
-        conteudoMenu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento);
+        if (nome != null) {
+            conteudoMenu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento);
+        } else {
+            conteudoMenu.getChildren().addAll(btnProjetosCurso, btnProjetosOrcamento);
+        }
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -76,11 +84,17 @@ public class EspecialistaView {
 
         // === CONTEÚDO CENTRAL COM IMAGEM DE FUNDO ===
         StackPane centerPane = new StackPane();
-        ImageView backgroundImage = new ImageView(new Image(getClass().getResource("/images/Capacete.png").toExternalForm()));
-        backgroundImage.setPreserveRatio(true);
-        backgroundImage.setFitWidth(450); // ajustável
-        backgroundImage.setOpacity(0.2); // transparência
-        centerPane.getChildren().add(backgroundImage);
+        try {
+            ImageView backgroundImage = new ImageView(new Image(getClass().getResource("/images/Capacete.png").toExternalForm()));
+            backgroundImage.setPreserveRatio(true);
+            backgroundImage.setFitWidth(450); // Ajustável
+            backgroundImage.setOpacity(0.2); // Transparência
+            centerPane.getChildren().add(backgroundImage);
+        } catch (Exception e) {
+            Label mensagemErro = new Label("⚠️ Não foi possível carregar a imagem de fundo.");
+            mensagemErro.setStyle("-fx-font-size: 14px; -fx-text-fill: gray;");
+            centerPane.getChildren().add(mensagemErro);
+        }
         centerPane.setAlignment(Pos.CENTER);
         layout.setCenter(centerPane);
 
