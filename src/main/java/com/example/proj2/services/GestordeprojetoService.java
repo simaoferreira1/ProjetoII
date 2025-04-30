@@ -2,53 +2,32 @@ package com.example.proj2.services;
 
 import com.example.proj2.models.Gestordeprojeto;
 import com.example.proj2.repository.GestordeprojetoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
-@Service
 public class GestordeprojetoService {
 
-    private final GestordeprojetoRepository gestordeprojetoRepository;
+    private final GestordeprojetoRepository gestordeprojetoRepository = new GestordeprojetoRepository();
 
-    @Autowired
-    public GestordeprojetoService(GestordeprojetoRepository gestordeprojetoRepository) {
-        this.gestordeprojetoRepository = gestordeprojetoRepository;
-    }
-
-    // Método para salvar ou atualizar um gestor de projeto
-    public Gestordeprojeto salvarGestor(Gestordeprojeto gestor) {
+    public Gestordeprojeto salvarOuAtualizar(Gestordeprojeto gestor) {
         if (gestor.getId() != null && gestordeprojetoRepository.existsById(gestor.getId())) {
-            // Retorna o objeto já existente para evitar nova inserção
-            return gestordeprojetoRepository.findById(gestor.getId()).orElse(gestor);
+            gestordeprojetoRepository.save(gestor);
+            return gestordeprojetoRepository.findById(gestor.getId()); // devolve da base de dados
+        } else {
+            gestordeprojetoRepository.save(gestor);
+            return gestor;
         }
-        return gestordeprojetoRepository.save(gestor);
     }
 
-    // Métodos para buscar, atualizar e remover
-    public Optional<Gestordeprojeto> buscarGestorPorId(Long id) {
+    public Gestordeprojeto findById(Long id) {
         return gestordeprojetoRepository.findById(id);
     }
 
-    public List<Gestordeprojeto> listarGestores() {
+    public List<Gestordeprojeto> findAll() {
         return gestordeprojetoRepository.findAll();
     }
 
-    // Método para atualizar um gestor de projeto
-    public Gestordeprojeto atualizarGestor(Gestordeprojeto gestor) {
-        // Verificar se o ID do gestor está presente, caso contrário lança uma exceção
-        if (gestor.getId() == null) {
-            throw new IllegalArgumentException("O ID do gestor é obrigatório para efetuar a atualização.");
-        }
-        return gestordeprojetoRepository.save(gestor);
-    }
-
-    // Método para remover um gestor de projeto pelo ID
-    public void removerGestor(Long id) {
+    public void deleteById(Long id) {
         gestordeprojetoRepository.deleteById(id);
     }
 }
-

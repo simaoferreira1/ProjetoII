@@ -1,8 +1,8 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.springframework.boot' version '3.4.3'
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version '1.1.4'
     id 'org.openjfx.javafxplugin' version '0.0.14'
 }
 
@@ -11,7 +11,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17) // Ajustado para compatibilidade com JavaFX 17
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
@@ -20,21 +20,22 @@ repositories {
 }
 
 dependencies {
-    // Aqui dentro colocas as dependências
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'org.postgresql:postgresql'
-
-    implementation 'org.springframework.boot:spring-boot-starter-web'  // <-- Esta linha aqui
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
     implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    runtimeOnly 'org.postgresql:postgresql:42.7.2'
 
     implementation 'org.openjfx:javafx-controls:17'
     implementation 'org.openjfx:javafx-fxml:17'
 
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+application {
+    mainClass = 'com.example.proj2.MainApp'
 }
 
 javafx {
@@ -42,6 +43,6 @@ javafx {
     modules = ['javafx.controls', 'javafx.fxml']
 }
 
-application {
-    mainClass = 'com.example.proj2.Proj2Application' // ou o caminho da tua Main de JavaFX
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }

@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.application.Platform;
 import com.example.proj2.views.FinanceiroView;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 
-
-
-@Component
+@Controller
 public class LoginController {
 
     @Autowired
