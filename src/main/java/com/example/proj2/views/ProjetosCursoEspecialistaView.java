@@ -9,9 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
 import java.math.BigDecimal;
-
-
 import java.util.List;
 
 public class ProjetosCursoEspecialistaView {
@@ -59,7 +58,7 @@ public class ProjetosCursoEspecialistaView {
         Button btnProjetosCurso = criarBotao("🗂 Projetos\nem curso", estiloBtn, estiloHover);
         btnProjetosCurso.setOnAction(e -> new ProjetosCursoEspecialistaView(stage).show());
 
-        Button btnProjetosOrcamento = criarBotao("💰 Projetos\npara orçamento", estiloBtn, estiloHover);
+        Button btnProjetosOrcamento = criarBotao("💰 Projetos\nem pré-planeamento", estiloBtn, estiloHover);
         btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage).show());
 
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
@@ -87,59 +86,67 @@ public class ProjetosCursoEspecialistaView {
                 .toList();
 
         VBox lista = new VBox(10);
-        for (Projeto projeto : projetos) {
-            HBox card = new HBox(15);
-            card.setPadding(new Insets(10));
-            card.setStyle("-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);");
-            card.setAlignment(Pos.CENTER_LEFT);
 
-            VBox info = new VBox(5);
-            Label nomeProjeto = new Label("Projeto " + projeto.getNome());
-            nomeProjeto.setStyle("-fx-font-weight: bold;");
-            Label descricao = new Label(projeto.getDescricao());
+        // MENSAGEM QUANDO NÃO EXISTEM PROJETOS
+        if (projetos.isEmpty()) {
+            Label semProjetosLabel = new Label("Nenhum projeto em curso disponível.");
+            semProjetosLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #666666;");
+            conteudo.getChildren().add(semProjetosLabel);
+        } else {
+            for (Projeto projeto : projetos) {
+                HBox card = new HBox(15);
+                card.setPadding(new Insets(10));
+                card.setStyle("-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);");
+                card.setAlignment(Pos.CENTER_LEFT);
 
-            info.getChildren().addAll(nomeProjeto, descricao);
+                VBox info = new VBox(5);
+                Label nomeProjeto = new Label("Projeto " + projeto.getNome());
+                nomeProjeto.setStyle("-fx-font-weight: bold;");
+                Label descricao = new Label(projeto.getDescricao());
 
-            Button btnAbrir = criarBotaoAcao("Abrir", false);
-            btnAbrir.setOnAction(e -> new DetalhesProjetoCursoEspecialistaView(projeto).show());
+                info.getChildren().addAll(nomeProjeto, descricao);
 
-            Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
-            btnEliminar.setOnAction(e -> {
-                Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-                confirmacao.setTitle("Confirmação");
-                confirmacao.setHeaderText("Tem a certeza que deseja eliminar este projeto?");
-                confirmacao.setContentText("Esta ação é irreversível.");
+                Button btnAbrir = criarBotaoAcao("Abrir", false);
+                btnAbrir.setOnAction(e -> new DetalhesProjetoCursoEspecialistaView(projeto).show());
 
-                confirmacao.showAndWait().ifPresent(resposta -> {
-                    if (resposta == ButtonType.OK) {
-                        ProjetoService serviceInterno = SpringContext.getBean(ProjetoService.class);
-                        serviceInterno.removerProjeto(new BigDecimal(projeto.getId().toString())); // <- aqui converte
+                Button btnEliminar = criarBotaoAcao("🗑 Eliminar projeto", true);
+                btnEliminar.setOnAction(e -> {
+                    Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmacao.setTitle("Confirmação");
+                    confirmacao.setHeaderText("Tem a certeza que deseja eliminar este projeto?");
+                    confirmacao.setContentText("Esta ação é irreversível.");
 
-                        Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
-                        sucesso.setTitle("Sucesso");
-                        sucesso.setHeaderText(null);
-                        sucesso.setContentText("Projeto eliminado com sucesso!");
-                        sucesso.showAndWait();
+                    confirmacao.showAndWait().ifPresent(resposta -> {
+                        if (resposta == ButtonType.OK) {
+                            ProjetoService serviceInterno = SpringContext.getBean(ProjetoService.class);
+                            serviceInterno.removerProjeto(new BigDecimal(projeto.getId().toString()));
 
-                        show();
-                    }
+                            Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
+                            sucesso.setTitle("Sucesso");
+                            sucesso.setHeaderText(null);
+                            sucesso.setContentText("Projeto eliminado com sucesso!");
+                            sucesso.showAndWait();
+
+                            show();
+                        }
+                    });
                 });
-            });
 
+                HBox botoes = new HBox(10, btnAbrir, btnEliminar);
+                botoes.setAlignment(Pos.CENTER_RIGHT);
 
-            HBox botoes = new HBox(10, btnAbrir, btnEliminar);
-            botoes.setAlignment(Pos.CENTER_RIGHT);
+                Region espaco = new Region();
+                HBox.setHgrow(espaco, Priority.ALWAYS);
 
-            Region espaco = new Region();
-            HBox.setHgrow(espaco, Priority.ALWAYS);
+                card.getChildren().addAll(info, espaco, botoes);
+                lista.getChildren().add(card);
+            }
 
-            card.getChildren().addAll(info, espaco, botoes);
-            lista.getChildren().add(card);
+            ScrollPane scroll = new ScrollPane(lista);
+            scroll.setFitToWidth(true);
+            conteudo.getChildren().add(scroll);
         }
 
-        ScrollPane scroll = new ScrollPane(lista);
-        scroll.setFitToWidth(true);
-        conteudo.getChildren().add(scroll);
         layout.setCenter(conteudo);
 
         Scene scene = new Scene(layout, 900, 600);
@@ -168,6 +175,7 @@ public class ProjetosCursoEspecialistaView {
                 "-fx-border-color: " + (vermelho ? "red" : "#cccccc") + "; " +
                 "-fx-border-width: 1px; " +
                 "-fx-cursor: hand;";
+
         Button button = new Button(texto);
         button.setStyle(estilo);
 
