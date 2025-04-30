@@ -62,10 +62,8 @@ public class ProjetosPrePlaneamentoView {
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
         conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
-
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
-
         menu.getChildren().addAll(conteudoMenu, espacoInferior, btnLogout);
 
         btnSolicitacoes.setOnAction(e -> new SolicitacoesView(stage, gestor).show());
@@ -96,11 +94,10 @@ public class ProjetosPrePlaneamentoView {
             conteudo.getChildren().add(semProjetos);
         } else {
             VBox lista = new VBox(10);
-            lista.setStyle("-fx-background-color: #f2f2f2; -fx-padding: 10px; -fx-border-radius: 5px; -fx-border-color: #cccccc; -fx-border-width: 1px;");
             for (Projeto projeto : projetosPrePlaneamento) {
                 HBox card = new HBox(15);
                 card.setPadding(new Insets(10));
-                card.setStyle("-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-background-radius: 5px; -fx-border-radius: 5px;");
+                card.setStyle("-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 1px;");
                 card.setAlignment(Pos.CENTER_LEFT);
 
                 VBox info = new VBox(5);
@@ -114,40 +111,6 @@ public class ProjetosPrePlaneamentoView {
                 btnAbrir.setOnAction(e -> new DetalhesProjetosEmCursoView(projeto, stage, gestor).show());
 
                 Button btnPlaneado = criarBotaoAcao("✔ Planeado", true);
-                btnPlaneado.setStyle("-fx-background-color: #ffffff; " +
-                        "-fx-text-fill: green; " +
-                        "-fx-font-size: 12px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-padding: 6px 12px; " +
-                        "-fx-background-radius: 8px; " +
-                        "-fx-border-radius: 8px; " +
-                        "-fx-border-color: green; " +
-                        "-fx-border-width: 1px; " +
-                        "-fx-cursor: hand;");
-                btnPlaneado.setOnMouseEntered(e -> btnPlaneado.setStyle(
-                        "-fx-background-color: #ccffcc; " +
-                                "-fx-text-fill: green; " +
-                                "-fx-font-size: 12px; " +
-                                "-fx-font-weight: bold; " +
-                                "-fx-padding: 6px 12px; " +
-                                "-fx-background-radius: 8px; " +
-                                "-fx-border-radius: 8px; " +
-                                "-fx-border-color: green; " +
-                                "-fx-border-width: 1px; " +
-                                "-fx-cursor: hand; " +
-                                "-fx-scale-x: 1.05; " +
-                                "-fx-scale-y: 1.05;"));
-                btnPlaneado.setOnMouseExited(e -> btnPlaneado.setStyle(
-                        "-fx-background-color: #ffffff; " +
-                                "-fx-text-fill: green; " +
-                                "-fx-font-size: 12px; " +
-                                "-fx-font-weight: bold; " +
-                                "-fx-padding: 6px 12px; " +
-                                "-fx-background-radius: 8px; " +
-                                "-fx-border-radius: 8px; " +
-                                "-fx-border-color: green; " +
-                                "-fx-border-width: 1px; " +
-                                "-fx-cursor: hand;"));
                 btnPlaneado.setOnAction(e -> planejarProjeto(projeto));
 
                 HBox botoes = new HBox(10, btnAbrir, btnPlaneado);

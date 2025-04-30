@@ -35,12 +35,24 @@ public class EspecialistaView {
         VBox conteudoMenu = new VBox(20);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
-        // Apenas mostra o nome se estiver disponível
-        Label nome = null;
-        if (especialista != null && especialista.getNome() != null) {
-            nome = new Label("👤 Especialista: " + especialista.getNome());
-            nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        // Exibir o nome do especialista no formato "👤 Especialista: Nome do Especialista"
+        String nomeEspecialista = "Especialista Desconhecido";
+        if (especialista != null && especialista.getNome() != null && !especialista.getNome().trim().isEmpty()) {
+            nomeEspecialista = especialista.getNome();
+        } else {
+            // Log para depuração
+            System.out.println("Especialista ou nome está null: " + (especialista == null ? "especialista é null" : "nome é null ou vazio"));
         }
+        Label nome = new Label("👤 Especialista: " + nomeEspecialista);
+        nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        nome.setWrapText(true);
+        nome.setAlignment(Pos.CENTER);
+
+        // Envolver o Label em um HBox para centralizar melhor
+        HBox nomeContainer = new HBox(nome);
+        nomeContainer.setAlignment(Pos.CENTER);
+        HBox.setHgrow(nome, Priority.ALWAYS);
+        nome.setMaxWidth(Double.MAX_VALUE);
 
         // Estilos de Botões
         String estiloBtn = "-fx-background-color: #ffffff; " +
@@ -61,20 +73,16 @@ public class EspecialistaView {
                 "-fx-scale-y: 1.02;";
 
         // Botões
-        Button btnProjetosCurso = criarBotao("📂 Projetos\nem curso", estiloBtn, estiloHover);
-        btnProjetosCurso.setOnAction(e -> new ProjetosCursoEspecialistaView(stage).show());
+        Button btnProjetosCurso = criarBotao("📂 Projetos\nem Curso", estiloBtn, estiloHover);
+        btnProjetosCurso.setOnAction(e -> new ProjetosCursoEspecialistaView(stage, especialista).show());
 
-        Button btnProjetosOrcamento = criarBotao("💰 Projetos\nem pré-planeamento", estiloBtn, estiloHover);
-        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage).show());
+        Button btnProjetosOrcamento = criarBotao("💰 Projetos\nem Pré-Planeamento", estiloBtn, estiloHover);
+        btnProjetosOrcamento.setOnAction(e -> new ProjetosOrcamentoEspecialistaView(stage, especialista).show());
 
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
         btnLogout.setOnAction(e -> stage.close());
 
-        if (nome != null) {
-            conteudoMenu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento);
-        } else {
-            conteudoMenu.getChildren().addAll(btnProjetosCurso, btnProjetosOrcamento);
-        }
+        conteudoMenu.getChildren().addAll(nomeContainer, btnProjetosCurso, btnProjetosOrcamento);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -101,6 +109,9 @@ public class EspecialistaView {
         Scene scene = new Scene(layout, 900, 600);
         stage.setScene(scene);
         stage.setTitle("Painel do Especialista");
+        stage.setMinWidth(900);
+        stage.setMinHeight(600);
+        stage.setResizable(true);
         stage.show();
     }
 

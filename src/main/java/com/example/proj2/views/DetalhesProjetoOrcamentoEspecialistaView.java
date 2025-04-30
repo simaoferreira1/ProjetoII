@@ -36,16 +36,29 @@ public class DetalhesProjetoOrcamentoEspecialistaView {
             mensagem.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
             conteudo.getChildren().addAll(titulo, mensagem);
         } else {
-            // Adicionando verificações de null para evitar NullPointerException
-            Label idOrcamento = new Label("🆔 ID do Orçamento: " + (orcamento.getId() != null ? orcamento.getId() : "N/A"));
-            Label idProjeto = new Label("🆔 ID do Projeto: " + (orcamento.getProjeto() != null && orcamento.getProjeto().getId() != null ? orcamento.getProjeto().getId() : "N/A"));
-            Label nomeProjeto = new Label("📌 Projeto: " + (orcamento.getProjeto() != null && orcamento.getProjeto().getNome() != null ? orcamento.getProjeto().getNome() : "N/A"));
-            Label estado = new Label("• Estado: " + (orcamento.getEstado() != null ? orcamento.getEstado() : "N/A"));
-            Label valor = new Label("💰 Valor Total: " + (orcamento.getValortotal() != null ? orcamento.getValortotal() + " €" : "N/A"));
-            Label dataAprovacao = new Label("📅 Data de Aprovação: " + (orcamento.getDataaprovacao() != null ? orcamento.getDataaprovacao().toString() : "Não aprovada"));
+            Label nomeProjeto = new Label("📌 Projeto: " +
+                    (orcamento.getProjeto() != null && orcamento.getProjeto().getNome() != null ? orcamento.getProjeto().getNome() : "N/A"));
+            Label estado = new Label("• Estado: " +
+                    (orcamento.getEstado() != null ? orcamento.getEstado() : "N/A"));
+            Label valor = new Label("💰 Valor Total: " +
+                    (orcamento.getValortotal() != null ? orcamento.getValortotal() + " €" : "N/A"));
+            Label dataAprovacao = new Label("📅 Data de Aprovação: " +
+                    (orcamento.getDataaprovacao() != null ? orcamento.getDataaprovacao().toString() : "Não aprovada"));
+
+            // Exibe o email do gestor (Gestordeprojeto) e do cliente
+            Label gestor = new Label("👤 Email Gestor: " +
+                    (orcamento.getProjeto() != null &&
+                            orcamento.getProjeto().getGestordeprojeto() != null &&
+                            orcamento.getProjeto().getGestordeprojeto().getEmail() != null ?
+                            orcamento.getProjeto().getGestordeprojeto().getEmail() : "N/A"));
+            Label cliente = new Label("👥 Email Cliente: " +
+                    (orcamento.getProjeto() != null &&
+                            orcamento.getProjeto().getIdcliente() != null &&
+                            orcamento.getProjeto().getIdcliente().getEmail() != null ?
+                            orcamento.getProjeto().getIdcliente().getEmail() : "N/A"));
 
             VBox infoBox = new VBox(10);
-            infoBox.getChildren().addAll(idOrcamento, idProjeto, nomeProjeto, estado, valor, dataAprovacao);
+            infoBox.getChildren().addAll(nomeProjeto, estado, valor, dataAprovacao, gestor, cliente);
 
             conteudo.getChildren().addAll(titulo, infoBox);
         }

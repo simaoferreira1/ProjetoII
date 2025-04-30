@@ -42,11 +42,24 @@ public class ProjetosOrcamentoEspecialistaView {
         VBox conteudoMenu = new VBox(20);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("👤 Especialista: " + (especialista != null && especialista.getNome() != null ? especialista.getNome() : "N/A"));
+        // Exibir o nome do especialista no formato "👤 Especialista: Nome do Especialista"
+        String nomeEspecialista = "Especialista Desconhecido";
+        if (especialista != null && especialista.getNome() != null && !especialista.getNome().trim().isEmpty()) {
+            nomeEspecialista = especialista.getNome();
+        } else {
+            // Log para depuração
+            System.out.println("Especialista ou nome está null: " + (especialista == null ? "especialista é null" : "nome é null ou vazio"));
+        }
+        Label nome = new Label("👤 Especialista: " + nomeEspecialista);
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        nome.setWrapText(true);
+        nome.setAlignment(Pos.CENTER);
 
-        Label idEspecialista = new Label("🆔 ID: " + (especialista != null && especialista.getId() != null ? especialista.getId() : "N/A"));
-        idEspecialista.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
+        // Envolver o Label em um HBox para centralizar melhor
+        HBox nomeContainer = new HBox(nome);
+        nomeContainer.setAlignment(Pos.CENTER);
+        HBox.setHgrow(nome, Priority.ALWAYS);
+        nome.setMaxWidth(Double.MAX_VALUE);
 
         String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
@@ -74,7 +87,7 @@ public class ProjetosOrcamentoEspecialistaView {
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
         btnLogout.setOnAction(e -> stage.close());
 
-        conteudoMenu.getChildren().addAll(nome, idEspecialista, btnProjetosCurso, btnProjetosOrcamento);
+        conteudoMenu.getChildren().addAll(nomeContainer, btnProjetosCurso, btnProjetosOrcamento);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -86,7 +99,7 @@ public class ProjetosOrcamentoEspecialistaView {
         VBox conteudo = new VBox(20);
         conteudo.setPadding(new Insets(20));
 
-        Label titulo = new Label("Projetos em pré-Planeamento)");
+        Label titulo = new Label("Projetos em Pré-Planeamento");
         titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         conteudo.getChildren().add(titulo);
 
@@ -108,17 +121,15 @@ public class ProjetosOrcamentoEspecialistaView {
             for (Orcamentoprojeto orc : orcamentosFiltrados) {
                 HBox card = new HBox(15);
                 card.setPadding(new Insets(10));
-                card.setStyle("-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);");
+                card.setStyle("-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-background-radius: 5px; -fx-border-radius: 5px;");
                 card.setAlignment(Pos.CENTER_LEFT);
 
                 VBox info = new VBox(5);
-                Label idOrcamento = new Label("🆔 ID Orçamento: " + (orc.getId() != null ? orc.getId() : "N/A"));
-                Label idProjeto = new Label("🆔 ID Projeto: " + (orc.getProjeto() != null && orc.getProjeto().getId() != null ? orc.getProjeto().getId() : "N/A"));
                 Label nomeProjeto = new Label("📌 Projeto: " + (orc.getProjeto() != null && orc.getProjeto().getNome() != null ? orc.getProjeto().getNome() : "N/A"));
                 nomeProjeto.setStyle("-fx-font-weight: bold;");
                 Label valor = new Label("💰 Valor: " + (orc.getValortotal() != null ? orc.getValortotal() + " €" : "N/A"));
 
-                info.getChildren().addAll(idOrcamento, idProjeto, nomeProjeto, valor);
+                info.getChildren().addAll(nomeProjeto, valor);
 
                 Button btnAbrir = criarBotaoAcao("Abrir", false);
                 btnAbrir.setOnAction(e -> new DetalhesProjetoOrcamentoEspecialistaView(orc).show());
@@ -156,9 +167,8 @@ public class ProjetosOrcamentoEspecialistaView {
                 lista.getChildren().add(card);
             }
 
-            ScrollPane scroll = new ScrollPane(lista);
-            scroll.setFitToWidth(true);
-            conteudo.getChildren().add(scroll);
+            // Adicionar a lista diretamente ao conteúdo, sem ScrollPane
+            conteudo.getChildren().add(lista);
         }
 
         layout.setCenter(conteudo);
@@ -166,6 +176,9 @@ public class ProjetosOrcamentoEspecialistaView {
         Scene scene = new Scene(layout, 900, 600);
         stage.setScene(scene);
         stage.setTitle("Projetos em Pré-Planeamento");
+        stage.setMinWidth(900);
+        stage.setMinHeight(600);
+        stage.setResizable(true);
         stage.show();
     }
 

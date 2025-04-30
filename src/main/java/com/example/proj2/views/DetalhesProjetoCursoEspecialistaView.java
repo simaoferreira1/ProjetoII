@@ -41,10 +41,12 @@ public class DetalhesProjetoCursoEspecialistaView {
             Label dataFim = new Label("📅 Fim Previsto: " + (projeto.getDatafimprevista() != null ? projeto.getDatafimprevista() : "N/A"));
             Label localizacao = new Label("📍 Localização: " + (projeto.getLocalizacao() != null ? projeto.getLocalizacao() : "N/A"));
             Label estado = new Label("• Estado: " + (projeto.getEstado() != null ? projeto.getEstado() : "N/A"));
-
+            // Adicionando o nome do gestor
+            Label gestor = new Label("👤 Gestor: " + (projeto.getGestordeprojeto() != null && projeto.getGestordeprojeto().getNome() != null ?
+                    projeto.getGestordeprojeto().getNome() : "N/A"));
 
             VBox infoBox = new VBox(10);
-            infoBox.getChildren().addAll(nome, descricao, dataInicio, dataFim, localizacao, estado);
+            infoBox.getChildren().addAll(nome, descricao, dataInicio, dataFim, localizacao, estado, gestor);
 
             layout.getChildren().add(infoBox);
         }
@@ -52,6 +54,9 @@ public class DetalhesProjetoCursoEspecialistaView {
         Scene scene = new Scene(layout, 450, 350);
         detailsStage.setScene(scene);
         detailsStage.setTitle("Detalhes do Projeto");
+        detailsStage.setMinWidth(450);
+        detailsStage.setMinHeight(350);
+        detailsStage.setResizable(true);
         detailsStage.show();
     }
 }

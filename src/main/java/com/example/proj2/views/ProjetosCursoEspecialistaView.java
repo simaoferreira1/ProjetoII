@@ -42,11 +42,17 @@ public class ProjetosCursoEspecialistaView {
         VBox conteudoMenu = new VBox(20);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
-        Label nome = new Label("👤 Especialista: " + (especialista != null && especialista.getNome() != null ? especialista.getNome() : "N/A"));
+        // Exibir o nome do especialista no formato "Especialista: Nome do Especialista"
+        String nomeEspecialista = "Especialista Desconhecido";
+        if (especialista != null && especialista.getNome() != null && !especialista.getNome().trim().isEmpty()) {
+            nomeEspecialista = especialista.getNome();
+        } else {
+            // Log para depuração
+            System.out.println("Especialista ou nome está null: " + (especialista == null ? "especialista é null" : "nome é null ou vazio"));
+        }
+        Label nome = new Label("Especialista: " + nomeEspecialista);
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-        Label idEspecialista = new Label("🆔 ID: " + (especialista != null && especialista.getId() != null ? especialista.getId() : "N/A"));
-        idEspecialista.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
+        nome.setWrapText(true);
 
         String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
@@ -74,7 +80,7 @@ public class ProjetosCursoEspecialistaView {
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
         btnLogout.setOnAction(e -> stage.close());
 
-        conteudoMenu.getChildren().addAll(nome, idEspecialista, btnProjetosCurso, btnProjetosOrcamento);
+        conteudoMenu.getChildren().addAll(nome, btnProjetosCurso, btnProjetosOrcamento);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -107,16 +113,15 @@ public class ProjetosCursoEspecialistaView {
             for (Projeto projeto : projetosFiltrados) {
                 HBox card = new HBox(15);
                 card.setPadding(new Insets(10));
-                card.setStyle("-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);");
+                card.setStyle("-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-background-radius: 5px; -fx-border-radius: 5px;");
                 card.setAlignment(Pos.CENTER_LEFT);
 
                 VBox info = new VBox(5);
-                Label idProjeto = new Label("🆔 ID: " + (projeto.getId() != null ? projeto.getId() : "N/A"));
                 Label nomeProjeto = new Label("📌 Projeto: " + (projeto.getNome() != null ? projeto.getNome() : "N/A"));
                 nomeProjeto.setStyle("-fx-font-weight: bold;");
                 Label descricao = new Label("📝 Descrição: " + (projeto.getDescricao() != null ? projeto.getDescricao() : "N/A"));
 
-                info.getChildren().addAll(idProjeto, nomeProjeto, descricao);
+                info.getChildren().addAll(nomeProjeto, descricao);
 
                 Button btnAbrir = criarBotaoAcao("Abrir", false);
                 btnAbrir.setOnAction(e -> new DetalhesProjetoCursoEspecialistaView(projeto).show());
@@ -154,9 +159,7 @@ public class ProjetosCursoEspecialistaView {
                 lista.getChildren().add(card);
             }
 
-            ScrollPane scroll = new ScrollPane(lista);
-            scroll.setFitToWidth(true);
-            conteudo.getChildren().add(scroll);
+            conteudo.getChildren().add(lista);
         }
 
         layout.setCenter(conteudo);
@@ -164,6 +167,9 @@ public class ProjetosCursoEspecialistaView {
         Scene scene = new Scene(layout, 900, 600);
         stage.setScene(scene);
         stage.setTitle("Projetos em Curso");
+        stage.setMinWidth(900);
+        stage.setMinHeight(600);
+        stage.setResizable(true);
         stage.show();
     }
 

@@ -60,7 +60,7 @@ public class FinanceiroView {
 
         // Botões
         Button btnPedidosOrcamento = criarBotao("💰 Pedidos de\nOrçamento", estiloBtn, estiloHover);
-        Button btnProjetosCurso = criarBotao("🗂 Projetos\nem curso", estiloBtn, estiloHover);
+        Button btnProjetosCurso = criarBotao("🗂 Projetos\nem Curso", estiloBtn, estiloHover);
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
         // Navegação dos botões

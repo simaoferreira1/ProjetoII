@@ -59,7 +59,7 @@ public class ProjetosEmCursoView {
 
         Button btnSolicitacoes = criarBotao("📋 Solicitações\nde Projeto", estiloBtn, estiloHover);
         Button btnProjetosCurso = criarBotao("📂 Projetos\nem Curso", estiloBtn, estiloHover);
-        Button btnProjetosPrePlanejamento = criarBotao("📝 Projetos em\nPré-Planejamento", estiloBtn, estiloHover);
+        Button btnProjetosPrePlanejamento = criarBotao("📝 Projetos em\nPré-Planeamento", estiloBtn, estiloHover);
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
         conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlanejamento);
@@ -172,22 +172,26 @@ public class ProjetosEmCursoView {
         return button;
     }
 
-    private Button criarBotaoAcao(String texto, boolean vermelho) {
+    private Button criarBotaoAcao(String texto, boolean verde) {
+        String cor = verde ? "green" : "#888888"; // cinza escuro para "Abrir"
+        String corHover = verde ? "#ccffcc" : "#dddddd";
+
         String estilo = "-fx-background-color: #ffffff; " +
-                "-fx-text-fill: " + (vermelho ? "red" : "green") + "; " +
+                "-fx-text-fill: " + cor + "; " +
                 "-fx-font-size: 12px; " +
                 "-fx-font-weight: bold; " +
                 "-fx-padding: 6px 12px; " +
                 "-fx-background-radius: 8px; " +
                 "-fx-border-radius: 8px; " +
-                "-fx-border-color: " + (vermelho ? "red" : "green") + "; " +
+                "-fx-border-color: " + cor + "; " +
                 "-fx-border-width: 1px; " +
                 "-fx-cursor: hand;";
+
         Button button = new Button(texto);
         button.setStyle(estilo);
 
         button.setOnMouseEntered(e -> button.setStyle(estilo +
-                "-fx-background-color: " + (vermelho ? "#ffcccc" : "#ccffcc") + "; " +
+                "-fx-background-color: " + corHover + "; " +
                 "-fx-scale-x: 1.05; " +
                 "-fx-scale-y: 1.05;"));
         button.setOnMouseExited(e -> button.setStyle(estilo));
