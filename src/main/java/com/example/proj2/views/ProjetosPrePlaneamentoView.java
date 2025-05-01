@@ -108,7 +108,7 @@ public class ProjetosPrePlaneamentoView {
                 info.getChildren().addAll(nomeProjeto, descricao);
 
                 Button btnAbrir = criarBotaoAcao("Abrir", false);
-                btnAbrir.setOnAction(e -> new DetalhesProjetosEmCursoView(projeto, stage, gestor).show());
+                btnAbrir.setOnAction(e -> new DetalhesProjetoPrePlaneamentoView(projeto, stage, gestor).show());
 
                 Button btnPlaneado = criarBotaoAcao("✔ Planeado", true);
                 btnPlaneado.setOnAction(e -> planejarProjeto(projeto));

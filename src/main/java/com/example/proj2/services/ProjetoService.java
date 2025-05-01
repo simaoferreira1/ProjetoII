@@ -50,7 +50,18 @@ public class ProjetoService {
 
     // Método para listar todos os projetos
     public List<Projeto> listarProjetos() {
-        return projetoRepository.findAllWithGestordeprojeto();
+        List<Projeto> projetos = projetoRepository.findAll(); // ou a forma que já usas
+
+        for (Projeto p : projetos) {
+            if (p.getIdcliente() != null) {
+                p.getIdcliente().getNome(); // força a inicialização
+            }
+            if (p.getGestordeprojeto() != null) {
+                p.getGestordeprojeto().getNome(); // idem
+            }
+        }
+
+        return projetos;
     }
 
     // Método para buscar um projeto por ID
