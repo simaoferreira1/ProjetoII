@@ -30,7 +30,7 @@
             margin-bottom: 10px;
         }
 
-        input, select {
+        input {
             width: 100%;
             padding: 10px;
             margin-top: 10px;
@@ -57,24 +57,17 @@
 </head>
 <body>
 <div class="register-container">
-    <img src="/images/Capacete.png" alt="Logo" style="width: 300px; height: auto;" >
+    <!-- Caminho relativo, mas não garantido funcionar em produção -->
+    <img src="/images/Capacete.png" alt="Logo" style="width: 300px; height: auto;">
     <form th:action="@{/register}" method="post">
         <input type="text" name="nome" placeholder="Nome" required>
         <input type="email" name="email" placeholder="Email" required>
         <input type="text" name="telefone" placeholder="Telefone" required>
         <input type="text" name="endereco" placeholder="Endereço (opcional)">
         <input type="password" name="password" placeholder="Palavra-passe" required>
-        <select name="tipo" required>
-            <option value="">Selecione o tipo</option>
-            <option value="cliente">Cliente</option>
-            <option value="especialista">Especialista</option>
-            <option value="gestor">Gestor</option>
-            <option value="membrodepartamentofinanceiro">Departamento Financeiro</option>
-        </select>
         <button type="submit">Registar</button>
     </form>
     <a href="/login" class="login-link">Já tem conta? Entrar</a>
 </div>
 </body>
 </html>
-

@@ -29,14 +29,17 @@ dependencies {
 
     implementation 'org.openjfx:javafx-controls:17'
     implementation 'org.openjfx:javafx-fxml:17'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 application {
+    mainClass = 'com.example.proj2.Proj2Application' //desktop
     mainClass = 'com.example.proj2.MainApp'
 }
+
 
 javafx {
     version = "17"

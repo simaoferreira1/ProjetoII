@@ -1,4 +1,4 @@
-package com.example.proj2.controller;
+package com.example.proj2.controller.desktop;
 
 import com.example.proj2.models.Gestordeprojeto;
 import com.example.proj2.models.Especialista;
@@ -8,14 +8,11 @@ import com.example.proj2.views.GestorView;
 import com.example.proj2.views.EspecialistaView;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import javafx.application.Platform;
 import com.example.proj2.views.FinanceiroView;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 
 
-@Controller
 public class LoginController {
 
     @Autowired

@@ -2,9 +2,11 @@ package com.example.proj2.services;
 
 import com.example.proj2.models.Gestordeprojeto;
 import com.example.proj2.repository.GestordeprojetoRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class GestordeprojetoService {
 
     private final GestordeprojetoRepository gestordeprojetoRepository = new GestordeprojetoRepository();

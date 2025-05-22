@@ -1,4 +1,4 @@
-package com.example.proj2.controller;
+package com.example.proj2.controller.desktop;
 
 import com.example.proj2.models.Gestordeprojeto;
 import com.example.proj2.models.Especialista;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
-@Controller
 public class AuthController {
 
     @Autowired
