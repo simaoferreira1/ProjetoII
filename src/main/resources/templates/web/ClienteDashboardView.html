@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Cliente</title>
+    <link rel="stylesheet" href="/css/estilo.css"> <!-- Se tiveres CSS externo -->
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #f1c40f;
+            padding: 20px;
+            height: 100vh;
+        }
+        .content {
+            flex-grow: 1;
+            background-color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        .main {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="sidebar">
+        <p><strong th:text="${cliente.nome}">Cliente</strong></p>
+        <a href="/cliente/solicitar">Solicitar Projeto</a><br><br>
+        <a href="/cliente/listar">Listar Projetos</a><br><br>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="content">
+        <img src="/images/Capacete.png" style="width: 300px;" alt="Logo"><br>
+        <h1>BETONARTE</h1>
+        <h3>Construção Civil</h3>
+    </div>
+</div>
+</body>
+</html>

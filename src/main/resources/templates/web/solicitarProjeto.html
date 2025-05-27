@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitar Projeto</title>
+    <link rel="stylesheet" href="/css/estilo.css">
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        .main { display: flex; }
+        .sidebar {
+            width: 200px;
+            background-color: #f1c40f;
+            padding: 20px;
+            height: 100vh;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            text-align: right;
+        }
+        .logo-container img {
+            height: 70px;
+        }
+        .logout {
+            position: absolute;
+            bottom: 20px;
+        }
+        button {
+            background-color: #f1c40f;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="sidebar">
+        <p><strong>Cliente</strong></p>
+        <p><a href="/cliente/dashboard">Dashboard</a></p>
+        <p><strong style="color: black;">Solicitar Projeto</strong></p>
+        <p><a href="/cliente/projetos">Listar Projetos</a></p>
+        <div class="logout">
+            <a href="/logout">Log Out</a>
+        </div>
+    </div>
+    <div class="content">
+        <div class="logo-container">
+            <img src="/images/Capacete.png" alt="Logo"><br>
+            <strong>BETONARTE</strong><br>
+            <small>Construção Civil</small>
+        </div>
+
+        <h2> Novo projeto </h2>
+
+        <form method="post" action="/cliente/solicitar">
+            <label>Nome do Projeto</label><br>
+            <input type="text" name="nome" required><br><br>
+
+            <label>Descrição do Projeto</label><br>
+            <input type="text" name="descricao" required><br><br>
+
+            <label>Local da Reunião</label><br>
+            <input type="text" name="localreuniao"><br><br>
+
+            <button type="submit">Submeter</button>
+        </form>
+
+    </div>
+</div>
+</body>
+</html>

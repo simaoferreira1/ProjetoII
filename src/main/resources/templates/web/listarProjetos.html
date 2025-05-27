@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Projetos</title>
+    <link rel="stylesheet" href="/css/estilo.css">
+    <style>
+        body { margin: 0; font-family: Arial; }
+        .main { display: flex; }
+        .sidebar {
+            width: 200px;
+            background-color: #f1c40f;
+            padding: 20px;
+            height: 100vh;
+        }
+        .sidebar a {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+        }
+        .card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .project-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .image-placeholder {
+            width: 120px;
+            height: 120px;
+            background-color: #eee;
+            border-radius: 10px;
+        }
+        .project-text {
+            max-width: 400px;
+        }
+        .delete-link {
+            color: red;
+            text-align: right;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="sidebar">
+        <strong th:text="${cliente.nome}">Cliente</strong><br><br>
+        <a href="/cliente/solicitar">Solicitar Projeto</a>
+        <a href="/cliente/projetos"><strong>Listar Projetos</strong></a>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="content">
+        <div style="text-align: right;">
+            <img src="/images/Capacete.png" alt="Logo" style="height: 60px;"><br>
+            <strong>BETONARTE</strong><br>
+            <small>Construção Civil</small>
+        </div>
+
+        <h2>Projetos</h2>
+
+        <div th:each="projeto : ${projetos}" class="card">
+            <div class="project-info">
+                <div class="image-placeholder"></div>
+                <div class="project-text">
+                    <strong th:text="${projeto.nome}">Nome do Projeto</strong><br>
+                    <span th:text="${projeto.descricao}">Descrição curta</span><br><br>
+                    <form th:action="@{/cliente/projetos/abrir}" method="get">
+                        <input type="hidden" th:name="id" th:value="${projeto.id}">
+                        <button type="submit">Abrir</button>
+                    </form>
+                </div>
+            </div>
+            <div>
+                <form th:action="@{/cliente/projetos/eliminar}" method="post">
+                    <input type="hidden" th:name="id" th:value="${projeto.id}">
+                    <button type="submit" class="delete-link">Eliminar projeto 🗑</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
