@@ -17,11 +17,6 @@
             flex-grow: 1;
             padding: 30px;
         }
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
         input[type="text"] {
             width: 100%;
             padding: 8px;
@@ -48,6 +43,22 @@
             border-radius: 6px;
             cursor: pointer;
         }
+        .mensagem {
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .mensagem-sucesso {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .mensagem-erro {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
@@ -61,6 +72,7 @@
             <a href="/logout">Log Out</a>
         </div>
     </div>
+
     <div class="content">
         <div class="logo-container">
             <img src="/images/Capacete.png" alt="Logo"><br>
@@ -70,6 +82,15 @@
 
         <h2> Novo projeto </h2>
 
+        <!-- MENSAGENS DE SUCESSO/ERRO -->
+        <div th:if="${mensagemSucesso}" class="mensagem mensagem-sucesso">
+            <p th:text="${mensagemSucesso}"></p>
+        </div>
+        <div th:if="${mensagemErro}" class="mensagem mensagem-erro">
+            <p th:text="${mensagemErro}"></p>
+        </div>
+
+        <!-- FORMULÁRIO -->
         <form method="post" action="/cliente/solicitar">
             <label>Nome do Projeto</label><br>
             <input type="text" name="nome" required><br><br>
@@ -77,12 +98,8 @@
             <label>Descrição do Projeto</label><br>
             <input type="text" name="descricao" required><br><br>
 
-            <label>Local da Reunião</label><br>
-            <input type="text" name="localreuniao"><br><br>
-
             <button type="submit">Submeter</button>
         </form>
-
     </div>
 </div>
 </body>

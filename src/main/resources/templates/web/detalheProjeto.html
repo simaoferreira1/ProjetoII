@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhe do Projeto</title>
+    <link rel="stylesheet" href="/css/estilo.css">
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        .main { display: flex; }
+        .sidebar {
+            width: 200px;
+            background-color: #f1c40f;
+            padding: 20px;
+            height: 100vh;
+        }
+        .sidebar a {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+        }
+        .projeto-box {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        p {
+            font-size: 16px;
+            color: #333;
+            margin-top: 15px;
+        }
+        .voltar-link {
+            display: inline-block;
+            margin-top: 30px;
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+        .voltar-link:hover {
+            text-decoration: underline;
+        }
+        .logo-container {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .logo-container img {
+            height: 60px;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="sidebar">
+        <strong>Cliente</strong><br><br>
+        <a href="/cliente/solicitar">Solicitar Projeto</a>
+        <a href="/cliente/projetos"><strong>Listar Projetos</strong></a>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="content">
+        <div class="logo-container">
+            <img src="/images/Capacete.png" alt="Logo"><br>
+            <strong>BETONARTE</strong><br>
+            <small>Construção Civil</small>
+        </div>
+
+        <div class="projeto-box">
+            <h2 th:text="${projeto.nome}">Nome do Projeto</h2>
+            <p th:text="${projeto.descricao}">Descrição do projeto.</p>
+            <a href="/cliente/projetos" class="voltar-link">← Voltar à lista de projetos</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

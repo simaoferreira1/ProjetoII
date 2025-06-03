@@ -5,7 +5,7 @@
     <title>Projetos</title>
     <link rel="stylesheet" href="/css/estilo.css">
     <style>
-        body { margin: 0; font-family: Arial; }
+        body { margin: 0; font-family: Arial, sans-serif; }
         .main { display: flex; }
         .sidebar {
             width: 200px;
@@ -23,31 +23,33 @@
         }
         .card {
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             border: 1px solid #ccc;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
         }
-        .project-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .image-placeholder {
-            width: 120px;
-            height: 120px;
-            background-color: #eee;
-            border-radius: 10px;
-        }
         .project-text {
-            max-width: 400px;
+            max-width: 500px;
         }
-        .delete-link {
-            color: red;
-            text-align: right;
-            text-decoration: none;
+        .botoes {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-ver {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-del {
+            background-color: #e74c3c;
+            color: white;
         }
     </style>
 </head>
@@ -66,28 +68,28 @@
             <small>Construção Civil</small>
         </div>
 
+        <!-- Mensagem de sucesso -->
+        <div th:if="${param.eliminado}" style="color: green; margin-bottom: 20px;">
+            Projeto eliminado com sucesso.
+        </div>
+
         <h2>Projetos</h2>
 
         <div th:each="projeto : ${projetos}" class="card">
-            <div class="project-info">
-                <div class="image-placeholder"></div>
-                <div class="project-text">
-                    <strong th:text="${projeto.nome}">Nome do Projeto</strong><br>
-                    <span th:text="${projeto.descricao}">Descrição curta</span><br><br>
-                    <form th:action="@{/cliente/projetos/abrir}" method="get">
-                        <input type="hidden" th:name="id" th:value="${projeto.id}">
-                        <button type="submit">Abrir</button>
-                    </form>
-                </div>
+            <div class="project-text">
+                <strong th:text="${projeto.nome}">Nome do Projeto</strong><br>
+                <span th:text="${projeto.descricao}">Descrição</span>
             </div>
-            <div>
-                <form th:action="@{/cliente/projetos/eliminar}" method="post">
-                    <input type="hidden" th:name="id" th:value="${projeto.id}">
-                    <button type="submit" class="delete-link">Eliminar projeto 🗑</button>
+            <div class="botoes">
+                <form th:action="@{/cliente/projetos/{id}(id=${projeto.id})}" method="get">
+                    <button type="submit" class="btn-ver">Abrir</button>
+                </form>
+                <form th:action="@{/cliente/projetos/eliminar/{id}(id=${projeto.id})}" method="post"
+                      onsubmit="return confirm('Tem a certeza que quer eliminar este projeto?');">
+                    <button type="submit" class="btn-del">Eliminar projeto 🗑</button>
                 </form>
             </div>
         </div>
-
     </div>
 </div>
 </body>
