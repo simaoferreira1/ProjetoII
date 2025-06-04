@@ -1,25 +1,165 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt">
 <head>
     <meta charset="UTF-8">
-    <title>Projetos</title>
-    <link rel="stylesheet" href="/css/estilo.css">
+    <title>Listar Projetos</title>
+    <!-- Bootstrap CSS + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; }
-        .main { display: flex; }
-        .sidebar {
-            width: 200px;
-            background-color: #f1c40f;
-            padding: 20px;
-            height: 100vh;
+        /* =========================
+           SIDEBAR & HEADER COMUNS
+           ========================= */
+        :root {
+            --sidebar-width: 180px;
+            --brand-yellow: #f1c40f;
+            --text-dark: #222;
+            --text-red: #8B0000;
         }
-        .sidebar a {
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        /* Header fixo no topo */
+        .header-bar {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            background: #fff;
+            color: var(--brand-yellow);
+            padding: 20px 40px 16px;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-bottom: 4px solid var(--brand-yellow);
+            display: flex;
+            align-items: center;
+            z-index: 1050;
+        }
+        .header-bar .navbar-toggler {
+            border: none;
+            color: var(--brand-yellow);
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        .navbar-light .navbar-toggler-icon {
+            background-image: url(
+            "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23f1c40f' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"
+            );
+        }
+        /* Sidebar offcanvas */
+        .offcanvas-start {
+            --bs-offcanvas-width: var(--sidebar-width) !important;
+            top: 0 !important;
+            height: 100vh !important;
+        }
+        #sidebar.offcanvas-start {
+            background-color: var(--brand-yellow) !important;
+            border: none !important;
+        }
+        #sidebar .offcanvas-body {
+            padding-top: 72px; /* desce abaixo do header */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 100%;
+            background-color: var(--brand-yellow) !important;
+        }
+        /* Usuário */
+        .sidebar-user {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            color: var(--text-dark);
+        }
+        .sidebar-user i {
+            font-size: 3.5rem;
+            margin-bottom: 0.25rem;
+        }
+        .sidebar-user .username {
+            font-size: 0.95rem;
+            font-weight: bold;
+            position: relative;
+            margin-bottom: 0.75rem;
+        }
+        .sidebar-user .username::after {
+            content: "";
             display: block;
-            margin-bottom: 10px;
+            width: 50%;
+            height: 2px;
+            background-color: rgba(0,0,0,0.2);
+            margin: 0.25rem auto 0;
         }
-        .content {
-            flex-grow: 1;
-            padding: 30px;
+        /* Navegação */
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-top: 1px solid rgba(0,0,0,0.2);
+            transition: background 0.2s;
+        }
+        .sidebar-nav a:first-child { border-top: none; }
+        .sidebar-nav a:hover { background: rgba(255,255,255,0.3); }
+        .sidebar-nav a i {
+            font-size: 2.5rem;
+            margin-bottom: 0.25rem;
+        }
+        .sidebar-nav a span {
+            font-size: 1.1rem;
+        }
+        /* Logout */
+        .logout-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-red);
+            text-decoration: none;
+            margin-top: auto;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(0,0,0,0.2);
+            transition: color 0.2s;
+        }
+        .logout-link:hover { color: darkred; }
+        .logout-link i { font-size: 2rem; }
+        .logout-link span {
+            font-size: 1rem;
+            margin-left: 0.5rem;
+        }
+
+        /* =========================
+           CONTEÚDO DA PÁGINA
+           ========================= */
+        main.content {
+            margin-top: 72px;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+        }
+        .logo-header {
+            text-align: right;
+            margin-bottom: 1.5rem;
+        }
+        .logo-header img {
+            height: 60px;
+        }
+        .logo-header strong {
+            display: block;
+            margin-top: 0.5rem;
+        }
+        .logo-header small {
+            display: block;
+            color: #555;
+        }
+        h2 {
+            margin-bottom: 1rem;
         }
         .card {
             display: flex;
@@ -29,6 +169,7 @@
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
+            background: #fff;
         }
         .project-text {
             max-width: 500px;
@@ -37,60 +178,98 @@
             display: flex;
             gap: 10px;
         }
-        button {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
         .btn-ver {
             background-color: #3498db;
             color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            text-decoration: none;
         }
         .btn-del {
             background-color: #e74c3c;
             color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-<div class="main">
-    <div class="sidebar">
-        <strong th:text="${cliente.nome}">Cliente</strong><br><br>
-        <a href="/cliente/solicitar">Solicitar Projeto</a>
-        <a href="/cliente/projetos"><strong>Listar Projetos</strong></a>
-        <a href="/logout">Logout</a>
-    </div>
-    <div class="content">
-        <div style="text-align: right;">
-            <img src="/images/Capacete.png" alt="Logo" style="height: 60px;"><br>
-            <strong>BETONARTE</strong><br>
-            <small>Construção Civil</small>
-        </div>
 
-        <!-- Mensagem de sucesso -->
-        <div th:if="${param.eliminado}" style="color: green; margin-bottom: 20px;">
-            Projeto eliminado com sucesso.
-        </div>
+<!-- HEADER -->
+<div class="header-bar navbar navbar-light">
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#sidebar"
+            aria-controls="sidebar" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    BETONARTE
+</div>
 
-        <h2>Projetos</h2>
-
-        <div th:each="projeto : ${projetos}" class="card">
-            <div class="project-text">
-                <strong th:text="${projeto.nome}">Nome do Projeto</strong><br>
-                <span th:text="${projeto.descricao}">Descrição</span>
-            </div>
-            <div class="botoes">
-                <form th:action="@{/cliente/projetos/{id}(id=${projeto.id})}" method="get">
-                    <button type="submit" class="btn-ver">Abrir</button>
-                </form>
-                <form th:action="@{/cliente/projetos/eliminar/{id}(id=${projeto.id})}" method="post"
-                      onsubmit="return confirm('Tem a certeza que quer eliminar este projeto?');">
-                    <button type="submit" class="btn-del">Eliminar projeto 🗑</button>
-                </form>
-            </div>
+<!-- SIDEBAR OFFCANVAS -->
+<div class="offcanvas offcanvas-start" id="sidebar" tabindex="-1">
+    <div class="offcanvas-body">
+        <!-- Usuário -->
+        <div class="sidebar-user">
+            <i class="bi bi-person-circle"></i>
+            <div class="username" th:text="${cliente.nome}">Cliente</div>
         </div>
+        <!-- Navegação -->
+        <nav class="sidebar-nav">
+            <a th:href="@{/cliente}">
+                <i class="bi bi-house-door"></i>
+                <span>Dashboard</span>
+            </a>
+            <a th:href="@{/cliente/solicitar}">
+                <i class="bi bi-clipboard2-plus"></i>
+                <span>Solicitar Projeto</span>
+            </a>
+            <a th:href="@{/cliente/projetos}">
+                <i class="bi bi-card-list"></i>
+                <span>Listar Projetos</span>
+            </a>
+        </nav>
+        <!-- Logout -->
+        <a th:href="@{/logout}" class="logout-link">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Sair</span>
+        </a>
     </div>
 </div>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<main class="content">
+    <div class="logo-header">
+        <img src="/images/Capacete.png" alt="Logo">
+        <strong>BETONARTE</strong>
+        <small>Construção Civil</small>
+    </div>
+
+    <div th:if="${param.eliminado}" class="alert alert-success">
+        Projeto eliminado com sucesso.
+    </div>
+
+    <h2>Meus Projetos</h2>
+
+    <div th:each="projeto : ${projetos}" class="card">
+        <div class="project-text">
+            <strong th:text="${projeto.nome}">Nome do Projeto</strong><br>
+            <span th:text="${projeto.descricao}">Descrição</span>
+        </div>
+        <div class="botoes">
+            <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}"
+               class="btn-ver">Abrir</a>
+            <form th:action="@{/cliente/projetos/eliminar/{id}(id=${projeto.id})}"
+                  method="post"
+                  onsubmit="return confirm('Tem certeza que deseja eliminar este projeto?');">
+                <button type="submit" class="btn-del">Eliminar 🗑</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

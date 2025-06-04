@@ -7,7 +7,9 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -18,52 +20,54 @@ import java.util.List;
 public class SolicitacaoProjetoController {
 
     @Autowired
-    private SolicitacaoprojetoRepository solicitacaoProjetoRepository;
+    private SolicitacaoprojetoRepository repo;
+
+    @GetMapping("")
+    public String dashboard(HttpSession session, Model model) {
+        Cliente c = (Cliente) session.getAttribute("cliente");
+        if (c == null) return "redirect:/login";
+        model.addAttribute("cliente", c);
+        return "web/ClienteDashboardView";
+    }
 
     @GetMapping("/solicitar")
     public String mostrarFormulario(HttpSession session, Model model) {
-        if (session.getAttribute("cliente") == null) {
-            return "redirect:/login";
-        }
+        Cliente c = (Cliente) session.getAttribute("cliente");
+        if (c == null) return "redirect:/login";
+        model.addAttribute("cliente", c);
         return "web/solicitarProjeto";
     }
 
     @PostMapping("/solicitar")
-    public String submeterProjeto(@RequestParam String nome,
-                                  @RequestParam String descricao,
+    public String submeterProjeto(String nome,
+                                  String descricao,
                                   HttpSession session,
-                                  RedirectAttributes redirectAttributes) {
-        Cliente cliente = (Cliente) session.getAttribute("cliente");
-        if (cliente == null) {
-            return "redirect:/login";
-        }
+                                  RedirectAttributes attrs) {
+        Cliente c = (Cliente) session.getAttribute("cliente");
+        if (c == null) return "redirect:/login";
 
         try {
             Solicitacaoprojeto sp = new Solicitacaoprojeto();
             sp.setNome(nome);
             sp.setDescricao(descricao);
-            sp.setLocalreuniao(""); // campo não usado
-            sp.setCliente(cliente);
             sp.setDatasolicitacao(LocalDate.now());
             sp.setEstado("Pendente");
-
-            solicitacaoProjetoRepository.save(sp);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Projeto submetido com sucesso!");
+            sp.setCliente(c);
+            repo.save(sp);
+            attrs.addFlashAttribute("mensagemSucesso", "Projeto enviado com sucesso!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao submeter projeto.");
+            attrs.addFlashAttribute("mensagemErro", "Erro ao enviar projeto.");
         }
-
         return "redirect:/cliente/solicitar";
     }
 
     @GetMapping("/projetos")
     public String listarProjetos(HttpSession session, Model model) {
-        Cliente cliente = (Cliente) session.getAttribute("cliente");
-        if (cliente == null) return "redirect:/login";
-
-        List<Solicitacaoprojeto> projetos = solicitacaoProjetoRepository.findByCliente(cliente);
-        model.addAttribute("projetos", projetos);
-        model.addAttribute("cliente", cliente);
+        Cliente c = (Cliente) session.getAttribute("cliente");
+        if (c == null) return "redirect:/login";
+        List<Solicitacaoprojeto> list = repo.findByCliente(c);
+        model.addAttribute("cliente", c);
+        model.addAttribute("projetos", list);
         return "web/listarProjetos";
     }
 }
