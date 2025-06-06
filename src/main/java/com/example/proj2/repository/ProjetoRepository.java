@@ -1,5 +1,6 @@
 package com.example.proj2.repository;
 
+import com.example.proj2.models.Cliente;
 import com.example.proj2.models.Projeto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,6 @@ public interface ProjetoRepository extends JpaRepository<Projeto, Integer> {
             "LEFT JOIN FETCH p.gestordeprojeto " +
             "WHERE p.estado = :estado")
     List<Projeto> findByEstadoWithCliente(@Param("estado") String estado);
+
+    List<Projeto> findByIdcliente(Cliente cliente);
 }

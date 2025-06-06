@@ -2,19 +2,19 @@ package com.example.proj2.models;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "projeto")
 public class Projeto {
+
     @Id
-    @Column(name = "idprojeto", nullable = false, precision = 5)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idprojeto", nullable = false)
     private Integer id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idprojeto", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idgestor", nullable = false)
     private Gestordeprojeto gestordeprojeto;
 
     @Column(name = "nome", length = 50)
@@ -39,8 +39,7 @@ public class Projeto {
     @JoinColumn(name = "idcliente")
     private Cliente idcliente;
 
-    @Column(name = "idgestor", precision = 10)
-    private BigDecimal idgestor;
+    // Getters e Setters
 
     public Integer getId() {
         return id;
@@ -113,13 +112,4 @@ public class Projeto {
     public void setIdcliente(Cliente idcliente) {
         this.idcliente = idcliente;
     }
-
-    public BigDecimal getIdgestor() {
-        return idgestor;
-    }
-
-    public void setIdgestor(BigDecimal idgestor) {
-        this.idgestor = idgestor;
-    }
-
 }

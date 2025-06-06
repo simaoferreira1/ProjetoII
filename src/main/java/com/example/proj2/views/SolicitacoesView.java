@@ -186,14 +186,17 @@ public class SolicitacoesView {
                 projeto.setNome(sp.getNome() != null ? sp.getNome() : "Projeto ID " + sp.getId());
                 projeto.setDescricao(sp.getDescricao() != null ? sp.getDescricao() : "Descrição não fornecida");
                 projeto.setLocalizacao(sp.getLocalreuniao() != null ? sp.getLocalreuniao() : "Não especificado");
-                projeto.setDatainicio(sp.getDatasolicitacao());
-                projeto.setDatafimprevista(null);
+
+                // ✅ Data início e fim prevista corrigidas
+                projeto.setDatainicio(sp.getDatasolicitacao() != null ? sp.getDatasolicitacao() : java.time.LocalDate.now());
+                projeto.setDatafimprevista(projeto.getDatainicio().plusMonths(6)); // ou outro período
+
                 projeto.setIdcliente(sp.getCliente());
-                projeto.setGestordeprojeto(gestor); // Adicionado o gestor atual
+                projeto.setGestordeprojeto(gestor);
                 projeto.setEstado("em pré-planeamento");
 
                 ProjetoService projetoService = SpringContext.getBean(ProjetoService.class);
-                projetoService.salvarProjeto(projeto); // O ID será gerado automaticamente pelo banco de dados
+                projetoService.salvarProjeto(projeto);
 
                 SolicitacaoprojetoService solicitacaoService = SpringContext.getBean(SolicitacaoprojetoService.class);
                 solicitacaoService.eliminarSolicitacao(sp.getId());
@@ -201,13 +204,14 @@ public class SolicitacoesView {
                 Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
                 sucesso.setTitle("Sucesso");
                 sucesso.setHeaderText(null);
-                sucesso.setContentText("Solicitação aceita com sucesso! O projeto foi movido para 'em pré-planeamento'.");
+                sucesso.setContentText("Solicitação aceite com sucesso! O projeto foi movido para 'em pré-planeamento'.");
                 sucesso.showAndWait();
 
-                show();
+                show(); // Atualiza a vista
             }
         });
     }
+
 
     private void eliminarProjeto(Solicitacaoprojeto sp) {
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);

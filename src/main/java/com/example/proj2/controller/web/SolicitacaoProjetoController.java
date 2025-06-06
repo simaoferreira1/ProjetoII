@@ -1,7 +1,9 @@
 package com.example.proj2.controller.web;
 
 import com.example.proj2.models.Cliente;
+import com.example.proj2.models.Projeto;
 import com.example.proj2.models.Solicitacaoprojeto;
+import com.example.proj2.repository.ProjetoRepository;
 import com.example.proj2.repository.SolicitacaoprojetoRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +16,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/cliente")
 public class SolicitacaoProjetoController {
 
     @Autowired
-    private SolicitacaoprojetoRepository repo;
+    private SolicitacaoprojetoRepository solicitacaoRepo;
+
+    @Autowired
+    private ProjetoRepository projetoRepo;
 
     @GetMapping("")
     public String dashboard(HttpSession session, Model model) {
@@ -53,7 +59,7 @@ public class SolicitacaoProjetoController {
             sp.setDatasolicitacao(LocalDate.now());
             sp.setEstado("Pendente");
             sp.setCliente(c);
-            repo.save(sp);
+            solicitacaoRepo.save(sp);
             attrs.addFlashAttribute("mensagemSucesso", "Projeto enviado com sucesso!");
         } catch (Exception e) {
             attrs.addFlashAttribute("mensagemErro", "Erro ao enviar projeto.");
@@ -65,9 +71,31 @@ public class SolicitacaoProjetoController {
     public String listarProjetos(HttpSession session, Model model) {
         Cliente c = (Cliente) session.getAttribute("cliente");
         if (c == null) return "redirect:/login";
-        List<Solicitacaoprojeto> list = repo.findByCliente(c);
+
+        // Projetos pendentes (ainda em Solicitacaoprojeto)
+        List<Solicitacaoprojeto> pendentes = solicitacaoRepo.findByCliente(c);
+
+        // Projetos existentes para o cliente
+        List<Projeto> todosProjetos = projetoRepo.findByIdcliente(c);
+
+        // Projetos considerados "aprovados"
+        List<Projeto> aprovados = todosProjetos.stream()
+                .filter(p -> {
+                    String estado = p.getEstado().trim().toLowerCase();
+                    return estado.equals("em curso") || estado.equals("em pré-planeamento");
+                })
+                .collect(Collectors.toList());
+
+        // Projetos terminados
+        List<Projeto> terminados = todosProjetos.stream()
+                .filter(p -> p.getEstado().trim().equalsIgnoreCase("terminado"))
+                .collect(Collectors.toList());
+
         model.addAttribute("cliente", c);
-        model.addAttribute("projetos", list);
+        model.addAttribute("pendentes", pendentes);
+        model.addAttribute("aprovados", aprovados);
+        model.addAttribute("terminados", terminados);
+
         return "web/listarProjetos";
     }
 }
