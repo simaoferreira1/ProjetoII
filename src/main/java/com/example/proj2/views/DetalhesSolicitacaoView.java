@@ -9,8 +9,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.math.BigDecimal;
-
 public class DetalhesSolicitacaoView {
 
     private final Stage stage;
@@ -44,9 +42,9 @@ public class DetalhesSolicitacaoView {
             String emailCliente = solicitacao.getCliente() != null && solicitacao.getCliente().getEmail() != null
                     ? solicitacao.getCliente().getEmail()
                     : "N/A";
-            BigDecimal telefoneCliente = solicitacao.getCliente() != null && solicitacao.getCliente().getTelefone() != null
-                    ? solicitacao.getCliente().getTelefone() // Telefone é String, não BigDecimal
-                    : null;
+            String telefoneCliente = solicitacao.getCliente() != null && solicitacao.getCliente().getTelefone() != null
+                    ? solicitacao.getCliente().getTelefone().toPlainString()
+                    : "N/A";
 
             Label clienteLabel = new Label("👤 Cliente: " + nomeCliente);
             Label emailLabel = new Label("📧 Email: " + emailCliente);
@@ -56,13 +54,13 @@ public class DetalhesSolicitacaoView {
             Label nomeSolicitacaoLabel = new Label("📌 Nome da Solicitação: " + (solicitacao.getNome() != null ? solicitacao.getNome() : "N/A"));
             Label descricaoLabel = new Label("📝 Descrição: " + (solicitacao.getDescricao() != null ? solicitacao.getDescricao() : "N/A"));
             Label dataLabel = new Label("📅 Data da Solicitação: " + (solicitacao.getDatasolicitacao() != null ? solicitacao.getDatasolicitacao() : "N/A"));
-            Label localReuniaoLabel = new Label("📍 Local da Reunião: " + (solicitacao.getLocalreuniao() != null ? solicitacao.getLocalreuniao() : "N/A"));
+            Label localizacaoLabel = new Label("📍 Localização: " + (solicitacao.getLocalizacao() != null ? solicitacao.getLocalizacao() : "N/A"));
 
             layout.getChildren().addAll(titulo, clienteLabel, emailLabel, telefoneLabel,
-                    nomeSolicitacaoLabel, descricaoLabel, dataLabel, localReuniaoLabel);
+                    nomeSolicitacaoLabel, descricaoLabel, dataLabel, localizacaoLabel);
         }
 
-        Scene scene = new Scene(layout, 400, 350); // Aumentei a altura para acomodar o novo campo
+        Scene scene = new Scene(layout, 400, 360); // ligeiramente ajustado para melhor altura
         stage.setScene(scene);
         stage.setTitle("Detalhes da Solicitação");
         stage.show();

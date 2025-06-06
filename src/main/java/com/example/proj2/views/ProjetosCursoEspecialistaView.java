@@ -50,7 +50,7 @@ public class ProjetosCursoEspecialistaView {
             // Log para depuração
             System.out.println("Especialista ou nome está null: " + (especialista == null ? "especialista é null" : "nome é null ou vazio"));
         }
-        Label nome = new Label("Especialista: " + nomeEspecialista);
+        Label nome = new Label("👤 Especialista: " + nomeEspecialista);
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         nome.setWrapText(true);
 

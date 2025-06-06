@@ -22,6 +22,9 @@ public class Solicitacaoprojeto {
     @Column(name = "localreuniao", length = 20)
     private String localreuniao;
 
+    @Column(name = "localizacao", length = 100) // <-- novo campo
+    private String localizacao;
+
     @Column(name = "estado", length = 20)
     private String estado;
 
@@ -43,6 +46,9 @@ public class Solicitacaoprojeto {
 
     public String getLocalreuniao() { return localreuniao; }
     public void setLocalreuniao(String localreuniao) { this.localreuniao = localreuniao; }
+
+    public String getLocalizacao() { return localizacao; }
+    public void setLocalizacao(String localizacao) { this.localizacao = localizacao; }
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }

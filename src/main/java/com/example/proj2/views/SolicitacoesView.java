@@ -64,7 +64,7 @@ public class SolicitacoesView {
         Button btnProjetosPrePlaneamento = criarBotao("📝 Projetos em\nPré-Planeamento", estiloBtn, estiloHover);
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
-        conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
+        conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosPrePlaneamento, btnProjetosCurso);
 
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
@@ -185,11 +185,12 @@ public class SolicitacoesView {
                 Projeto projeto = new Projeto();
                 projeto.setNome(sp.getNome() != null ? sp.getNome() : "Projeto ID " + sp.getId());
                 projeto.setDescricao(sp.getDescricao() != null ? sp.getDescricao() : "Descrição não fornecida");
-                projeto.setLocalizacao(sp.getLocalreuniao() != null ? sp.getLocalreuniao() : "Não especificado");
 
-                // ✅ Data início e fim prevista corrigidas
+                // ✅ Localização fornecida pelo cliente na solicitação
+                projeto.setLocalizacao(sp.getLocalizacao() != null ? sp.getLocalizacao() : "Localização não definida");
+
                 projeto.setDatainicio(sp.getDatasolicitacao() != null ? sp.getDatasolicitacao() : java.time.LocalDate.now());
-                projeto.setDatafimprevista(projeto.getDatainicio().plusMonths(6)); // ou outro período
+                projeto.setDatafimprevista(projeto.getDatainicio().plusMonths(6));
 
                 projeto.setIdcliente(sp.getCliente());
                 projeto.setGestordeprojeto(gestor);
@@ -204,14 +205,13 @@ public class SolicitacoesView {
                 Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
                 sucesso.setTitle("Sucesso");
                 sucesso.setHeaderText(null);
-                sucesso.setContentText("Solicitação aceite com sucesso! O projeto foi movido para 'em pré-planeamento'.");
+                sucesso.setContentText("Solicitação aceite com sucesso! O projeto foi criado.");
                 sucesso.showAndWait();
 
                 show(); // Atualiza a vista
             }
         });
     }
-
 
     private void eliminarProjeto(Solicitacaoprojeto sp) {
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);

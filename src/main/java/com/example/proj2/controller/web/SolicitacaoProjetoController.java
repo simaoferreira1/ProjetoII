@@ -47,6 +47,7 @@ public class SolicitacaoProjetoController {
     @PostMapping("/solicitar")
     public String submeterProjeto(String nome,
                                   String descricao,
+                                  String localizacao,
                                   HttpSession session,
                                   RedirectAttributes attrs) {
         Cliente c = (Cliente) session.getAttribute("cliente");
@@ -56,6 +57,7 @@ public class SolicitacaoProjetoController {
             Solicitacaoprojeto sp = new Solicitacaoprojeto();
             sp.setNome(nome);
             sp.setDescricao(descricao);
+            sp.setLocalizacao(localizacao); // <-- novo campo
             sp.setDatasolicitacao(LocalDate.now());
             sp.setEstado("Pendente");
             sp.setCliente(c);
@@ -67,18 +69,15 @@ public class SolicitacaoProjetoController {
         return "redirect:/cliente/solicitar";
     }
 
+
     @GetMapping("/projetos")
     public String listarProjetos(HttpSession session, Model model) {
         Cliente c = (Cliente) session.getAttribute("cliente");
         if (c == null) return "redirect:/login";
 
-        // Projetos pendentes (ainda em Solicitacaoprojeto)
         List<Solicitacaoprojeto> pendentes = solicitacaoRepo.findByCliente(c);
-
-        // Projetos existentes para o cliente
         List<Projeto> todosProjetos = projetoRepo.findByIdcliente(c);
 
-        // Projetos considerados "aprovados"
         List<Projeto> aprovados = todosProjetos.stream()
                 .filter(p -> {
                     String estado = p.getEstado().trim().toLowerCase();
@@ -86,7 +85,6 @@ public class SolicitacaoProjetoController {
                 })
                 .collect(Collectors.toList());
 
-        // Projetos terminados
         List<Projeto> terminados = todosProjetos.stream()
                 .filter(p -> p.getEstado().trim().equalsIgnoreCase("terminado"))
                 .collect(Collectors.toList());

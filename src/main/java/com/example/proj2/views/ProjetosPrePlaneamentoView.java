@@ -61,7 +61,7 @@ public class ProjetosPrePlaneamentoView {
         Button btnProjetosPrePlaneamento = criarBotao("📝 Projetos em\nPré-Planeamento", estiloBtn, estiloHover);
         Button btnLogout = criarBotao("↩ Sair", estiloBtn, estiloHover);
 
-        conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosCurso, btnProjetosPrePlaneamento);
+        conteudoMenu.getChildren().addAll(nome, btnSolicitacoes, btnProjetosPrePlaneamento, btnProjetosCurso);
         Region espacoInferior = new Region();
         VBox.setVgrow(espacoInferior, Priority.ALWAYS);
         menu.getChildren().addAll(conteudoMenu, espacoInferior, btnLogout);
