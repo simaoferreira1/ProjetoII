@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Listar Projetos</title>
-    <!-- Bootstrap CSS + Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -81,7 +80,7 @@
             width: 50%;
             height: 2px;
             background-color: rgba(0,0,0,0.2);
-            margin: 0.25rem auto 0;
+            margin: 0.25rem auto;
         }
         .sidebar-nav {
             display: flex;
@@ -119,10 +118,8 @@
         }
         .logout-link:hover { color: darkred; }
         .logout-link i { font-size: 2rem; }
-        .logout-link span {
-            font-size: 1rem;
-            margin-left: 0.5rem;
-        }
+        .logout-link span { font-size: 1rem; margin-left: .5rem; }
+
         main.content {
             margin-top: 72px;
             margin-left: var(--sidebar-width);
@@ -143,55 +140,67 @@
             display: block;
             color: #555;
         }
-        h2 {
-            margin-bottom: 1rem;
+        .project-section {
+            margin-bottom: 2.5rem;
         }
-        .card {
+        .section-title {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            border-bottom: 2px solid var(--brand-yellow);
+            display: inline-block;
+            padding-bottom: .25rem;
+        }
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+            gap: 1.5rem;
+        }
+        .project-card {
+            background: #fff;
+            border-radius: .75rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .project-card .card-body {
+            padding: 1rem 1.5rem;
+            flex-grow: 1;
+        }
+        .project-card .card-body .badge {
+            display: block;
+            margin-bottom: .75rem;
+        }
+        .project-card .card-title {
+            margin-bottom: .5rem;
+            color: #2c3e50;
+        }
+        .project-card .card-text {
+            color: #555;
+            font-size: .95rem;
+        }
+        .project-card .card-footer {
+            background: transparent;
+            border-top: 1px solid #eaeaea;
+            padding: .75rem 1.5rem;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            background: #fff;
-        }
-        .project-text {
-            max-width: 500px;
-        }
-        .botoes {
-            display: flex;
-            gap: 10px;
-        }
-        .btn-ver {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-        .btn-del {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
         }
     </style>
 </head>
 <body>
 
+<!-- Header Fixo -->
 <div class="header-bar navbar navbar-light">
     <button class="navbar-toggler" type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#sidebar"
+            data-bs-toggle="offcanvas" data-bs-target="#sidebar"
             aria-controls="sidebar" aria-label="Menu">
         <span class="navbar-toggler-icon"></span>
     </button>
     BETONARTE
 </div>
 
+<!-- Menu Lateral Offcanvas -->
 <div class="offcanvas offcanvas-start" id="sidebar" tabindex="-1">
     <div class="offcanvas-body">
         <div class="sidebar-user">
@@ -219,6 +228,7 @@
     </div>
 </div>
 
+<!-- Conteúdo Principal -->
 <main class="content">
     <div class="logo-header">
         <img src="/images/Capacete.png" alt="Logo">
@@ -226,82 +236,94 @@
         <small>Construção Civil</small>
     </div>
 
-    <div th:if="${param.eliminado}" class="alert alert-success">
-        Projeto eliminado com sucesso.
-    </div>
-
-    <!-- === PROJETOS PENDENTES === -->
-    <h2>Projetos a Aguardar Aprovação</h2>
-    <div th:if="${pendentes.empty}">
-        <p class="text-muted">Nenhum projeto pendente.</p>
-    </div>
-    <div th:each="projeto : ${pendentes}" class="card">
-        <div class="project-text">
-            <strong th:text="${projeto.nome}">Nome do Projeto</strong><br>
-            <span th:text="${projeto.descricao}">Descrição</span><br>
-            <span>
-            <strong>Estado:</strong>
-            <span class="badge bg-warning text-dark">⏳ A aguardar aprovação</span>
-        </span>
+    <!-- Projetos A Aguardar Aprovação -->
+    <div class="project-section">
+        <h2 class="section-title">Projetos a Aguardar Aprovação</h2>
+        <div th:if="${pendentes.empty}" class="text-muted">
+            Nenhum projeto pendente.
         </div>
-        <div class="botoes">
-            <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}" class="btn-ver">Abrir</a>
-            <button type="button" class="btn-del"
-                    th:attr="data-id=${projeto.id}, data-tipo='pendente'"
-                    onclick="abrirModalEliminacao(this)">
-                Eliminar 🗑
-            </button>
-        </div>
-    </div>
-
-
-    <!-- === PROJETOS APROVADOS === -->
-    <h2 class="mt-5">Projetos Aprovados</h2>
-    <div th:if="${aprovados.empty}">
-        <p class="text-muted">Nenhum projeto aprovado.</p>
-    </div>
-    <div th:each="projeto : ${aprovados}" class="card">
-        <div class="project-text">
-            <strong th:text="${projeto.nome}">Nome do Projeto</strong><br>
-            <span th:text="${projeto.descricao}">Descrição</span><br>
-            <span>
-                <strong>Estado:</strong>
-                <span class="badge bg-success">✅ Aprovado</span>
-            </span>
-        </div>
-        <div class="botoes">
-            <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}" class="btn-ver">Abrir</a>
+        <div th:if="${!pendentes.empty}" class="project-grid">
+            <div th:each="projeto : ${pendentes}" class="project-card">
+                <div class="card-body">
+                    <span class="badge bg-warning text-dark">A aguardar aprovação</span>
+                    <h5 class="card-title" th:text="${projeto.nome}">Nome do Projeto</h5>
+                    <p class="card-text" th:text="${projeto.descricao}">Descrição do projeto</p>
+                </div>
+                <div class="card-footer">
+                    <button type="button"
+                            class="btn btn-sm btn-danger"
+                            th:attr="data-id=${projeto.id}"
+                            onclick="abrirModalEliminacao(this)">
+                        Eliminar
+                    </button>
+                    <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}"
+                       class="btn btn-sm btn-primary">
+                        Consultar
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- === PROJETOS TERMINADOS === -->
-    <h2 class="mt-5">Projetos Terminados</h2>
-    <div th:if="${terminados.empty}">
-        <p class="text-muted">Nenhum projeto terminado.</p>
-    </div>
-    <div th:each="projeto : ${terminados}" class="card">
-        <div class="project-text">
-            <strong th:text="${projeto.nome}">Nome do Projeto</strong><br>
-            <span th:text="${projeto.descricao}">Descrição</span><br>
-            <span>
-            <strong>Estado:</strong>
-            <span class="badge bg-secondary">✅ Terminado</span>
-        </span>
+    <!-- Projetos Aprovados -->
+    <div class="project-section">
+        <h2 class="section-title">Projetos Aprovados</h2>
+        <div th:if="${aprovados.empty}" class="text-muted">
+            Nenhum projeto aprovado.
         </div>
-        <div class="botoes">
-            <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}" class="btn-ver">Abrir</a>
-            <button type="button" class="btn-del"
-                    th:attr="data-id=${projeto.id}"
-                    onclick="abrirModalEliminacao(this)">
-                Eliminar 🗑
-            </button>
+        <div th:if="${!aprovados.empty}" class="project-grid">
+            <div th:each="projeto : ${aprovados}" class="project-card">
+                <div class="card-body">
+                    <span class="badge bg-success">Aprovado</span>
+                    <h5 class="card-title" th:text="${projeto.nome}">Nome do Projeto</h5>
+                    <p class="card-text" th:text="${projeto.descricao}">Descrição do projeto</p>
+                </div>
+                <div class="card-footer">
+                    <button type="button"
+                            class="btn btn-sm btn-danger"
+                            th:attr="data-id=${projeto.id}"
+                            onclick="abrirModalEliminacao(this)">
+                        Eliminar
+                    </button>
+                    <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}"
+                       class="btn btn-sm btn-primary">
+                        Consultar
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Projetos Terminados -->
+    <div class="project-section">
+        <h2 class="section-title">Projetos Terminados</h2>
+        <div th:if="${terminados.empty}" class="text-muted">
+            Nenhum projeto terminado.
+        </div>
+        <div th:if="${!terminados.empty}" class="project-grid">
+            <div th:each="projeto : ${terminados}" class="project-card">
+                <div class="card-body">
+                    <span class="badge bg-secondary">Terminado</span>
+                    <h5 class="card-title" th:text="${projeto.nome}">Nome do Projeto</h5>
+                    <p class="card-text" th:text="${projeto.descricao}">Descrição do projeto</p>
+                </div>
+                <div class="card-footer">
+                    <button type="button"
+                            class="btn btn-sm btn-danger"
+                            th:attr="data-id=${projeto.id}"
+                            onclick="abrirModalEliminacao(this)">
+                        Eliminar
+                    </button>
+                    <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}"
+                       class="btn btn-sm btn-primary">
+                        Consultar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Modal de Confirmação de Eliminação -->
 <div class="modal fade" id="modalConfirmarEliminacao" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -316,13 +338,14 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <form id="formEliminarConfirmado" method="post">
-                    <button type="submit" class="btn btn-danger">Eliminar 🗑</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     function abrirModalEliminacao(botao) {
         const idProjeto = botao.getAttribute("data-id");

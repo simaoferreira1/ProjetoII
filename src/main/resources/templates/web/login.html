@@ -7,30 +7,42 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
             rel="stylesheet">
     <style>
-        body {
-            background-color: #fff;
-            min-height: 100vh;
+        html, body {
             margin: 0;
             padding: 0;
+            height: 100%;
+            overflow: hidden; /* remove scroll vertical */
         }
+        body {
+            background: url('/images/fundoproj4.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
         .header-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
             background: #fff;
             color: #f1c40f;
-            padding: 20px 40px 16px 40px;
+            padding: 20px 40px 16px;
             font-size: 2rem;
             font-family: 'Montserrat', Arial, sans-serif;
             font-weight: bold;
             letter-spacing: 1px;
             border-bottom: 4px solid #f1c40f;
-            /* Alinha o texto à direita */
             text-align: right;
+            z-index: 100;
         }
+
         .login-wrapper {
-            min-height: 90vh;
+            position: absolute;
+            top: 72px; /* abaixo do header */
+            left: 0; right: 0; bottom: 0;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         .login-card {
             background: #fff;
             border-radius: 18px;
@@ -39,7 +51,9 @@
             max-width: 900px;
             width: 100%;
             overflow: hidden;
+            border: 4px solid #f1c40f;
         }
+
         .login-illustration {
             background: #fffbe6;
             display: flex;
@@ -48,11 +62,13 @@
             width: 420px;
             min-height: 400px;
         }
+
         .login-illustration img {
             max-width: 320px;
             width: 100%;
             height: auto;
         }
+
         .login-form-box {
             flex: 1;
             padding: 48px 40px;
@@ -60,46 +76,39 @@
             flex-direction: column;
             justify-content: center;
         }
+
         .login-form-box h2 {
             font-weight: 700;
             margin-bottom: 8px;
         }
+
         .login-form-box p {
             color: #555;
             margin-bottom: 24px;
             text-align: center;
         }
+
         .btn-yellow {
             background-color: #f1c40f;
             color: #222;
             border: none;
-            font-weight: normal;
         }
+
         .btn-yellow:hover {
             background-color: #d4ac0d;
             color: #222;
         }
+
         .register-link {
             color: #f1c40f;
             text-decoration: underline;
-            font-weight: normal;
         }
-        .register-link:hover {
-            text-decoration: underline;
-        }
-        .forgot-link {
-            font-size: 0.95em;
-            color: #f1c40f;
-            float: right;
-            text-decoration: none;
-        }
-        .forgot-link:hover {
-            text-decoration: underline;
-        }
+
         .error-message {
             color: #d9534f;
             margin-bottom: 10px;
         }
+
         @media (max-width: 900px) {
             .login-card {
                 flex-direction: column;
@@ -117,9 +126,8 @@
     </style>
 </head>
 <body>
-<div class="header-bar">
-    BETONARTE
-</div>
+<div class="header-bar">BETONARTE</div>
+
 <div class="login-wrapper">
     <div class="login-card">
         <div class="login-illustration d-none d-md-flex">
@@ -132,18 +140,16 @@
                 <div th:if="${erro}" class="error-message" th:text="${erro}"></div>
                 <div class="mb-3">
                     <label for="email" class="form-label">E-mail</label>
-                    <input type="email" class="form-control" name="email" id="email" required>
+                    <input type="email" id="email" name="email" class="form-control" required>
                 </div>
-                <div class="mb-2">
+                <div class="mb-3">
                     <label for="password" class="form-label">Palavra-passe</label>
-                    <input type="password" class="form-control" name="password" id="password" required>
+                    <input type="password" id="password" name="password" class="form-control" required>
                 </div>
                 <button type="submit" class="btn btn-yellow w-100 mt-3">Entrar</button>
             </form>
             <div class="mt-3 text-center">
-          <span>Não tem uma conta?
-            <a th:href="@{/register}" class="register-link">Registar</a>
-          </span>
+                <span>Não tem uma conta? <a th:href="@{/register}" class="register-link">Registar</a></span>
             </div>
         </div>
     </div>
