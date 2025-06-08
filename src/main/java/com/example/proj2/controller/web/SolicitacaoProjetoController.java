@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.PathVariable;
+import java.util.Optional;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -95,5 +98,19 @@ public class SolicitacaoProjetoController {
         model.addAttribute("terminados", terminados);
 
         return "web/listarProjetos";
+    }
+    @GetMapping("/solicitacoes/{id}")
+    public String consultarSolicitacao(@PathVariable int id, HttpSession session, Model model) {
+        Cliente cliente = (Cliente) session.getAttribute("cliente");
+
+        Optional<Solicitacaoprojeto> solicitacao = solicitacaoRepo.findById(id);
+        if (solicitacao.isPresent() &&
+                solicitacao.get().getCliente().getId().equals(cliente.getId())) {
+
+            model.addAttribute("solicitacao", solicitacao.get());
+            return "web/detalheSolicitacao";
+        }
+
+        return "redirect:/cliente/projetos";
     }
 }

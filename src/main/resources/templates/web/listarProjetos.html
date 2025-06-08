@@ -264,7 +264,7 @@
                             onclick="abrirModalEliminacao(this)">
                         Eliminar
                     </button>
-                    <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}" class="btn btn-sm btn-primary">
+                    <a th:href="@{/cliente/solicitacoes/{id}(id=${projeto.id})}" class="btn btn-sm btn-primary">
                         Consultar
                     </a>
                 </div>
@@ -281,17 +281,15 @@
         <div th:if="${!aprovados.empty}" class="project-grid">
             <div th:each="projeto : ${aprovados}" class="project-card">
                 <div class="card-body">
-                    <span class="badge bg-success">Aprovado</span>
+                    <span th:switch="${projeto.estado.trim().toLowerCase()}">
+                    <span th:case="'em curso'" class="badge bg-primary">Em curso</span>
+                    <span th:case="'em pré-planeamento'" class="badge bg-info text-dark">Pré-planeamento</span>
+                    <span th:case="*">Aprovado</span> <!-- fallback -->
+                    </span>
                     <h5 class="card-title" th:text="${projeto.nome}">Nome do Projeto</h5>
                     <p class="card-text" th:text="${projeto.descricao}">Descrição do projeto</p>
                 </div>
                 <div class="card-footer">
-                    <button type="button"
-                            class="btn btn-sm btn-danger"
-                            th:attr="data-id=${projeto.id}"
-                            onclick="abrirModalEliminacao(this)">
-                        Eliminar
-                    </button>
                     <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}" class="btn btn-sm btn-primary">
                         Consultar
                     </a>

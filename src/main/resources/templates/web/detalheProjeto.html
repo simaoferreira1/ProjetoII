@@ -256,6 +256,14 @@
         <h2 th:text="${projeto.nome}">Nome do Projeto</h2>
         <p><strong>Descrição:</strong> <span th:text="${projeto.descricao}">Descrição do projeto.</span></p>
         <p><strong>Localização:</strong> <span th:text="${projeto.localizacao}">Rua/Localização</span></p>
+
+        <hr style="margin: 25px 0;">
+
+        <h5>Gestor Responsável</h5>
+        <p><strong>Nome:</strong> <span th:text="${projeto.gestordeprojeto.nome}">Nome do gestor</span></p>
+        <p><strong>Email:</strong> <span th:text="${projeto.gestordeprojeto.email}">Email do gestor</span></p>
+        <p><strong>Telefone:</strong> <span th:text="${projeto.gestordeprojeto.telefone}">Número de telemóvel</span></p>
+
         <a th:href="@{/cliente/projetos}" class="voltar-link">← Voltar à lista de projetos</a>
     </div>
 </main>
