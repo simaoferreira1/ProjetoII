@@ -36,7 +36,7 @@ dependencies {
 }
 
 application {
-    mainClass = 'com.example.proj2.Proj2Application' //desktop
+    //mainClass = 'com.example.proj2.Proj2Application'
     mainClass = 'com.example.proj2.MainApp'
 }
 

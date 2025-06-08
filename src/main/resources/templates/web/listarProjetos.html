@@ -12,22 +12,33 @@
             --text-dark: #222;
             --text-red: #8B0000;
         }
+
+        /* Fundo principal com imagem sutil */
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            background-image: url('/images/fundoproj.png');
+            background-repeat: no-repeat;
+            background-position: center top;
+            background-size: cover;
+            background-attachment: fixed;
+            color: #333;
         }
+
+        /* Cabeçalho fixo */
         .header-bar {
             position: fixed;
             top: 0; left: 0;
             width: 100%;
-            background: #fff;
+            background: rgba(255,255,255,0.95);
+            border-bottom: 4px solid var(--brand-yellow);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             color: var(--brand-yellow);
             padding: 20px 40px 16px;
             font-size: 2rem;
             font-weight: bold;
             letter-spacing: 1px;
-            border-bottom: 4px solid var(--brand-yellow);
             display: flex;
             align-items: center;
             z-index: 1050;
@@ -39,14 +50,15 @@
             margin-right: 1rem;
         }
         .navbar-light .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23f1c40f' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            background-image:
+                    url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23f1c40f' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
+
+        /* Sidebar offcanvas */
         .offcanvas-start {
             --bs-offcanvas-width: var(--sidebar-width) !important;
             top: 0 !important;
             height: 100vh !important;
-        }
-        #sidebar.offcanvas-start {
             background-color: var(--brand-yellow) !important;
             border: none !important;
         }
@@ -54,72 +66,65 @@
             padding-top: 72px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
             height: 100%;
         }
         .sidebar-user {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            text-align: center;
             padding: 1rem 0;
             color: var(--text-dark);
         }
         .sidebar-user i {
             font-size: 3.5rem;
-            margin-bottom: 0.25rem;
         }
         .sidebar-user .username {
             font-size: 0.95rem;
             font-weight: bold;
+            margin-top: .25rem;
             position: relative;
-            margin-bottom: 0.75rem;
         }
         .sidebar-user .username::after {
             content: "";
             display: block;
             width: 50%;
             height: 2px;
-            background-color: rgba(0,0,0,0.2);
-            margin: 0.25rem auto;
+            background: rgba(0,0,0,0.2);
+            margin: .5rem auto 0;
         }
         .sidebar-nav {
+            margin-top: 1rem;
             display: flex;
             flex-direction: column;
         }
         .sidebar-nav a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             padding: 1rem 0;
             color: var(--text-dark);
             text-decoration: none;
+            text-align: center;
             border-top: 1px solid rgba(0,0,0,0.2);
-            transition: background 0.2s;
+            transition: background 0.3s, color 0.3s;
         }
         .sidebar-nav a:first-child { border-top: none; }
-        .sidebar-nav a:hover { background: rgba(255,255,255,0.3); }
+        .sidebar-nav a:hover {
+            background: rgba(241,196,15,0.2);
+            color: var(--brand-yellow);
+        }
         .sidebar-nav a i {
             font-size: 2.5rem;
-            margin-bottom: 0.25rem;
-        }
-        .sidebar-nav a span {
-            font-size: 1.1rem;
+            display: block;
+            margin-bottom: .25rem;
         }
         .logout-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-red);
-            text-decoration: none;
             margin-top: auto;
             padding: 1rem 0;
+            text-align: center;
+            color: var(--text-red) !important;
+            text-decoration: none;
             border-top: 1px solid rgba(0,0,0,0.2);
             transition: color 0.2s;
         }
         .logout-link:hover { color: darkred; }
-        .logout-link i { font-size: 2rem; }
-        .logout-link span { font-size: 1rem; margin-left: .5rem; }
 
+        /* Conteúdo principal deslocado pela sidebar */
         main.content {
             margin-top: 72px;
             margin-left: var(--sidebar-width);
@@ -134,41 +139,44 @@
         }
         .logo-header strong {
             display: block;
-            margin-top: 0.5rem;
+            margin-top: .5rem;
         }
         .logo-header small {
             display: block;
             color: #555;
         }
+
+        /* Sessões de projetos */
         .project-section {
             margin-bottom: 2.5rem;
         }
         .section-title {
-            margin-bottom: 1rem;
-            color: #2c3e50;
-            border-bottom: 2px solid var(--brand-yellow);
             display: inline-block;
+            margin-bottom: 1rem;
             padding-bottom: .25rem;
+            border-bottom: 2px solid var(--brand-yellow);
+            color: #2c3e50;
         }
+
+        /* Grid de cards */
         .project-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
             gap: 1.5rem;
         }
         .project-card {
-            background: #fff;
+            background: rgba(255,255,255,0.9);
             border-radius: .75rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
         .project-card .card-body {
-            padding: 1rem 1.5rem;
+            padding: 1.25rem 1.5rem;
             flex-grow: 1;
         }
-        .project-card .card-body .badge {
-            display: block;
+        .project-card .badge {
             margin-bottom: .75rem;
         }
         .project-card .card-title {
@@ -200,7 +208,7 @@
     BETONARTE
 </div>
 
-<!-- Menu Lateral Offcanvas -->
+<!-- Sidebar Offcanvas -->
 <div class="offcanvas offcanvas-start" id="sidebar" tabindex="-1">
     <div class="offcanvas-body">
         <div class="sidebar-user">
@@ -236,7 +244,7 @@
         <small>Construção Civil</small>
     </div>
 
-    <!-- Projetos A Aguardar Aprovação -->
+    <!-- Projetos a Aguardar Aprovação -->
     <div class="project-section">
         <h2 class="section-title">Projetos a Aguardar Aprovação</h2>
         <div th:if="${pendentes.empty}" class="text-muted">
@@ -256,8 +264,7 @@
                             onclick="abrirModalEliminacao(this)">
                         Eliminar
                     </button>
-                    <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}"
-                       class="btn btn-sm btn-primary">
+                    <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}" class="btn btn-sm btn-primary">
                         Consultar
                     </a>
                 </div>
@@ -285,8 +292,7 @@
                             onclick="abrirModalEliminacao(this)">
                         Eliminar
                     </button>
-                    <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}"
-                       class="btn btn-sm btn-primary">
+                    <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}" class="btn btn-sm btn-primary">
                         Consultar
                     </a>
                 </div>
@@ -314,8 +320,7 @@
                             onclick="abrirModalEliminacao(this)">
                         Eliminar
                     </button>
-                    <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}"
-                       class="btn btn-sm btn-primary">
+                    <a th:href="@{/cliente/projetos/{id}(id=${projeto.id})}" class="btn btn-sm btn-primary">
                         Consultar
                     </a>
                 </div>
@@ -325,18 +330,21 @@
 </main>
 
 <!-- Modal de Confirmação de Eliminação -->
-<div class="modal fade" id="modalConfirmarEliminacao" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
+<div class="modal fade" id="modalConfirmarEliminacao" tabindex="-1"
+     aria-labelledby="tituloModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content text-dark">
             <div class="modal-header bg-warning">
                 <h5 class="modal-title" id="tituloModal">Confirmar Eliminação</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Fechar"></button>
             </div>
             <div class="modal-body">
                 Tem a certeza que deseja eliminar este projeto?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Cancelar</button>
                 <form id="formEliminarConfirmado" method="post">
                     <button type="submit" class="btn btn-danger">Eliminar</button>
                 </form>
@@ -351,8 +359,7 @@
         const idProjeto = botao.getAttribute("data-id");
         const form = document.getElementById("formEliminarConfirmado");
         form.action = `/cliente/projetos/eliminar/${idProjeto}`;
-        const modal = new bootstrap.Modal(document.getElementById('modalConfirmarEliminacao'));
-        modal.show();
+        new bootstrap.Modal(document.getElementById('modalConfirmarEliminacao')).show();
     }
 </script>
 </body>

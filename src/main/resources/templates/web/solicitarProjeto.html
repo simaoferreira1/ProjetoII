@@ -9,146 +9,125 @@
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
             rel="stylesheet">
-    <style>
+    <style th:inline="css">
         :root {
             --sidebar-width: 180px;
             --brand-yellow: #f1c40f;
             --text-dark: #222;
-            --bg-light: #fff;
         }
-        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; padding: 0;
+            height: 100%; overflow: hidden;
+        }
         body {
-            margin: 0;
-            min-height: 100vh;
+            background: url([[ @{/images/fundoproj.png} ]]) no-repeat center center fixed;
+            background-size: cover;
             font-family: Arial, sans-serif;
-            background-color: var(--bg-light);
         }
-        /* Header & Sidebar (inalterados) */
-        .header-bar {
-            position: fixed; top: 0; left: 0;
-            width: 100%; background: #fff;
-            color: var(--brand-yellow);
-            padding: 20px 40px 16px;
-            font-size: 2rem; font-weight: bold;
-            letter-spacing: 1px;
-            border-bottom: 4px solid var(--brand-yellow);
-            display: flex; align-items: center;
-            z-index: 1050;
+        /* Header e Sidebar inalterados */
+        .header-bar { position: fixed; top:0; left:0; right:0;
+            background:#fff;color:var(--brand-yellow);
+            padding:20px 40px 16px;font-size:2rem;font-weight:bold;
+            letter-spacing:1px;border-bottom:4px solid var(--brand-yellow);
+            display:flex;align-items:center;z-index:1050;
         }
-        .header-bar .navbar-toggler {
-            border: none; color: var(--brand-yellow);
-            font-size: 1.5rem; margin-right: 1rem;
+        .header-bar .navbar-toggler { border:none;color:var(--brand-yellow);
+            font-size:1.5rem;margin-right:1rem;
         }
         .navbar-light .navbar-toggler-icon {
-            background-image: url(
-            "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23f1c40f' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"
-            );
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23f1c40f' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
-        .offcanvas-start {
-            --bs-offcanvas-width: var(--sidebar-width) !important;
-            top: 0 !important; height: 100vh !important;
+        .offcanvas-start { --bs-offcanvas-width: var(--sidebar-width) !important;
+            top:0!important;height:100vh!important;
         }
-        #sidebar.offcanvas-start { background-color: var(--brand-yellow) !important; border: none !important; }
-        #sidebar .offcanvas-body {
-            padding-top: 72px;
-            display: flex; flex-direction: column;
-            justify-content: flex-start; height: 100%;
+        #sidebar.offcanvas-start { background-color:var(--brand-yellow)!important;
+            border:none!important;
         }
-        .sidebar-user {
-            display: flex; flex-direction: column;
-            align-items: center; padding: 1rem 0;
-            color: var(--text-dark);
+        #sidebar .offcanvas-body { padding-top:72px;
+            display:flex;flex-direction:column;height:100%;justify-content:flex-start;
         }
-        .sidebar-user i { font-size: 3.5rem; margin-bottom: .25rem; }
-        .sidebar-user .username {
-            font-size: .95rem; font-weight: bold;
-            position: relative; margin-bottom: .75rem;
+        .sidebar-user { display:flex;flex-direction:column;
+            align-items:center;padding:1rem 0;color:var(--text-dark);
         }
-        .sidebar-user .username::after {
-            content: ""; display: block;
-            width: 50%; height: 2px;
-            background-color: rgba(0,0,0,0.2);
-            margin: .25rem auto 0;
+        .sidebar-user i { font-size:3.5rem;margin-bottom:.25rem; }
+        .sidebar-user .username { font-size:.95rem;font-weight:bold;
+            margin-bottom:.75rem;position:relative;
         }
-        .sidebar-nav a {
-            display: flex; flex-direction: column;
-            align-items: center; padding: 1rem 0;
-            color: var(--text-dark); text-decoration: none;
-            border-top: 1px solid rgba(0,0,0,0.2);
-            transition: background .2s;
+        .sidebar-user .username::after { content:""; display:block;
+            width:50%;height:2px;background:rgba(0,0,0,.2);
+            margin:.25rem auto 0;
         }
-        .sidebar-nav a:first-child { border-top: none; }
-        .sidebar-nav a:hover { background: rgba(255,255,255,0.3); }
-        .sidebar-nav a i { font-size: 2.5rem; margin-bottom: .25rem; }
-        .sidebar-nav a span { font-size: 1.1rem; }
-        .logout-link {
-            display: flex; align-items: center;
-            justify-content: center; margin-top: auto;
-            padding: 1rem 0; color: darkred;
-            text-decoration: none; border-top: 1px solid rgba(0,0,0,0.2);
-            transition: background .2s;
+        .sidebar-nav a { display:flex;flex-direction:column;
+            align-items:center;padding:1rem 0;color:var(--text-dark);
+            text-decoration:none;border-top:1px solid rgba(0,0,0,.2);
+            transition:background .2s;
         }
-        .logout-link:hover { background: rgba(255,255,255,0.3); }
-        .logout-link i { font-size: 1.8rem; margin-right: .5rem; }
+        .sidebar-nav a:first-child { border-top:none; }
+        .sidebar-nav a:hover { background:rgba(255,255,255,.3); }
+        .sidebar-nav a i { font-size:2.5rem;margin-bottom:.25rem; }
+        .sidebar-nav a span { font-size:1.1rem; }
+        .logout-link { display:flex;align-items:center;
+            justify-content:center;margin-top:auto;padding:1rem 0;
+            color:darkred;text-decoration:none;
+            border-top:1px solid rgba(0,0,0,.2);transition:background .2s;
+        }
+        .logout-link:hover { background:rgba(255,255,255,.3); }
+        .logout-link i { font-size:1.8rem;margin-right:.5rem; }
 
-        /* Layout principal */
+        /* Wrapper centraliza o card */
         .login-wrapper {
-            display: flex; align-items: center; justify-content: center;
-            padding-top: 72px;
-            min-height: calc(100vh - 72px);
+            position:absolute;top:72px;left:0;right:0;bottom:0;
+            display:flex;justify-content:center;align-items:center;
         }
+        /* Card com borda amarela */
         .login-card {
-            display: flex;
-            max-width: 900px; width: 100%;
-            border-radius: 18px;
-            box-shadow: 0 8px 32px rgba(60,70,130,0.08);
-            overflow: hidden;
-            background: #fff;
+            display:flex;max-width:900px;width:100%;
+            background:#fff;border-radius:18px;
+            box-shadow:0 8px 32px rgba(60,70,130,0.08);
+            overflow:hidden;border:4px solid var(--brand-yellow);
         }
         .login-illustration {
-            background: #fffbe6;
-            flex: 1;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 2rem;
+            background:#fffbe6;flex:1;
+            display:flex;flex-direction:column;
+            align-items:center;justify-content:center;
+            padding:2rem;
         }
         .login-illustration img {
-            max-width: 240px; width: 100%; height: auto;
-            margin-bottom: 1.5rem;
+            max-width:240px;width:100%;height:auto;
+            margin-bottom:1.5rem;
         }
         .login-illustration .intro {
-            color: #555; text-align: center; line-height: 1.5;
-            max-width: 260px;
-        }
-        .login-illustration .intro a {
-            color: var(--brand-yellow);
-            text-decoration: underline;
+            color:#555;text-align:center;line-height:1.5;
+            max-width:260px;
         }
         .login-form-box {
-            flex: 1;
-            padding: 48px 40px;
-            display: flex; flex-direction: column;
-            justify-content: center;
+            flex:1;padding:48px 40px;
+            display:flex;flex-direction:column;
+            justify-content:center;
         }
         .login-form-box h2 {
-            font-weight: 700; margin-bottom: 8px;
-            color: #333; text-align: center;
+            font-weight:700;margin-bottom:8px;color:#333;
+            text-align:center;
         }
         .login-form-box p {
-            color: #555; margin-bottom: 24px; text-align: center;
+            color:#555;margin-bottom:24px;text-align:center;
         }
+        .form-control { background:#fff; }
         .btn-yellow {
-            background-color: var(--brand-yellow);
-            color: var(--text-dark); border: none;
+            background-color:var(--brand-yellow);
+            color:var(--text-dark);border:none;
         }
         .btn-yellow:hover {
-            background-color: #d4ac0d;
-            color: var(--text-dark);
+            background-color:#d4ac0d;color:var(--text-dark);
+        }
+        @media(max-width:900px) {
+            .login-card { flex-direction:column;max-width:98vw; }
+            .login-illustration { padding:1.5rem 0; }
+            .login-form-box { padding:32px 20px; }
         }
     </style>
 </head>
 <body>
-
 <!-- HEADER -->
 <div class="header-bar navbar navbar-light">
     <button class="navbar-toggler" type="button"
@@ -185,74 +164,91 @@
     </div>
 </div>
 
-<!-- FORMULÁRIO COM MODAIS -->
+<!-- FORMULÁRIO CENTRALIZADO -->
 <div class="login-wrapper">
     <div class="login-card">
-        <!-- Ilustração e Texto ao lado -->
+
+        <!-- Ilustração e texto -->
         <div class="login-illustration">
-            <img src="/images/Capacete.png" alt="Logo Betonarte">
+            <img th:src="@{/images/Capacete.png}"
+                 src="/images/Capacete.png" alt="Logo">
             <div class="intro">
                 <strong>Solicite seu projeto facilmente</strong><br>
                 Preencha o formulário ao lado e acompanhe o estado da sua solicitação em
                 <a th:href="@{/cliente/projetos}">Listar Projetos</a>.
             </div>
         </div>
-        <!-- Formulário de Solicitação -->
+
+        <!-- Formulário -->
         <div class="login-form-box">
             <h2>Solicitar Projeto</h2>
             <p>Por favor, informe os detalhes do seu projeto:</p>
             <form id="solicitarForm" th:action="@{/cliente/solicitar}" method="post">
                 <div class="mb-3">
                     <label for="nome" class="form-label">Nome do Projeto</label>
-                    <input type="text" class="form-control" id="nome" name="nome" required>
+                    <input type="text" id="nome" name="nome"
+                           class="form-control" required>
                 </div>
                 <div class="mb-3">
                     <label for="descricao" class="form-label">Descrição</label>
-                    <textarea class="form-control" id="descricao" name="descricao" rows="4" required></textarea>
+                    <textarea id="descricao" name="descricao"
+                              class="form-control" rows="4" required></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="localizacao" class="form-label">Localização</label>
-                    <input type="text" class="form-control" id="localizacao" name="localizacao" required>
+                    <input type="text" id="localizacao" name="localizacao"
+                           class="form-control" required>
                 </div>
-                <button type="submit" class="btn btn-yellow w-100 mt-3">Submeter Projeto</button>
+                <button type="submit" class="btn btn-yellow w-100 mt-3">
+                    Submeter Projeto
+                </button>
             </form>
         </div>
     </div>
 </div>
 
 <!-- Modal de Confirmação -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmModal" tabindex="-1"
+     aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="confirmModalLabel">Confirmação</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Fechar"></button>
             </div>
             <div class="modal-body">
-                Tem certeza que deseja solicitar este projeto?<br>
+                Tem certeza que deseja submeter este projeto?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" id="confirmSubmitBtn" class="btn btn-primary">Confirmar</button>
+                <button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="confirmSubmitBtn"
+                        class="btn btn-primary">Confirmar</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Modal de Sucesso -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+<div class="modal fade" id="successModal" tabindex="-1"
+     aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content text-dark">
             <div class="modal-header bg-success text-white">
                 <h5 class="modal-title" id="successModalLabel">Sucesso</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Fechar"></button>
             </div>
             <div class="modal-body">
-                Projeto solicitado com sucesso! Aguarde aprovação.<br>
-                Consulte <a th:href="@{/cliente/projetos}">Listar Projetos</a> para acompanhar o estado da solicitação.
+                Projeto submetido com sucesso!<br>
+                Clique em “Listar Projetos” para ver seus pedidos.
             </div>
             <div class="modal-footer">
-                <button type="button" id="successOkBtn" class="btn btn-success">OK</button>
+                <a th:href="@{/cliente/projetos}"
+                   class="btn btn-success">Listar Projetos</a>
             </div>
         </div>
     </div>
@@ -266,21 +262,17 @@
     const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
     const confirmBtn = document.getElementById('confirmSubmitBtn');
-    const successOkBtn = document.getElementById('successOkBtn');
 
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
+    // Intercepta o submit e exibe a confirmação
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
         confirmModal.show();
     });
 
+    // Ao confirmar, fecha modal e abre o de sucesso
     confirmBtn.addEventListener('click', function() {
         confirmModal.hide();
         successModal.show();
-    });
-
-    successOkBtn.addEventListener('click', function() {
-        successModal.hide();
-        form.submit();
     });
 </script>
 </body>
