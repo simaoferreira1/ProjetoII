@@ -23,7 +23,7 @@ public class Licenca {
     @Column(name = "datavalidade", nullable = false)
     private LocalDate datavalidade;
 
-    @Version // Adiciona controle de versão para evitar concorrência
+    @Version
     @Column(name = "versao")
     private Integer versao;
 

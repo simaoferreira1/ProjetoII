@@ -22,7 +22,7 @@ public class Solicitacaoprojeto {
     @Column(name = "localreuniao", length = 20)
     private String localreuniao;
 
-    @Column(name = "localizacao", length = 100) // <-- novo campo
+    @Column(name = "localizacao", length = 100)
     private String localizacao;
 
     @Column(name = "estado", length = 20)

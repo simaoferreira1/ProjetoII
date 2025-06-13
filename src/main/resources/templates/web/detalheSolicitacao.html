@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Detalhes da Solicitação</title>
+
+    <!-- Bootstrap e Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
+        /* Estilo geral do corpo com imagem de fundo */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -16,6 +20,7 @@
             background-size: cover;
         }
 
+        /* Barra de topo fixa */
         .header-bar {
             position: fixed;
             top: 0;
@@ -41,9 +46,10 @@
         }
 
         .navbar-light .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23f1c40f' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml,...");
         }
 
+        /* Sidebar lateral estilo offcanvas */
         #sidebar.offcanvas-start {
             --bs-offcanvas-width: 180px !important;
             background-color: #f1c40f !important;
@@ -58,6 +64,7 @@
             height: 100%;
         }
 
+        /* Informações do utilizador na sidebar */
         .sidebar-user {
             text-align: center;
             padding: 1.2rem 0 0.8rem;
@@ -81,6 +88,7 @@
             margin: 0.5rem auto 0;
         }
 
+        /* Links de navegação da sidebar */
         .sidebar-nav {
             text-align: center;
         }
@@ -104,6 +112,7 @@
             margin-bottom: 0.3rem;
         }
 
+        /* Botão de logout fixado em baixo */
         .logout-container {
             text-align: center;
             border-top: 1px solid rgba(0, 0, 0, 0.2);
@@ -124,6 +133,7 @@
             margin-right: 0.5rem;
         }
 
+        /* Área principal do conteúdo */
         main.content {
             margin-top: 90px;
             padding: 2rem;
@@ -138,6 +148,7 @@
             height: 70px;
         }
 
+        /* Bloco com detalhes da solicitação */
         .projeto-box {
             background: rgba(255,255,255,0.9);
             padding: 30px;
@@ -147,6 +158,7 @@
             margin: 0 auto;
         }
 
+        /* Link de voltar */
         .voltar-link {
             display: inline-block;
             margin-top: 25px;
@@ -162,7 +174,7 @@
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- Cabeçalho com botão de menu -->
 <div class="header-bar navbar navbar-light">
     <button class="navbar-toggler" type="button"
             data-bs-toggle="offcanvas" data-bs-target="#sidebar"
@@ -172,18 +184,18 @@
     BETONARTE
 </div>
 
-<!-- SIDEBAR OFFCANVAS -->
+<!-- Sidebar lateral (offcanvas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
     <div class="offcanvas-body d-flex flex-column p-0">
 
-        <!-- UTILIZADOR -->
+        <!-- Informação do utilizador -->
         <div class="sidebar-user">
             <i class="bi bi-person-circle"></i>
             <div class="username" th:text="${cliente?.nome}">Cliente</div>
             <div class="underline"></div>
         </div>
 
-        <!-- LINKS DE NAVEGAÇÃO -->
+        <!-- Navegação -->
         <nav class="sidebar-nav flex-grow-1">
             <a th:href="@{/cliente/dashboard}">
                 <i class="bi bi-house-door"></i>
@@ -199,7 +211,7 @@
             </a>
         </nav>
 
-        <!-- SAIR -->
+        <!-- Sair -->
         <div class="logout-container">
             <a th:href="@{/logout}">
                 <i class="bi bi-box-arrow-right"></i> Sair
@@ -208,7 +220,7 @@
     </div>
 </div>
 
-<!-- CONTEÚDO -->
+<!-- Conteúdo principal da página -->
 <main class="content">
     <div class="logo-container">
         <img src="/images/Capacete.png" alt="Logo"><br>
@@ -227,6 +239,7 @@
     </div>
 </main>
 
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
