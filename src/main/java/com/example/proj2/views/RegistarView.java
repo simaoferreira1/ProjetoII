@@ -1,5 +1,9 @@
 package com.example.proj2.views;
 
+import com.example.proj2.controller.desktop.LoginController;
+import com.example.proj2.models.Tipoespecialista;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,12 +15,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class RegistarView {
+    private final Stage stage;
+    private final LoginController loginController;
 
-    private Stage stage;
-
-    public RegistarView(Stage stage) {
+    public RegistarView(Stage stage, LoginController loginController) {
         this.stage = stage;
+        this.loginController = loginController;
     }
 
     public void show() {
@@ -25,7 +33,7 @@ public class RegistarView {
         root.setPadding(new Insets(30));
         root.setStyle("-fx-background-color: white;");
 
-        // Logo
+        // Logo (apenas o logo, sem texto em baixo)
         Image logoImage = new Image(getClass().getResource("/images/Capacete.png").toExternalForm());
         ImageView logo = new ImageView(logoImage);
         logo.setFitHeight(100);
@@ -44,7 +52,7 @@ public class RegistarView {
 
         TextField telefoneField = new TextField();
         telefoneField.setPromptText("Telefone");
-        emailField.setMaxWidth(250);
+        telefoneField.setMaxWidth(250);
 
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Palavra-passe");
@@ -59,22 +67,58 @@ public class RegistarView {
         tipoUtilizadorComboBox.setPromptText("Tipo de Utilizador");
         tipoUtilizadorComboBox.setMaxWidth(250);
 
+        // ComboBox para Tipo de Especialista (inicialmente escondido)
+        ComboBox<Tipoespecialista> tipoEspecialistaComboBox = new ComboBox<>();
+        tipoEspecialistaComboBox.setPromptText("Tipo de Especialista");
+        tipoEspecialistaComboBox.setMaxWidth(250);
+        tipoEspecialistaComboBox.setVisible(false);
+
+        // Simulação: lista de tipos de especialista (substitua por busca real)
+        List<Tipoespecialista> tipos = Arrays.asList(
+                criarTipo(1, "Engenheiro Civil"),
+                criarTipo(2, "Arquiteto"),
+                criarTipo(3, "Eletricista")
+        );
+        ObservableList<Tipoespecialista> listaTipos = FXCollections.observableArrayList(tipos);
+        tipoEspecialistaComboBox.setItems(listaTipos);
+
+        // Mostrar apenas a descrição no ComboBox
+        tipoEspecialistaComboBox.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Tipoespecialista item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getDescricao());
+            }
+        });
+        tipoEspecialistaComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Tipoespecialista item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getDescricao());
+            }
+        });
+
+        // Mostra/esconde o campo tipo de especialista conforme a seleção
+        tipoUtilizadorComboBox.setOnAction(e -> {
+            String tipo = tipoUtilizadorComboBox.getValue();
+            tipoEspecialistaComboBox.setVisible("Especialista".equals(tipo));
+        });
+
         Button registerButton = new Button("Registar");
-        registerButton.setPrefWidth(250);
-        registerButton.setStyle("-fx-background-color: #f5c242; -fx-text-fill: black; -fx-font-weight: bold;");
+        registerButton.setPrefWidth(250); // igual ao botão de login
+        registerButton.setStyle("-fx-background-color: #f5c242; -fx-text-fill: white; -fx-font-weight: bold;");
 
         HBox loginBox = new HBox(5);
         loginBox.setAlignment(Pos.CENTER);
         Label hasAccount = new Label("Já tem uma conta?");
+        hasAccount.setStyle("-fx-font-size: 12px;");
         Hyperlink loginLink = new Hyperlink("Entrar");
-        loginLink.setStyle("-fx-text-fill: #f5c242; -fx-font-weight: bold;");
+        loginLink.setStyle("-fx-text-fill: #f5c242; -fx-font-weight: bold; -fx-font-size: 12px;");
 
         loginBox.getChildren().addAll(hasAccount, loginLink);
 
         // Ir para página de login quando clicar no link
-        loginLink.setOnAction(e -> {
-            new LoginView(stage).show();
-        });
+        loginLink.setOnAction(e -> new LoginView(stage, loginController).show());
 
         // Lógica do botão registar
         registerButton.setOnAction(e -> {
@@ -84,35 +128,38 @@ public class RegistarView {
             String password = passwordField.getText();
             String tipoUtilizador = tipoUtilizadorComboBox.getValue();
 
-            // Validação básica
             if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty() || password.isEmpty() || tipoUtilizador == null) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erro");
-                alert.setHeaderText(null);
-                alert.setContentText("Por favor, preencha todos os campos!");
-                alert.showAndWait();
-            } else {
-                System.out.println("Nome: " + nome);
-                System.out.println("Email: " + email);
-                System.out.println("Telefone: " + telefone);
-                System.out.println("Password: " + password);
-                System.out.println("Tipo de Utilizador: " + tipoUtilizador);
+                showAlert("Erro", "Por favor, preencha todos os campos!");
+                return;
+            }
+            if ("Especialista".equals(tipoUtilizador)) {
+                Tipoespecialista tipoEspecialistaSelecionado = tipoEspecialistaComboBox.getValue();
+                if (tipoEspecialistaSelecionado == null) {
+                    showAlert("Erro", "Por favor, selecione o tipo de especialista!");
+                    return;
+                }
+                // Aqui você pode passar o tipoEspecialistaSelecionado para o controller, se necessário
+            }
 
-                // Aqui você pode adicionar a lógica para salvar o utilizador no banco de dados
-                // Por enquanto, após o registro bem-sucedido, voltamos para a tela de login
+            String resultado = loginController.registrar(nome, email, telefone, password, tipoUtilizador);
+
+            if ("Utilizador registado com sucesso!".equals(resultado)) {
                 Alert success = new Alert(Alert.AlertType.INFORMATION);
                 success.setTitle("Sucesso");
                 success.setHeaderText(null);
-                success.setContentText("Utilizador registado com sucesso!");
+                success.setContentText(resultado);
                 success.showAndWait();
 
-                new LoginView(stage).show();
+                new LoginView(stage, loginController).show();
+            } else {
+                showAlert("Erro", resultado);
             }
         });
 
         root.getChildren().addAll(
                 logo, separator,
                 nameField, emailField, telefoneField, passwordField, tipoUtilizadorComboBox,
+                tipoEspecialistaComboBox, // campo extra
                 registerButton, loginBox
         );
 
@@ -120,5 +167,20 @@ public class RegistarView {
         stage.setScene(scene);
         stage.setTitle("Registar - Betonarte");
         stage.show();
+    }
+
+    private Tipoespecialista criarTipo(int id, String descricao) {
+        Tipoespecialista tipo = new Tipoespecialista();
+        tipo.setId(id);
+        tipo.setDescricao(descricao);
+        return tipo;
+    }
+
+    private void showAlert(String titulo, String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
     }
 }

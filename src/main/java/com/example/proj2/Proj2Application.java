@@ -1,5 +1,6 @@
 package com.example.proj2;
 
+import com.example.proj2.controller.desktop.LoginController;
 import com.example.proj2.views.LoginView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -26,8 +27,9 @@ public class Proj2Application extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Mostra o menu de login ao invés de entrar direto como gestor
-        new LoginView(primaryStage).show();
+        // Obtém o LoginController do contexto do Spring
+        LoginController loginController = context.getBean(LoginController.class);
+        new LoginView(primaryStage, loginController).show();
     }
 
     @Override

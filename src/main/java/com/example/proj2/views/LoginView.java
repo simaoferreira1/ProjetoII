@@ -1,5 +1,6 @@
 package com.example.proj2.views;
 
+import com.example.proj2.controller.desktop.LoginController;
 import com.example.proj2.models.Especialista;
 import com.example.proj2.models.Gestordeprojeto;
 import com.example.proj2.models.Membrodepartamentofinanceiro;
@@ -17,10 +18,12 @@ import javafx.stage.Stage;
 
 public class LoginView {
 
-    private Stage stage;
+    private final Stage stage;
+    private final LoginController loginController;
 
-    public LoginView(Stage stage) {
+    public LoginView(Stage stage, LoginController loginController) {
         this.stage = stage;
+        this.loginController = loginController;
     }
 
     public void show() {
@@ -59,17 +62,9 @@ public class LoginView {
                 return;
             }
 
-            AuthService authService = new AuthService();
-            Object user = authService.autenticar(email, password);
-
-            if (user instanceof Gestordeprojeto gestor) {
-                new GestorView(stage, gestor).show();
-            } else if (user instanceof Especialista especialista) {
-                new EspecialistaView(stage, especialista).show();
-            } else if (user instanceof Membrodepartamentofinanceiro financeiro) {
-                new FinanceiroView(stage, financeiro).show();
-            } else {
-                showAlert("Erro", "Credenciais inválidas.");
+            String resultado = loginController.login(email, password, stage);
+            if (resultado != null) {
+                showAlert("Erro", resultado);
             }
         });
 
@@ -79,7 +74,7 @@ public class LoginView {
         Hyperlink registerLink = new Hyperlink("Registar");
         registerLink.setStyle("-fx-text-fill: #f5c242; -fx-font-weight: bold;");
         registerLink.setOnAction(e -> {
-            new RegistarView(stage).show();
+            new RegistarView(stage, loginController).show();
         });
 
         registerBox.getChildren().addAll(noAccount, registerLink);

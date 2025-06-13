@@ -1,20 +1,21 @@
 package com.example.proj2.models;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "especialista")
 public class Especialista {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idespecialista", nullable = false, precision = 10)
     private Integer id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idespecialista", nullable = false)
-    private Tipoespecialista tipoespecialistas;
+    // Se for obrigatório o relacionamento, mantenha, senão remova o @MapsId e @JoinColumn
+    // Ajuste conforme sua modelagem real:
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "idtipoespecialista")
+    // private Tipoespecialista tipoespecialistas;
 
     @Column(name = "nome", length = 50)
     private String nome;
@@ -28,48 +29,21 @@ public class Especialista {
     @Column(name = "password", length = 20)
     private String password;
 
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    // public Tipoespecialista getTipoespecialistas() { return tipoespecialistas; }
+    // public void setTipoespecialistas(Tipoespecialista tipoespecialistas) { this.tipoespecialistas = tipoespecialistas; }
 
-    public Tipoespecialista getTipoespecialistas() {
-        return tipoespecialistas;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public void setTipoespecialistas(Tipoespecialista tipoespecialistas) {
-        this.tipoespecialistas = tipoespecialistas;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getNome() {
-        return nome;
-    }
+    public BigDecimal getTelefone() { return telefone; }
+    public void setTelefone(BigDecimal telefone) { this.telefone = telefone; }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public BigDecimal getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(BigDecimal telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getPassword() {return password;}
-
-    public void setPassword(String password) {this.password = password;}
-
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 }
