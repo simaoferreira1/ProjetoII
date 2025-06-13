@@ -1,13 +1,13 @@
 package com.example.proj2.models;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "cliente")
 public class Cliente {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // <-- ESSA LINHA É OBRIGATÓRIA!
     @Column(name = "idcliente", nullable = false, precision = 10)
     private Integer id;
 
@@ -66,7 +66,7 @@ public class Cliente {
         this.endereco = endereco;
     }
 
-    public String getPassword() {return password;}
+    public String getPassword() { return password; }
 
-    public void setPassword(String password) {this.password = password;}
+    public void setPassword(String password) { this.password = password; }
 }
