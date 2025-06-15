@@ -16,6 +16,7 @@ public class RegisterWebController {
     @Autowired
     private ClienteRepository clienteRepo;
 
+    // Mostra o formulário de registo
     @GetMapping("/register")
     public String showRegisterForm(Model model, @RequestParam(value = "sucesso", required = false) String sucesso) {
         model.addAttribute("cliente", new Cliente());
@@ -25,6 +26,7 @@ public class RegisterWebController {
         return "web/register";
     }
 
+    // Processa o registo do cliente
     @PostMapping("/register")
     public String register(@ModelAttribute("cliente") Cliente cliente) {
         clienteRepo.save(cliente);

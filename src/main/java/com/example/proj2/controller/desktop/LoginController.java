@@ -41,16 +41,20 @@ public class LoginController {
             return "Credenciais inválidas!";
         }
 
+        // Redireciona para a view adequada conforme o tipo de utilizador
         if (user instanceof Gestordeprojeto) {
             Gestordeprojeto gestor = (Gestordeprojeto) user;
             Platform.runLater(() -> new GestorView(stage, gestor).show());
-        } else if (user instanceof Especialista) {
+        }
+        else if (user instanceof Especialista) {
             Especialista especialista = (Especialista) user;
             Platform.runLater(() -> new EspecialistaView(stage, especialista).show());
-        } else if (user instanceof Membrodepartamentofinanceiro) {
+        }
+        else if (user instanceof Membrodepartamentofinanceiro) {
             Membrodepartamentofinanceiro financeiro = (Membrodepartamentofinanceiro) user;
             Platform.runLater(() -> new FinanceiroView(stage, financeiro).show());
-        } else {
+        }
+        else {
             return "Tipo de utilizador não suportado!";
         }
 
@@ -60,9 +64,10 @@ public class LoginController {
         return null;
     }
 
-    public String registrar(String nome, String email, String telefone, String password, String tipo) {
+    public String registrar(String nome, String email, String telefone,
+                            String password, String tipo) {
         try {
-            // Validação básica
+            // Validação básica dos campos
             if (nome == null || nome.trim().isEmpty()) return "Nome é obrigatório!";
             if (email == null || email.trim().isEmpty()) return "E-mail é obrigatório!";
             if (telefone == null || telefone.trim().isEmpty()) return "Telefone é obrigatório!";
@@ -74,6 +79,7 @@ public class LoginController {
 
             BigDecimal telefoneBD = new BigDecimal(telefone);
 
+            // Cria o tipo de utilizador correto
             switch (tipo) {
                 case "Gestor de Projeto":
                     Gestordeprojeto gestor = new Gestordeprojeto();

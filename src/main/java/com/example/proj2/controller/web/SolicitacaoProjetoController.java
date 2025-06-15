@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Optional;
-
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +29,7 @@ public class SolicitacaoProjetoController {
     @Autowired
     private ProjetoRepository projetoRepo;
 
+    // Dashboard do cliente
     @GetMapping("")
     public String dashboard(HttpSession session, Model model) {
         Cliente c = (Cliente) session.getAttribute("cliente");
@@ -39,6 +38,7 @@ public class SolicitacaoProjetoController {
         return "web/ClienteDashboardView";
     }
 
+    // Formulário para solicitar novo projeto
     @GetMapping("/solicitar")
     public String mostrarFormulario(HttpSession session, Model model) {
         Cliente c = (Cliente) session.getAttribute("cliente");
@@ -47,6 +47,7 @@ public class SolicitacaoProjetoController {
         return "web/solicitarProjeto";
     }
 
+    // Submissão de nova solicitação de projeto
     @PostMapping("/solicitar")
     public String submeterProjeto(String nome,
                                   String descricao,
@@ -60,7 +61,7 @@ public class SolicitacaoProjetoController {
             Solicitacaoprojeto sp = new Solicitacaoprojeto();
             sp.setNome(nome);
             sp.setDescricao(descricao);
-            sp.setLocalizacao(localizacao); // <-- novo campo
+            sp.setLocalizacao(localizacao);
             sp.setDatasolicitacao(LocalDate.now());
             sp.setEstado("Pendente");
             sp.setCliente(c);
@@ -72,7 +73,7 @@ public class SolicitacaoProjetoController {
         return "redirect:/cliente/solicitar";
     }
 
-
+    // Lista dos projetos do cliente, organizados por estado
     @GetMapping("/projetos")
     public String listarProjetos(HttpSession session, Model model) {
         Cliente c = (Cliente) session.getAttribute("cliente");
@@ -99,6 +100,8 @@ public class SolicitacaoProjetoController {
 
         return "web/listarProjetos";
     }
+
+    // Consulta de uma solicitação específica
     @GetMapping("/solicitacoes/{id}")
     public String consultarSolicitacao(@PathVariable int id, HttpSession session, Model model) {
         Cliente cliente = (Cliente) session.getAttribute("cliente");

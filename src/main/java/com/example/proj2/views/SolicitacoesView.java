@@ -29,7 +29,7 @@ public class SolicitacoesView {
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: white;");
 
-        // === MENU LATERAL ===
+        // Menu lateral de navegação
         VBox menu = new VBox();
         menu.setStyle("-fx-background-color: #f1c40f;");
         menu.setPadding(new Insets(20));
@@ -78,7 +78,7 @@ public class SolicitacoesView {
 
         layout.setLeft(menu);
 
-        // === CONTEÚDO CENTRAL ===
+        // Conteúdo central: lista de solicitações
         VBox conteudo = new VBox(20);
         conteudo.setPadding(new Insets(20));
 
@@ -174,6 +174,7 @@ public class SolicitacoesView {
         stage.show();
     }
 
+    // Aceita a solicitação e cria projeto
     private void aceitarSolicitacao(Solicitacaoprojeto sp) {
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacao.setTitle("Confirmação");
@@ -185,13 +186,9 @@ public class SolicitacoesView {
                 Projeto projeto = new Projeto();
                 projeto.setNome(sp.getNome() != null ? sp.getNome() : "Projeto ID " + sp.getId());
                 projeto.setDescricao(sp.getDescricao() != null ? sp.getDescricao() : "Descrição não fornecida");
-
-                // ✅ Localização fornecida pelo cliente na solicitação
                 projeto.setLocalizacao(sp.getLocalizacao() != null ? sp.getLocalizacao() : "Localização não definida");
-
                 projeto.setDatainicio(sp.getDatasolicitacao() != null ? sp.getDatasolicitacao() : java.time.LocalDate.now());
                 projeto.setDatafimprevista(projeto.getDatainicio().plusMonths(6));
-
                 projeto.setIdcliente(sp.getCliente());
                 projeto.setGestordeprojeto(gestor);
                 projeto.setEstado("em pré-planeamento");
@@ -213,6 +210,7 @@ public class SolicitacoesView {
         });
     }
 
+    // Elimina (recusa) a solicitação
     private void eliminarProjeto(Solicitacaoprojeto sp) {
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacao.setTitle("Confirmação");
@@ -228,6 +226,7 @@ public class SolicitacoesView {
         });
     }
 
+    // Cria botões de navegação do menu lateral
     private Button criarBotao(String texto, String estiloBase, String estiloHover) {
         Button button = new Button(texto);
         button.setWrapText(true);
@@ -237,6 +236,7 @@ public class SolicitacoesView {
         return button;
     }
 
+    // Cria botões de ação (abrir, aceitar, recusar)
     private Button criarBotaoAcao(String texto, boolean vermelho) {
         String estilo = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: " + (vermelho ? "red" : "#333333") + "; " +

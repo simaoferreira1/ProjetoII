@@ -21,15 +21,15 @@ public class ProjetoClienteController {
     @Autowired
     private ProjetoRepository projetoRepository;
 
+    // Abre o detalhe de um projeto (pendente ou oficial)
     @GetMapping("/{id}")
     public String abrirProjeto(@PathVariable("id") Integer id, Model model, HttpSession session) {
         Cliente cliente = (Cliente) session.getAttribute("cliente");
         if (cliente == null) return "redirect:/login";
 
-        // Adicionar cliente ao model para o sidebar funcionar corretamente
         model.addAttribute("cliente", cliente);
 
-        // Tenta primeiro encontrar como projeto pendente
+        // Verifica se é um projeto pendente
         Solicitacaoprojeto pendente = solicitacaoprojetoRepository.findById(id).orElse(null);
         if (pendente != null && pendente.getCliente().getId().equals(cliente.getId())) {
             model.addAttribute("projeto", pendente);
@@ -37,7 +37,7 @@ public class ProjetoClienteController {
             return "web/detalheProjeto";
         }
 
-        // Tenta como projeto oficial (em curso, pré-planeamento ou terminado)
+        // Verifica se é um projeto
         Projeto projeto = projetoRepository.findById(id).orElse(null);
         if (projeto != null && projeto.getIdcliente().getId().equals(cliente.getId())) {
             model.addAttribute("projeto", projeto);
@@ -48,19 +48,20 @@ public class ProjetoClienteController {
         return "redirect:/cliente/projetos";
     }
 
+    // Elimina projeto pendente ou terminado
     @PostMapping("/eliminar/{id}")
     public String eliminarProjeto(@PathVariable("id") Integer id, HttpSession session) {
         Cliente cliente = (Cliente) session.getAttribute("cliente");
         if (cliente == null) return "redirect:/login";
 
-        // Tenta eliminar se for projeto pendente
+        // Elimina se for pendente
         Solicitacaoprojeto pendente = solicitacaoprojetoRepository.findById(id).orElse(null);
         if (pendente != null && pendente.getCliente().getId().equals(cliente.getId())) {
             solicitacaoprojetoRepository.deleteById(id);
             return "redirect:/cliente/projetos?eliminado=sucesso";
         }
 
-        // Tenta eliminar se for projeto terminado
+        // Elimina se for terminado
         Projeto projeto = projetoRepository.findById(id).orElse(null);
         if (projeto != null &&
                 projeto.getIdcliente().getId().equals(cliente.getId()) &&

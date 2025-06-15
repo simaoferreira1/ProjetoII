@@ -14,6 +14,7 @@ public class LoginWebController {
     @Autowired
     private ClienteRepository clienteRepo;
 
+    // Mostra o formulário de login
     @GetMapping("/login")
     public String showLoginForm(@RequestParam(value = "erro", required = false) String erro, Model model) {
         if (erro != null) {
@@ -22,6 +23,7 @@ public class LoginWebController {
         return "web/login";
     }
 
+    // Processa o login do cliente
     @PostMapping("/login")
     public String processLogin(@RequestParam String email,
                                @RequestParam String password,
@@ -30,13 +32,14 @@ public class LoginWebController {
         Cliente cliente = clienteRepo.findByEmailAndPassword(email, password);
         if (cliente != null) {
             session.setAttribute("cliente", cliente);
-            return "redirect:/cliente/dashboard"; // vai para nova rota do cliente
+            return "redirect:/cliente/dashboard"; // Redireciona para o dashboard do cliente
         } else {
             model.addAttribute("erro", "Credenciais inválidas.");
             return "web/login";
         }
     }
 
+    // Mostra o dashboard do cliente (apenas se autenticado)
     @GetMapping("/cliente/dashboard")
     public String mostrarDashboard(HttpSession session, Model model) {
         Cliente cliente = (Cliente) session.getAttribute("cliente");
@@ -44,6 +47,6 @@ public class LoginWebController {
             return "redirect:/login?erro";
         }
         model.addAttribute("cliente", cliente);
-        return "web/clienteDashboardView"; // ficheiro clienteDashboardView.html
+        return "web/clienteDashboardView"; // View do dashboard do cliente
     }
 }

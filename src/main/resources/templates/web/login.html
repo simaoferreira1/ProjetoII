@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-            rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         html, body {
             margin: 0;
@@ -14,11 +12,11 @@
             overflow: hidden;
         }
         body {
+            /* Fundo ilustrativo */
             background: url('/images/fundoproj.png') no-repeat center center fixed;
             background-size: cover;
             font-family: Arial, sans-serif;
         }
-
         .header-bar {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -33,16 +31,14 @@
             text-align: right;
             z-index: 100;
         }
-
         .login-wrapper {
             position: absolute;
-            top: 72px; /* abaixo do header */
+            top: 72px;
             left: 0; right: 0; bottom: 0;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
         .login-card {
             background: #fff;
             border-radius: 18px;
@@ -53,7 +49,6 @@
             overflow: hidden;
             border: 4px solid #f1c40f;
         }
-
         .login-illustration {
             background: #fffbe6;
             display: flex;
@@ -62,13 +57,11 @@
             width: 420px;
             min-height: 400px;
         }
-
         .login-illustration img {
             max-width: 320px;
             width: 100%;
             height: auto;
         }
-
         .login-form-box {
             flex: 1;
             padding: 48px 40px;
@@ -76,39 +69,32 @@
             flex-direction: column;
             justify-content: center;
         }
-
         .login-form-box h2 {
             font-weight: 700;
             margin-bottom: 8px;
         }
-
         .login-form-box p {
             color: #555;
             margin-bottom: 24px;
             text-align: center;
         }
-
         .btn-yellow {
             background-color: #f1c40f;
             color: #222;
             border: none;
         }
-
         .btn-yellow:hover {
             background-color: #d4ac0d;
             color: #222;
         }
-
         .register-link {
             color: #f1c40f;
             text-decoration: underline;
         }
-
         .error-message {
             color: #d9534f;
             margin-bottom: 10px;
         }
-
         @media (max-width: 900px) {
             .login-card {
                 flex-direction: column;
@@ -130,9 +116,11 @@
 
 <div class="login-wrapper">
     <div class="login-card">
+        <!--  (apenas em ecrãs médios ou maiores) -->
         <div class="login-illustration d-none d-md-flex">
             <img src="/images/Capacete.png" alt="Ilustração Login">
         </div>
+        <!-- Formulário de login -->
         <div class="login-form-box">
             <h2>Inicie sessão na sua conta</h2>
             <p>Com a sua conta Betonarte vai poder, num único lugar, gerir todos os seus projetos de construção civil de forma simples, rápida e segura.</p>
