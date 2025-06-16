@@ -19,9 +19,6 @@ public class Solicitacaoprojeto {
     @Column(name = "datasolicitacao")
     private LocalDate datasolicitacao;
 
-    @Column(name = "localreuniao", length = 20)
-    private String localreuniao;
-
     @Column(name = "localizacao", length = 100)
     private String localizacao;
 
@@ -43,9 +40,6 @@ public class Solicitacaoprojeto {
 
     public LocalDate getDatasolicitacao() { return datasolicitacao; }
     public void setDatasolicitacao(LocalDate datasolicitacao) { this.datasolicitacao = datasolicitacao; }
-
-    public String getLocalreuniao() { return localreuniao; }
-    public void setLocalreuniao(String localreuniao) { this.localreuniao = localreuniao; }
 
     public String getLocalizacao() { return localizacao; }
     public void setLocalizacao(String localizacao) { this.localizacao = localizacao; }

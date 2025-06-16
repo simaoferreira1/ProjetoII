@@ -26,9 +26,6 @@ public class SolicitacaoprojetoService {
         if (solicitacao.getDatasolicitacao() == null) {
             throw new IllegalArgumentException("A data da solicitação é obrigatória.");
         }
-        if (solicitacao.getLocalreuniao() == null || solicitacao.getLocalreuniao().trim().isEmpty()) {
-            throw new IllegalArgumentException("O local da reunião é obrigatório.");
-        }
         if (solicitacao.getEstado() == null || solicitacao.getEstado().trim().isEmpty()) {
             throw new IllegalArgumentException("O estado da solicitação é obrigatório.");
         }
