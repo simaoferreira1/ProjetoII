@@ -12,6 +12,7 @@ import jakarta.persistence.*;
 public class Orcamentoprojeto {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idorcamentoprojeto", nullable = false, precision = 10)
     private Integer id;
 

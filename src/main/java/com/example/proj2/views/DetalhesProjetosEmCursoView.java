@@ -47,7 +47,6 @@ public class DetalhesProjetosEmCursoView {
 
             VBox infoBox = new VBox(8);
             infoBox.getChildren().addAll(
-                    new Label("🆔 ID do Projeto: " + (projeto.getId() != null ? projeto.getId() : "N/A")),
                     new Label("📌 Nome: " + (projeto.getNome() != null ? projeto.getNome() : "N/A")),
                     new Label("📝 Descrição: " + (projeto.getDescricao() != null ? projeto.getDescricao() : "N/A")),
                     new Label("⚙️ Estado: " + (projeto.getEstado() != null ? projeto.getEstado() : "N/A")),

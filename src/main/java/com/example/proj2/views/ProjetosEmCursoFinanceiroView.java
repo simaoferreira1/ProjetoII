@@ -43,13 +43,10 @@ public class ProjetosEmCursoFinanceiroView {
         menu.setPrefWidth(200);
         menu.setAlignment(Pos.TOP_CENTER);
 
-        // Exibir o nome e ID do financeiro
+        // Exibir o nome do financeiro
         Label nomeLabel = new Label("👤 Financeiro: " + (financeiro != null && financeiro.getNome() != null ? financeiro.getNome() : "Desconhecido"));
         nomeLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         nomeLabel.setWrapText(true);
-
-        Label idFinanceiro = new Label("🆔 ID: " + (financeiro != null && financeiro.getId() != null ? financeiro.getId() : "N/A"));
-        idFinanceiro.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
 
         // Estilo para os botões
         String estiloBtn = "-fx-background-color: #ffffff; " +
@@ -80,7 +77,7 @@ public class ProjetosEmCursoFinanceiroView {
         Region spacerMenu = new Region();
         VBox.setVgrow(spacerMenu, Priority.ALWAYS);
 
-        menu.getChildren().addAll(nomeLabel, idFinanceiro, btnPedidosOrcamento, btnProjetosCurso, spacerMenu, btnSair);
+        menu.getChildren().addAll(nomeLabel, btnPedidosOrcamento, btnProjetosCurso, spacerMenu, btnSair);
         root.setLeft(menu);
 
         // === CONTEÚDO CENTRAL ===
@@ -117,12 +114,11 @@ public class ProjetosEmCursoFinanceiroView {
                 card.setAlignment(Pos.CENTER_LEFT);
 
                 VBox info = new VBox(5);
-                Label idProjeto = new Label("🆔 ID: " + (projeto.getId() != null ? projeto.getId() : "N/A"));
                 Label nomeProjeto = new Label("📌 Projeto: " + (projeto.getNome() != null ? projeto.getNome() : "N/A"));
                 nomeProjeto.setStyle("-fx-font-weight: bold;");
                 Label descricao = new Label("📝 Descrição: " + (projeto.getDescricao() != null ? projeto.getDescricao() : "N/A"));
 
-                info.getChildren().addAll(idProjeto, nomeProjeto, descricao);
+                info.getChildren().addAll(nomeProjeto, descricao);
 
                 Optional<Orcamentoprojeto> orcamentoOpt = orcamentos.stream()
                         .filter(o -> o != null && o.getProjeto() != null && o.getProjeto().getId() != null && o.getProjeto().getId().equals(projeto.getId()))

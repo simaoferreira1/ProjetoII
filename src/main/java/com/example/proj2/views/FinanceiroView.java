@@ -37,9 +37,6 @@ public class FinanceiroView {
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         nome.setWrapText(true);
 
-        Label idFinanceiro = new Label("🆔 ID: " + (financeiro != null && financeiro.getId() != null ? financeiro.getId() : "N/A"));
-        idFinanceiro.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
-
         // Estilos dos botões
         String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
@@ -68,7 +65,7 @@ public class FinanceiroView {
         btnProjetosCurso.setOnAction(e -> new ProjetosEmCursoFinanceiroView(stage, financeiro).show());
         btnLogout.setOnAction(e -> stage.close());
 
-        VBox conteudoMenu = new VBox(20, nome, idFinanceiro, btnPedidosOrcamento, btnProjetosCurso);
+        VBox conteudoMenu = new VBox(20, nome, btnPedidosOrcamento, btnProjetosCurso);
         conteudoMenu.setAlignment(Pos.TOP_CENTER);
 
         Region espacoInferior = new Region();

@@ -42,9 +42,6 @@ public class PedidosOrcamentoView {
         Label nome = new Label("👤 Financeiro: " + (financeiro != null && financeiro.getNome() != null ? financeiro.getNome() : "Desconhecido"));
         nome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        Label idFinanceiro = new Label("🆔 ID: " + (financeiro != null && financeiro.getId() != null ? financeiro.getId() : "N/A"));
-        idFinanceiro.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
-
         String estiloBtn = "-fx-background-color: #ffffff; " +
                 "-fx-text-fill: #333333; " +
                 "-fx-font-size: 14px; " +
@@ -73,7 +70,7 @@ public class PedidosOrcamentoView {
         Region spacerMenu = new Region();
         VBox.setVgrow(spacerMenu, Priority.ALWAYS);
 
-        menu.getChildren().addAll(nome, idFinanceiro, btnPedidosOrcamento, btnProjetosCurso, spacerMenu, btnSair);
+        menu.getChildren().addAll(nome, btnPedidosOrcamento, btnProjetosCurso, spacerMenu, btnSair);
         root.setLeft(menu);
 
         // === CONTEÚDO CENTRAL ===
