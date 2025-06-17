@@ -11,12 +11,6 @@ public class Especialista {
     @Column(name = "idespecialista", nullable = false, precision = 10)
     private Integer id;
 
-    // Se for obrigatório o relacionamento, mantenha, senão remova o @MapsId e @JoinColumn
-    // Ajuste conforme sua modelagem real:
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "idtipoespecialista")
-    // private Tipoespecialista tipoespecialistas;
-
     @Column(name = "nome", length = 50)
     private String nome;
 
@@ -31,9 +25,6 @@ public class Especialista {
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
-
-    // public Tipoespecialista getTipoespecialistas() { return tipoespecialistas; }
-    // public void setTipoespecialistas(Tipoespecialista tipoespecialistas) { this.tipoespecialistas = tipoespecialistas; }
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
